@@ -1,0 +1,11 @@
+*.env
+__pycache__/
+*venv/
+.vscode/
+
+# NoneBot Files
+/*/.env.dev
+/*/.env.prod
+/*/.gitignore
+/*/pyproject.toml
+/*/README.md
