@@ -34,7 +34,7 @@
 
 ## 配置
 > 在目录下执行 `setup.bat` 或 `bash setup.sh`
-> ###### 使用脚手架创建项目环境
+> ###### 使用脚手架(nb-cli)创建项目环境
 > > 1. 选择simple模板
 > > 2. 给项目起个名字（比如`Repeater`）
 > > 3. 建议使用FastAPI驱动器
@@ -43,7 +43,7 @@
 > > 6. 输入Yes安装虚拟环境
 > > 7. 如果需要，可以选择内置插件，如echo
 > > 8. 在项目目录下，找到`.env`文件
-> > 9. 填写HOST(x.x.x.x)和PORT(数字)，并保存
+> > 9. 填写 `PORT`(数字), `ONEBOT_ACCESS_TOKEN`(字符串) 等字段配置项
 > > 10. 将复读机的NoneBot插件放入项目目录下（通常是`plugins`文件夹下）
 > 执行`{项目名称}/.venv/pip install httpx`安装唯一依赖（此处这个大括号要去掉）
 > 运行`run.bat`或`bash run.sh`启动程序`
