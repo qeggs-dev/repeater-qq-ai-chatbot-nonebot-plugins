@@ -48,15 +48,6 @@ from .config import (
     handle_set_time_zone
 )
 
-# === Note === #
-from .note import (
-    handle_del_note,
-    handle_delete_sub_note,
-    handle_change_sub_note,
-    handle_delete_sub_note,
-    handle_set_note
-)
-
 # === UserDataFile === #
 from .userFile import (
     handle_send_user_data_file

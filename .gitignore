@@ -9,3 +9,6 @@ __pycache__/
 /*/.gitignore
 /*/pyproject.toml
 /*/README.md
+
+# Windows Folder Metadata Files
+desktop.ini

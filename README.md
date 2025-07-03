@@ -106,4 +106,6 @@
 | `setDefaultModel`          | `sdm`  | `SetDefaultModel`         | `CONFIG`    | 设置默认模型                   | [模型](#模型)                              | 4.0 Beta | 1.0      | 设置默认使用的模型 |
 | `setTopP`                  | `stp`  | `SetTopP`                 | `CONFIG`    | 设置Top_P参数                  | 0~1的浮点数 或`0%`~`100%`的百分比           | 4.0.1 Beta | 1.0    | 设置Top_P参数 |
 | `setMaxTokens`             | `stm`  | `SetMaxTokens`            | `CONFIG`    | 设置最大生成tokens数           | 0~4096的整数                               | 4.0.1 Beta | 1.0    | 设置最大生成tokens数 |
-| `getContextTotalLength`    | `gctl` | `GetContextTotalLength`   | `CONTEXT`   | 获取上下文总长度               | 无                                         | 4.0.1 Beta | 1.0    | 获取上下文总长度     |
+| `getContextTotalLength`    | `gctl` | `GetContextTotalLength`   | `CONTEXT`   | 获取上下文总长度               | 无                                         | 4.0.1 Beta | 1.0    | 获取上下文总长度 |
+| `publicSpaceChat`          | `psc`  | `PublicSpaceChat`         | `CHAT`      | 公共空间聊天                   | 自然语言输入                                | 4.0.2.1 Beta | 1.0    | 公共空间聊天 |
+| `deletePublicSpaceContext` | `dpsc` | `DeletePublicSpaceContext`| `CONTEXT`   | 删除公共空间上下文             | 无                                         | 4.0.2.1 Beta | 1.0    | 删除公共空间上下文 | 

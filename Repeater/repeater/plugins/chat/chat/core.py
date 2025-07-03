@@ -19,6 +19,7 @@ class ChatCore:
         self,
         message: str,
         username: str,
+        role_name: str | None = None,
         model_type: str | None = None,
         load_prompt: bool = True,
         rendering: bool = True
@@ -42,6 +43,8 @@ class ChatCore:
             }
             if model_type:
                 data['model_type'] = model_type
+            if role_name:
+                data['role_name'] = role_name
             if message:
                 MD_Rendering_Enables_Prompts = "\n> Markdown渲染已开启！！！"
                 data['message'] = '> SystemInfo:\n> 消息发送时间：{time}' + (MD_Rendering_Enables_Prompts if rendering else '') + '\n\n---\n\n' + message
