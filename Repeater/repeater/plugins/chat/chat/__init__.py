@@ -7,3 +7,4 @@ from .Keep_Answering import handle_keep_answering
 from .Keep_Reasoning import handle_keep_reasoning
 from .recomplete import handle_recomplete
 from .temperature_chat import handle_temperature_chat
+from .public_space_chat import handle_public_space_chat

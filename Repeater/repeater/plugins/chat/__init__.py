@@ -9,7 +9,8 @@ from .chat import (
     handle_keep_answering,
     handle_keep_reasoning,
     handle_recomplete,
-    handle_temperature_chat
+    handle_temperature_chat,
+    handle_public_space_chat,
 )
 
 # === Context === #
@@ -21,7 +22,7 @@ from .context import (
     handle_inject_context,
     handle_withdraw,
     handle_change_sub_session,
-    handle_clone_session
+    handle_clone_session,
 )
 
 # === Prompt === #
@@ -31,7 +32,7 @@ from .prompt import (
     handle_setprompt,
     handle_change_sub_prompt,
     handle_snms,
-    handle_snmu
+    handle_snmu,
 )
 
 # === Config === #
@@ -45,12 +46,12 @@ from .config import (
     handle_enable_memory,
     handle_disable_memory,
     handle_set_render_style,
-    handle_set_time_zone
+    handle_set_time_zone,
 )
 
 # === UserDataFile === #
 from .userFile import (
-    handle_send_user_data_file
+    handle_send_user_data_file,
 )
 
 # === SessionID === #
