@@ -31,19 +31,13 @@ DELETE_CONFIG_ROUTE = "userdata/config/delete"
 DELETE_SUBSESSION_CONFIG_ROUTE = "config/subsession/delete"
 SET_SUMT_ROUTE = "sumt/set"
 
-# ==== NOTE API ==== #
-SET_NOTE_ROUTE = "note/set"
-CLONE_NOTE_ROUTE = "note/clone"
-DELETE_SESSION_NOTE_ROUTE = "note/delete"
-CHANGE_SUBSESSION_NOTE_ROUTE = "note/subsession/change"
-DELETE_SUBSESSION_NOTE_ROUTE = "note/subsession/delete"
-
 # ==== Download User Data File ==== #
 
 DOWNLOAD_USER_DATA_FILE_ROUTE = "userdata/file"
 
 # ==== RENDER API ==== #
 DOWNLOAD_RENDERED_IMAGE_ROUTE = "file/render"
+TEXT_RENDER_ROUTE = "render"
 
 # ==== ONLINE CHECK API ==== #
 ONLINE_CHECK_ROUTE = "server/online"

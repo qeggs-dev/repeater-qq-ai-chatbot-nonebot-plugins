@@ -9,7 +9,6 @@ from .core import ChatCore, RepeaterDebugMode
 
 renderChat = on_command('renderChat', aliases={'rc', 'render_chat', 'Render_Chat', 'RenderChat'}, rule=to_me(), block=True)
 
-
 @renderChat.handle()
 async def handle_render_Chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     msg = args.extract_plain_text()
@@ -24,14 +23,15 @@ async def handle_render_Chat(bot: Bot, event: MessageEvent, args: Message = Comm
             session_id = f"Private:{user_id}"
         result = await bot.get_stranger_info(user_id=user_id)
         nickname = result['nickname']
-
-        chat_core = ChatCore(session_id)
-        if RepeaterDebugMode:
-            await renderChat.finish(reply + f'[Chat.RenderChat|{session_id}|{nickname}]：{msg}')
+    
+    chat_core = ChatCore(session_id)
+    if RepeaterDebugMode:
+        await renderChat.finish(reply + f'[Chat.Render_Chat|{session_id}|{nickname}]：{msg}')
+    else:
+        response = await chat_core.send_message(message=msg, username=nickname)
+        if response['status_code'] == 200:
+            render_response = await chat_core.content_render(response['content'], response['reasoning'])
+            message = MessageSegment.image(render_response['image_url'])
+            await renderChat.finish(reply + message)
         else:
-            filename, code, text, reasoning, content = await chat_core.send_message_and_get_image(message=msg, username=nickname)
-            if code == 200:
-                response = MessageSegment.image(filename)
-                await renderChat.finish(reply + response)
-            else:
-                await renderChat.finish(reply + f'====Chat.RenderChat====\n> {session_id}\n{response}\nHTTP Code: {code}')
+            await renderChat.finish(reply + f"====Chat.Render_Chat====\n> {session_id}\n{response}\nHTTP Code: {response['status_code']}")

@@ -3,13 +3,11 @@ from .chat import (
     handle_smart_at,
     handle_chat,
     reason_handle,
-    prover_handle,
     handle_render_Chat,
     handle_npchat,
     handle_keep_answering,
     handle_keep_reasoning,
     handle_recomplete,
-    handle_temperature_chat,
     handle_public_space_chat,
 )
 

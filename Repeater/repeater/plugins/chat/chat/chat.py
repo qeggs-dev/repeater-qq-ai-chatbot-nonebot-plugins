@@ -39,25 +39,19 @@ async def handle_smart_at(bot: Bot, event: MessageEvent):
     if RepeaterDebugMode:
         await smart_at.finish(reply + f'[Chat|{session_id}|{nickname}]：{msg}')
     else:
-        fileurl, code, text, reasoning, content = await chat_core.send_message_and_get_image(message=msg, username=nickname)
-        logger.info(f'fileurl: {fileurl}')
-        lines = content.split('\n')
+        response = await chat_core.send_message(message=msg, username=nickname)
+        lines = response['content'].split('\n')
         max_line_length = max(len(line) for line in lines) if lines else 0
-        if mode == "group" and (max_line_length < MAX_SINGLE_LINE_LENGTH or len(content.split('\n')) > MIN_RENDER_IMAGE_TEXT_LINE):
-            if code == 200:
-                response = MessageSegment.image(fileurl)
-                await smart_at.finish(reply + response)
+        if response['status_code'] == 200:
+            if (mode == "group" and (max_line_length < MAX_SINGLE_LINE_LENGTH or len(response['content'].split('\n')) > MIN_RENDER_IMAGE_TEXT_LINE)) or len(response['response_text']) > MAX_LENGTH:
+                render_response = await chat_core.content_render(response['content'], response['reasoning'])
+                logger.info(f"file_url: {render_response['image_url']}")
+                message = MessageSegment.image(render_response['image_url'])
             else:
-                await smart_at.finish(reply + f'====Chat.Chat====\n> {session_id}\n{text}\nHTTP Code: {code}')
+                message = response['content']
+            await smart_at.finish(reply + message)
         else:
-            if code == 200:
-                if len(text) > MAX_LENGTH:
-                    response = MessageSegment.image(fileurl)
-                else:
-                    response = text
-                await smart_at.finish(reply + content)
-            else:
-                await smart_at.finish(reply + f'====Chat.Chat====\n> {session_id}\n{response}\nHTTP Code: {code}')
+            await smart_at.finish(reply + f"====Chat.Chat====\n> {session_id}\n{response}\nHTTP Code: {response['status_code']}")
 
 chat = on_command('chat', aliases={'c', 'Chat'}, rule=to_me(), block=True)
 
@@ -78,14 +72,17 @@ async def handle_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg(
 
     chat_core = ChatCore(session_id)
     if RepeaterDebugMode:
-        await chat.finish(reply + f'[Chat|{session_id}|{nickname}]：{msg}')
+        await smart_at.finish(reply + f'[Chat|{session_id}|{nickname}]：{msg}')
     else:
-        fileurl, code, text, reasoning, content = await chat_core.send_message_and_get_image(message=msg, username=nickname, model_type='chat')
-        if code == 200:
-            if len(text) > MAX_LENGTH:
-                response = MessageSegment.image(fileurl)
+        response = await chat_core.send_message(message=msg, username=nickname)
+        lines = response['content'].split('\n')
+        max_line_length = max(len(line) for line in lines) if lines else 0
+        if response['status_code'] == 200:
+            if len(response['response_text']) > MAX_LENGTH:
+                render_response = await chat_core.content_render(response['content'], response['reasoning'])
+                message = MessageSegment.image(render_response['image_url'])
             else:
-                response = text
-            await smart_at.finish(reply + content)
+                message = response['response_text']
+            await smart_at.finish(reply + message)
         else:
-            await smart_at.finish(reply + f'====Chat.Chat====\n> {session_id}\n{response}\nHTTP Code: {code}')
+            await smart_at.finish(reply + f"====Chat.Chat====\n> {session_id}\n{response}\nHTTP Code: {response['status_code']}")

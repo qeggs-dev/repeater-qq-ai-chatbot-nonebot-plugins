@@ -5,7 +5,7 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from .core import ChatCore, RepeaterDebugMode, MAX_LENGTH
+from .core import ChatCore, RepeaterDebugMode, MAX_LENGTH, MAX_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE_TEXT_LINE
 
 keepAnswering = on_command("keepAnswering", aliases={"ka", "keep_answering", "Keep_Answering", "KeepAnswering"}, rule=to_me(), block=True)
 
@@ -30,19 +30,18 @@ async def handle_keep_answering(bot: Bot, event: MessageEvent):
     if RepeaterDebugMode:
         await keepAnswering.finish(reply + f'[Chat.Keep_Answering|{session_id}|{nickname}]：{msg}')
     else:
-        filename, code, text, reasoning, content = await chat_core.send_message_and_get_image(message='', username=nickname)
-        if mode == "group":
-            if code == 200:
-                response = MessageSegment.image(filename)
-                await keepAnswering.finish(reply + response)
+        response = await chat_core.send_message(message=msg, username=nickname)
+        lines = response['content'].split('\n')
+        max_line_length = max(len(line) for line in lines) if lines else 0
+        if response['status_code'] == 200:
+            if mode == "group" and (max_line_length < MAX_SINGLE_LINE_LENGTH or len(response['content'].split('\n')) > MIN_RENDER_IMAGE_TEXT_LINE):
+                render_response = await chat_core.content_render(response['content'], response['reasoning'])
+                message = MessageSegment.image(render_response['image_url'])
+            elif len(response['response_text']) > MAX_LENGTH:
+                render_response = await chat_core.content_render(response['content'], response['reasoning'])
+                message = MessageSegment.image(render_response['image_url'])
             else:
-                await keepAnswering.finish(reply + f'====Chat.Keep_Answering====\n> {session_id}\n{text}\nHTTP Code: {code}')
+                message = response['content']
+            await keepAnswering.finish(reply + message)
         else:
-            if code == 200:
-                if len(text) > MAX_LENGTH:
-                    response = MessageSegment.image(filename)
-                else:
-                    response = text
-                await keepAnswering.finish(reply + content)
-            else:
-                await keepAnswering.finish(reply + f'====Chat.Keep_Answering====\n> {session_id}\n{response}\nHTTP Code: {code}')
+            await keepAnswering.finish(reply + f"====Chat.Keep_Answering====\n> {session_id}\n{response}\nHTTP Code: {response['status_code']}")
