@@ -22,13 +22,7 @@ async def handle_set_default_model_type(bot: Bot, event: MessageEvent, args: Mes
     result = await bot.get_stranger_info(user_id=user_id)
     nickname = result['nickname']
 
-    style = {"chat", "reasoner", "prover"}
-    if msg.lower() not in style:
-        await set_default_model_type.finish(
-            f'====Chat.Set_Default_Model====\n> 请输入正确的模型名称\n> 可选模型：{style}'
-        )
-    else:
-        msg = msg.lower()
+    msg = msg.lower()
 
 
     reply = MessageSegment.reply(event.message_id)

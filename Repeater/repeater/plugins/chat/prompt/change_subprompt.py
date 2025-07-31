@@ -7,10 +7,10 @@ from nonebot.adapters import Bot
 
 from .core import ChatCore, RepeaterDebugMode
 
-change_sub_prompt = on_command('changeSubPrompt', aliases={'csp', 'change_sub_prompt', 'Change_Sub_Prompt', 'ChangeSubPrompt'}, rule=to_me(), block=True)
+change_prompt_branch = on_command('changePromptBranch', aliases={'cpb', 'change_prompt_branch', 'Change_Prompt_Branch', 'ChangePromptBranch'}, rule=to_me(), block=True)
 
-@change_sub_prompt.handle()
-async def handle_change_sub_prompt(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
+@change_prompt_branch.handle()
+async def handle_change_prompt_branch(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     msg =  args.extract_plain_text().strip()
     try:
         whatever, group_id, user_id = event.get_session_id().split('_')  # 获取当前群聊id，发起人id，返回的格式为group_groupid_userid
@@ -26,8 +26,8 @@ async def handle_change_sub_prompt(bot: Bot, event: MessageEvent, args: Message 
     reply = MessageSegment.reply(event.message_id)
     chat_core = ChatCore(session_id)
     if RepeaterDebugMode:
-        await change_sub_prompt.finish(reply + f'[Chat.Change_Sub_Prompt|{session_id}|{nickname}]: {msg}')
+        await change_prompt_branch.finish(reply + f'[Chat.Change_Prompt_Branch|{session_id}|{nickname}]: {msg}')
     else:
-        code, text = await chat_core.change_subsession(msg)
+        code, text = await chat_core.change_prompt_branch(msg)
 
-        await change_sub_prompt.finish(reply + f'====Chat.Change_Sub_Prompt====\n> {session_id}\n{text}\nHTTP Code: {code}')
+        await change_prompt_branch.finish(reply + f'====Chat.Change_Prompt_Branch====\n> {session_id}\n{text}\nHTTP Code: {code}')

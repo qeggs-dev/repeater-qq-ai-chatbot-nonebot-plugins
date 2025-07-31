@@ -22,14 +22,7 @@ async def handle_set_render_style(bot: Bot, event: MessageEvent, args: Message =
     result = await bot.get_stranger_info(user_id=user_id)
     nickname = result['nickname']
 
-    style = {"light", "dark", "pink","blue", "green"}
-    if msg.lower() not in style:
-        await set_render_style.finish(
-            f'====Chat.Set_Render_Style====\n> 请输入正确的渲染风格\n> 可选风格：{style}'
-        )
-    else:
-        msg = msg.lower()
-
+    msg = msg.lower()
 
     reply = MessageSegment.reply(event.message_id)
     chat_core = ChatCore(session_id)

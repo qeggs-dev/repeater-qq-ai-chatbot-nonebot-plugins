@@ -4,5 +4,5 @@ from .get_context_total_length import handle_total_context_length
 from .send_session_file import handle_send_session_file
 from .inject_context import handle_inject_context
 from .withdraw import handle_withdraw
-from .change_subsession import handle_change_sub_session
+from .change_subsession import handle_change_context_branch
 from .clone_session import handle_clone_session

@@ -7,10 +7,10 @@ from nonebot.adapters import Bot
 
 from .core import ChatCore, RepeaterDebugMode
 
-change_sub_config = on_command('changeSubConfig', aliases={'csc', 'change_sub_config', 'Change_Sub_Config', 'ChangeSubConfig'}, rule=to_me(), block=True)
+change_config_branch = on_command('changeConfigBranch', aliases={'ccfgb', 'change_config_branch', 'Change_Config_Branch', 'ChangeConfigBranch'}, rule=to_me(), block=True)
 
-@change_sub_config.handle()
-async def handle_change_sub_config(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
+@change_config_branch.handle()
+async def handle_change_config_branch(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     msg =  args.extract_plain_text().strip()
     try:
         whatever, group_id, user_id = event.get_session_id().split('_')  # 获取当前群聊id，发起人id，返回的格式为group_groupid_userid
@@ -26,8 +26,8 @@ async def handle_change_sub_config(bot: Bot, event: MessageEvent, args: Message 
     reply = MessageSegment.reply(event.message_id)
     chat_core = ChatCore(session_id)
     if RepeaterDebugMode:
-        await change_sub_config.finish(reply + f'[Chat.Change_SubConfig|{session_id}|{nickname}]:{msg}')
+        await change_config_branch.finish(reply + f'[Chat.Change_Config_Branch|{session_id}|{nickname}]:{msg}')
     else:
-        code, text = await chat_core.change_subsession(msg)
+        code, text = await chat_core.change_config_branch(msg)
 
-        await change_sub_config.finish(reply + f'====Chat.Change_SubConfig====\n> {session_id}\n{text}\nHTTP Code: {code}')
+        await change_config_branch.finish(reply + f'====Chat.Change_Config_Branch====\n> {session_id}\n{text}\nHTTP Code: {code}')
