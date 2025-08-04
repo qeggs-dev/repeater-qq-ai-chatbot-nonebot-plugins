@@ -56,9 +56,20 @@
 | :---: | :---: |
 | **`light`** | 亮色 |
 | `dark` | 暗色 |
+| `red` | 红色 |
 | `pink` | 粉色 |
 | `blue` | 蓝色 |
 | `green` | 绿色 |
+| `purple` | 紫色 |
+| `yellow` | 黄色 |
+| `orange` | 橙色 |
+| `dark-red` | 暗红色 |
+| `dark-pink` | 暗粉色 |
+| `dark-blue` | 暗蓝色 |
+| `dark-green` | 暗绿色 |
+| `dark-purple` | 暗紫色 |
+| `dark-yellow` | 暗黄色 |
+| `dark-orange` | 暗橙色 |
 
 ---
 
@@ -82,17 +93,17 @@
 
 ---
 
-## 命令表(命令代码在NoneBot插件中)
+## 命令表
 
 | 命令                       | 别名    | 全名                      | 类型        | 功能描述                       | 参数描述                                   | 加入版本 | 命令版本 | 备注 |
-| :---:                      | :---:  | :---:                     | :---:       | :---:                         | :---:                                     | :---:    | :---:    | :---: |
+| :---                       | :---   | :---                      | :---:       | :---:                         | :---:                                     | :---:    | :---:    | :---: |
 | `chat`                     | `c`    | `Chat`                    | `CHAT`      | 与机器人对话                   | 自然语言输入                               | 4.0 Beta | 1.0              | 默认命令，可被`to_me`消息调起 |
 | `keepAnswering`            | `ka`   | `KeepAnswering`           | `CHAT`      | 持续对话(常规)                 | 无                                        | 4.0 Beta | 1.0              | 无须输入，AI再次回复 |
 | `keepReasoning`            | `kr`   | `KeepReasoning`           | `CHAT`      | 持续对话(推理)                 | 无                                        | 4.0 Beta | 1.0              | 无须输入，AI再次使用推理回复 |
 | `renderChat`               | `rc`   | `RenderChat`              | `CHAT`      | 渲染Markdown回复               | 自然语言输入                               | 4.0 Beta | 1.0              | 强制渲染图片输出 |
 | `setRenderStyle`           | `srs`  | `SetRenderStyle`          | `RENDER`    | 设置渲染样式                   | [渲染样式](#Markdown图片渲染样式)           | 4.0 Beta | 1.0              | 设置Markdown图片渲染样式 |
 | `npChat`                   | `np`   | `NoPromptChat`            | `CHAT`      | 不加载提示词进行对话            | 自然语言输入                               | 4.0 Beta | 1.0              | 使用常规模型 |
-| `prover`                   | `p`    | `Prover`                  | `CHAT`      | 使用Prover模型进行数学形式化证明 | 自然语言输入                               | 4.0 Beta | ~~1.0~~(已弃用)  | 使用`Prover`模型 |
+| ~~`prover`~~               | ~~`p`~~| ~~`Prover`~~              | `CHAT`      | 使用Prover模型进行数学形式化证明 | 自然语言输入                               | 4.0 Beta | ~~1.0~~(已弃用)  | 使用`Prover`模型(已弃用) |
 | `reason`                   | `r`    | `Reason`                  | `CHAT`      | 使用Reasoner模型进行推理        | 自然语言输入                               | 4.0 Beta | 1.0             | 使用`Reasoner`模型 |
 | `recomplete`               | `rcm`  | `Recomplete`              | `CHAT`      | 重新进行对话补全                | 无                                        | 4.0 Beta | 1.0             | 重新生成 |
 | `setFrequencyPenalty`      | `sfp`  | `SetFrequencyPenalty`     | `CONFIG`    | 设置频率惩罚                   | `-2`\~`2`的浮点数 或`-200%`\~`200%`的百分比 | 4.0 Beta | 1.0             | 控制着模型输出重复相同内容的可能性 |
@@ -104,8 +115,14 @@
 | `deleteContext`            | `dc`   | `DeleteContext`           | `CONTEXT`   | 删除上下文                     | 无                                        | 4.0 Beta | 1.0             | 删除上下文 |
 | `varExpand`                | `ve`   | `VarExpand`               | `VAREXPAND` | 变量展开                       | 文本模板(使用大括号作为[变量](#变量表)标记)  | 4.0 Beta | 1.0             | 变量展开 |
 | `setDefaultModel`          | `sdm`  | `SetDefaultModel`         | `CONFIG`    | 设置默认模型                   | [模型](#模型)                              | 4.0 Beta | 1.0             | 设置默认使用的模型 |
-| `setTopP`                  | `stp`  | `SetTopP`                 | `CONFIG`    | 设置Top_P参数                  | 0~1的浮点数 或`0%`~`100%`的百分比           | 4.0.1 Beta | 1.0           | 设置Top_P参数 |
-| `setMaxTokens`             | `stm`  | `SetMaxTokens`            | `CONFIG`    | 设置最大生成tokens数           | 0~4096的整数                               | 4.0.1 Beta | 1.0           | 设置最大生成tokens数 |
+| `setTopP`                  | `stp`  | `SetTopP`                 | `CONFIG`    | 设置Top_P参数                  | 0\~1的浮点数 或`0%`\~`100%`的百分比         | 4.0.1 Beta | 1.0           | 设置Top_P参数 |
+| `setMaxTokens`             | `stm`  | `SetMaxTokens`            | `CONFIG`    | 设置最大生成tokens数           | 0\~4096的整数                               | 4.0.1 Beta | 1.0           | 设置最大生成tokens数 |
 | `getContextTotalLength`    | `gctl` | `GetContextTotalLength`   | `CONTEXT`   | 获取上下文总长度               | 无                                         | 4.0.1 Beta | 1.0           | 获取上下文总长度 |
 | `publicSpaceChat`          | `psc`  | `PublicSpaceChat`         | `CHAT`      | 公共空间聊天                   | 自然语言输入                                | 4.0.2.1 Beta | 1.0         | 公共空间聊天 |
 | `deletePublicSpaceContext` | `dpsc` | `DeletePublicSpaceContext`| `CONTEXT`   | 删除公共空间上下文             | 无                                         | 4.0.2.1 Beta | 1.0         | 删除公共空间上下文 | 
+| `sendUserDataFile`         | `sudf` | `SendUserDataFile`        | `USERFILE`  | 发送用户数据文件               | 无                                         | 4.0.2.1 Beta | 1.0         | 发送用户数据文件 |
+| `changeContextBranch`      | `ccb`  | `ChangeContextBranch`     | `CONTEXT`   | 切换上下文分支                 | 分支名称                                    | 4.1.2.0      | 1.0         | 切换上下文分支 |
+| `changePromptBranch`       | `cppb` | `ChangePromptBranch`      | `PROMPT`    | 切换提示词分支                 | 分支名称                                    | 4.1.2.0      | 1.0         | 切换提示词分支 |
+| `changeConfigBranch`       | `ccfgb`| `ChangeConfigBranch`      | `CONFIG`    | 切换配置分支                   | 分支名称                                    | 4.1.2.0      | 1.0         | 切换配置分支 |
+| `reference`                | `ref`  | `Reference`               | `CHAT`      | 引用上下文                     | 用户ID                                     | 4.1.2.0      | 1.0         | 引用其他用户的上下文并追加到当前上下文 |
+| `chooseGroupMember`        | `cgm`  | `ChooseGroupMember`       | `OTHER`     | 选择群组成员                   | 抽取数量                                    | 4.1.2.0      | 1.0         | 选择群组成员 |
