@@ -18,19 +18,23 @@ async def handle_keep_answering(bot: Bot, event: MessageEvent):
         whatever, group_id, user_id = event.get_session_id().split('_')  # 获取当前群聊id，发起人id，返回的格式为group_groupid_userid
         session_id = f"Group:{group_id}:{user_id}"
         mode = "group"
+        result = await bot.get_group_member_info(group_id = group_id, user_id = user_id, no_cache = False)
+        nickname = result['card']
+        if not nickname:
+            nickname = result['nickname']
     except:  # 如果上面报错了，意味着发起的是私聊，返回格式为userid
         group_id = None
         user_id = event.get_session_id()
         session_id = f"Private:{user_id}"
         mode = "private"
-    result = await bot.get_stranger_info(user_id=user_id)
-    nickname = result['nickname']
+        result = await bot.get_stranger_info(user_id=user_id)
+        nickname = result['nickname']
 
     chat_core = ChatCore(session_id)
     if RepeaterDebugMode:
         await keepAnswering.finish(reply + f'[Chat.Keep_Answering|{session_id}|{nickname}]：{msg}')
     else:
-        response = await chat_core.send_message(message=msg, username=nickname)
+        response = await chat_core.send_message(username=nickname)
         lines = response['content'].split('\n')
         max_line_length = max(len(line) for line in lines) if lines else 0
         if response['status_code'] == 200:

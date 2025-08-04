@@ -6,14 +6,17 @@ from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
 from .core import ChatCore, RepeaterDebugMode, MAX_LENGTH, MAX_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE_TEXT_LINE
+from ..assist_func import image_to_text, get_first_mentioned_user
 
-keepReasoning = on_command("keepReasoning", aliases={"kr", "keep_reasoning", "Keep_Reasoning", "KeepReasoning"}, rule=to_me(), block=True)
+reference = on_command("Reference", aliases={"ref", "Reference"}, rule=to_me(), block=True)
 
-@keepReasoning.handle()
-async def handle_keep_reasoning(bot: Bot, event: MessageEvent):
-    msg = event.get_plaintext().strip()
+@reference.handle()
+async def handle_reference(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
+    msg = args.extract_plain_text().strip()
     reply = MessageSegment.reply(event.message_id) # 获取回复消息头
-    
+    from_userid = get_first_mentioned_user(event)
+    if not from_userid:
+        await reference.finish(reply + "====Chat.Reference====\n抱歉，但是引用对象无效")
     try:
         whatever, group_id, user_id = event.get_session_id().split('_')  # 获取当前群聊id，发起人id，返回的格式为group_groupid_userid
         session_id = f"Group:{group_id}:{user_id}"
@@ -29,12 +32,15 @@ async def handle_keep_reasoning(bot: Bot, event: MessageEvent):
         mode = "private"
         result = await bot.get_stranger_info(user_id=user_id)
         nickname = result['nickname']
+    
+    if not msg:
+        msg = ''
 
     chat_core = ChatCore(session_id)
     if RepeaterDebugMode:
-        await keepReasoning.finish(reply + f'[Chat.Keep_Reasoning|{session_id}|{nickname}]：{msg}')
+        await reference.finish(reply + f'[Chat.Reference|{session_id}|{nickname}]：{msg}')
     else:
-        response = await chat_core.send_message(username=nickname)
+        response = await chat_core.send_message(message=msg, username=nickname, reference_context_id=from_session_id)
         lines = response['content'].split('\n')
         max_line_length = max(len(line) for line in lines) if lines else 0
         if response['status_code'] == 200:
@@ -46,6 +52,6 @@ async def handle_keep_reasoning(bot: Bot, event: MessageEvent):
                 message = MessageSegment.image(render_response['image_url'])
             else:
                 message = response['content']
-            await keepReasoning.finish(reply + message)
+            await reference.finish(reply + message)
         else:
-            await keepReasoning.finish(reply + f"====Chat.Keep_Reasoning====\n> {session_id}\n{response}\nHTTP Code: {response['status_code']}")
+            await reference.finish(reply + f"====Chat.Reference====\n> {session_id}\n{response}\nHTTP Code: {response['status_code']}")

@@ -8,6 +8,7 @@ from .chat import (
     handle_keep_answering,
     handle_keep_reasoning,
     handle_recomplete,
+    handle_reference,
     handle_public_space_chat,
 )
 
@@ -19,7 +20,7 @@ from .context import (
     handle_total_context_length,
     handle_inject_context,
     handle_withdraw,
-    handle_change_sub_session,
+    handle_change_context_branch,
     handle_clone_session,
 )
 
@@ -28,7 +29,7 @@ from .prompt import (
     handle_delete_prompt,
     handle_delete_sub_prompt,
     handle_setprompt,
-    handle_change_sub_prompt,
+    handle_change_prompt_branch,
     handle_snms,
     handle_snmu,
 )

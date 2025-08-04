@@ -5,4 +5,5 @@ from .npchat import handle_npchat
 from .Keep_Answering import handle_keep_answering
 from .Keep_Reasoning import handle_keep_reasoning
 from .recomplete import handle_recomplete
+from .reference import handle_reference
 from .public_space_chat import handle_public_space_chat

@@ -7,25 +7,31 @@ from nonebot.adapters import Bot
 from nonebot import logger
 
 from .core import ChatCore, RepeaterDebugMode, MAX_LENGTH, MAX_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE_TEXT_LINE
+from ..assist_func import image_to_text
 
 smart_at = on_message(rule=to_me(), priority=100, block=True)
 
 @smart_at.handle()
 async def handle_smart_at(bot: Bot, event: MessageEvent):
-    msg = event.get_plaintext().strip()
+    tmsg:Message = await image_to_text(bot, event.message, "\n==== OCR Image Begin ====\n{text}\n===== OCR Image End =====\n")
+    msg:str = tmsg.extract_plain_text().strip()
     reply = MessageSegment.reply(event.message_id) # 获取回复消息头
     
     try:
         whatever, group_id, user_id = event.get_session_id().split('_')  # 获取当前群聊id，发起人id，返回的格式为group_groupid_userid
         session_id = f"Group:{group_id}:{user_id}"
         mode = "group"
+        result = await bot.get_group_member_info(group_id = group_id, user_id = user_id, no_cache = False)
+        nickname = result['card']
+        if not nickname:
+            nickname = result['nickname']
     except:  # 如果上面报错了，意味着发起的是私聊，返回格式为userid
         group_id = None
         user_id = event.get_session_id()
         session_id = f"Private:{user_id}"
         mode = "private"
-    result = await bot.get_stranger_info(user_id=user_id)
-    nickname = result['nickname']
+        result = await bot.get_stranger_info(user_id=user_id)
+        nickname = result['nickname']
     
     if not msg:
         if mode == "group":
@@ -68,7 +74,7 @@ async def handle_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg(
         session_id = f"Private:{user_id}"
         mode = "private"
     result = await bot.get_stranger_info(user_id=user_id)
-    nickname = result['nickname']
+    nickname = result['card']
 
     chat_core = ChatCore(session_id)
     if RepeaterDebugMode:
