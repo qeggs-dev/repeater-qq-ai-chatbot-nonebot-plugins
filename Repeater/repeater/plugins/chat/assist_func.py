@@ -55,7 +55,7 @@ async def image_to_text(bot:Bot, message: Message, format: str = "{text}", cite:
             if text.endswith("\n"):
                 text = text[:-1]
             text = format.format(text = text)
-            if text:
+            if text.strip():
                 if cite:
                     text = text.replace("\n", "\n> ")
                 outmsg.append(MessageSegment(type = "text", data = {"text": text}))

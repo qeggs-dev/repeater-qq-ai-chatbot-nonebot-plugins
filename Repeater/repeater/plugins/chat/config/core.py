@@ -99,7 +99,7 @@ class ChatCore:
         response = await self._httpx_client.put(
             f'{self.url}/{SET_CONFIG_ROUTE}/{self.session_id}/string',
             data={
-                'key': 'default_prompt_file',
+                'key': 'parset_prompt_name',
                 'value': name
             }
         )

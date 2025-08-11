@@ -1,4 +1,5 @@
 from nonebot import on_message, on_command
+from nonebot.internal.matcher.matcher import Matcher
 from nonebot.rule import to_me
 from nonebot.params import CommandArg
 from nonebot.adapters import Message
@@ -7,88 +8,43 @@ from nonebot.adapters import Bot
 from nonebot import logger
 
 from .core import ChatCore, RepeaterDebugMode, MAX_LENGTH, MAX_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE_TEXT_LINE
-from ..assist_func import image_to_text
+from ._get_stranger_info import StrangerInfo
+from ._send_msg import send_msg
 
-smart_at = on_message(rule=to_me(), priority=100, block=True)
+smart_at: type[Matcher] = on_message(rule=to_me(), priority=100, block=True)
 
 @smart_at.handle()
 async def handle_smart_at(bot: Bot, event: MessageEvent):
-    tmsg:Message = await image_to_text(bot, event.message, "\n==== OCR Image Begin ====\n{text}\n===== OCR Image End =====\n")
-    msg:str = tmsg.extract_plain_text().strip()
-    reply = MessageSegment.reply(event.message_id) # 获取回复消息头
     
-    try:
-        whatever, group_id, user_id = event.get_session_id().split('_')  # 获取当前群聊id，发起人id，返回的格式为group_groupid_userid
-        session_id = f"Group:{group_id}:{user_id}"
-        mode = "group"
-        result = await bot.get_group_member_info(group_id = group_id, user_id = user_id, no_cache = False)
-        nickname = result['card']
-        if not nickname:
-            nickname = result['nickname']
-    except:  # 如果上面报错了，意味着发起的是私聊，返回格式为userid
-        group_id = None
-        user_id = event.get_session_id()
-        session_id = f"Private:{user_id}"
-        mode = "private"
-        result = await bot.get_stranger_info(user_id=user_id)
-        nickname = result['nickname']
+    stranger_info = StrangerInfo()
+    await stranger_info.get_stranger_info(bot, event)
     
-    if not msg:
-        if mode == "group":
+    if not stranger_info.message:
+        if stranger_info.mode == "group":
             await smart_at.finish(
-                reply + '复读机在线哦~ ο(=•ω＜=)ρ⌒☆'
+                stranger_info.reply + '复读机在线哦~ ο(=•ω＜=)ρ⌒☆'
             )
         else:
             return
+    
+    core = ChatCore(stranger_info.name_space)
 
-    chat_core = ChatCore(session_id)
-    if RepeaterDebugMode:
-        await smart_at.finish(reply + f'[Chat|{session_id}|{nickname}]：{msg}')
-    else:
-        response = await chat_core.send_message(message=msg, username=nickname)
-        lines = response['content'].split('\n')
-        max_line_length = max(len(line) for line in lines) if lines else 0
-        if response['status_code'] == 200:
-            if (mode == "group" and (max_line_length < MAX_SINGLE_LINE_LENGTH or len(response['content'].split('\n')) > MIN_RENDER_IMAGE_TEXT_LINE)) or len(response['response_text']) > MAX_LENGTH:
-                render_response = await chat_core.content_render(response['content'], response['reasoning'])
-                logger.info(f"file_url: {render_response['image_url']}")
-                message = MessageSegment.image(render_response['image_url'])
-            else:
-                message = response['content']
-            await smart_at.finish(reply + message)
-        else:
-            await smart_at.finish(reply + f"====Chat.Chat====\n> {session_id}\n{response}\nHTTP Code: {response['status_code']}")
+    response = await core.send_message(stranger_info.message, stranger_info.nickname)
 
-chat = on_command('chat', aliases={'c', 'Chat'}, rule=to_me(), block=True)
+    await send_msg(
+        "Chat",
+        stranger_info,
+        smart_at,
+        response
+    )
+
+chat: Matcher = on_command('chat', aliases={'c', 'Chat'}, rule=to_me(), block=True)
 
 async def handle_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
-    msg = args.extract_plain_text().strip()
-    reply = MessageSegment.reply(event.message_id) # 获取回复消息头
-    try:
-        whatever, group_id, user_id = event.get_session_id().split('_')  # 获取当前群聊id，发起人id，返回的格式为group_groupid_userid
-        session_id = f"Group:{group_id}:{user_id}"
-        mode = "group"
-    except:  # 如果上面报错了，意味着发起的是私聊，返回格式为userid
-        group_id = None
-        user_id = event.get_session_id()
-        session_id = f"Private:{user_id}"
-        mode = "private"
-    result = await bot.get_stranger_info(user_id=user_id)
-    nickname = result['card']
-
-    chat_core = ChatCore(session_id)
-    if RepeaterDebugMode:
-        await smart_at.finish(reply + f'[Chat|{session_id}|{nickname}]：{msg}')
-    else:
-        response = await chat_core.send_message(message=msg, username=nickname)
-        lines = response['content'].split('\n')
-        max_line_length = max(len(line) for line in lines) if lines else 0
-        if response['status_code'] == 200:
-            if len(response['response_text']) > MAX_LENGTH:
-                render_response = await chat_core.content_render(response['content'], response['reasoning'])
-                message = MessageSegment.image(render_response['image_url'])
-            else:
-                message = response['response_text']
-            await smart_at.finish(reply + message)
-        else:
-            await smart_at.finish(reply + f"====Chat.Chat====\n> {session_id}\n{response}\nHTTP Code: {response['status_code']}")
+    stranger_info = StrangerInfo()
+    await stranger_info.get_stranger_info(bot, event)
+    await send_msg(
+        "Chat",
+        stranger_info,
+        chat,
+    )

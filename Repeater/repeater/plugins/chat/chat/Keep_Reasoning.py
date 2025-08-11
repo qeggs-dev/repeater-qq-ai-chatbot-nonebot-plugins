@@ -5,47 +5,22 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from .core import ChatCore, RepeaterDebugMode, MAX_LENGTH, MAX_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE_TEXT_LINE
+from .core import ChatCore
+from ._get_stranger_info import StrangerInfo
+from ._send_msg import send_msg 
 
 keepReasoning = on_command("keepReasoning", aliases={"kr", "keep_reasoning", "Keep_Reasoning", "KeepReasoning"}, rule=to_me(), block=True)
 
 @keepReasoning.handle()
 async def handle_keep_reasoning(bot: Bot, event: MessageEvent):
-    msg = event.get_plaintext().strip()
-    reply = MessageSegment.reply(event.message_id) # 获取回复消息头
-    
-    try:
-        whatever, group_id, user_id = event.get_session_id().split('_')  # 获取当前群聊id，发起人id，返回的格式为group_groupid_userid
-        session_id = f"Group:{group_id}:{user_id}"
-        mode = "group"
-        result = await bot.get_group_member_info(group_id = group_id, user_id = user_id, no_cache = False)
-        nickname = result['card']
-        if not nickname:
-            nickname = result['nickname']
-    except:  # 如果上面报错了，意味着发起的是私聊，返回格式为userid
-        group_id = None
-        user_id = event.get_session_id()
-        session_id = f"Private:{user_id}"
-        mode = "private"
-        result = await bot.get_stranger_info(user_id=user_id)
-        nickname = result['nickname']
+    stranger_info = StrangerInfo()
+    await stranger_info.get_stranger_info(bot, event)
 
-    chat_core = ChatCore(session_id)
-    if RepeaterDebugMode:
-        await keepReasoning.finish(reply + f'[Chat.Keep_Reasoning|{session_id}|{nickname}]：{msg}')
-    else:
-        response = await chat_core.send_message(username=nickname)
-        lines = response['content'].split('\n')
-        max_line_length = max(len(line) for line in lines) if lines else 0
-        if response['status_code'] == 200:
-            if mode == "group" and (max_line_length < MAX_SINGLE_LINE_LENGTH or len(response['content'].split('\n')) > MIN_RENDER_IMAGE_TEXT_LINE):
-                render_response = await chat_core.content_render(response['content'], response['reasoning'])
-                message = MessageSegment.image(render_response['image_url'])
-            elif len(response['response_text']) > MAX_LENGTH:
-                render_response = await chat_core.content_render(response['content'], response['reasoning'])
-                message = MessageSegment.image(render_response['image_url'])
-            else:
-                message = response['content']
-            await keepReasoning.finish(reply + message)
-        else:
-            await keepReasoning.finish(reply + f"====Chat.Keep_Reasoning====\n> {session_id}\n{response}\nHTTP Code: {response['status_code']}")
+    chat_core = ChatCore(stranger_info.name_space)
+    response = await chat_core.send_message(username=stranger_info.nickname, model_type="reasoning")
+    await send_msg(
+        "Keep_Reasoning",
+        stranger_info,
+        keepReasoning,
+        response
+    )

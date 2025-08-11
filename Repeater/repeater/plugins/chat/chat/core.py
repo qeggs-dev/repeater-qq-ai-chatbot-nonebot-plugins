@@ -1,6 +1,8 @@
 import json
 from typing import (
-    Literal
+    Any,
+    Literal,
+    AsyncIterator
 )
 
 from nonebot import logger
@@ -37,23 +39,15 @@ class ChatCore:
         :return: AI返回的消息
         """
         url = f"{self.url}/{CHAT_ROUTE}/{self.session_id}"
-        # 表单数据格式 (Form Data)
-        data = {
-            "user_name": username,
-            "load_prompt": load_prompt,
-        }
-        if model_type:
-            data['model_type'] = model_type
-        if role_name:
-            data['role_name'] = role_name
-        if reference_context_id:
-            data['reference_context_id'] = reference_context_id
-        if message:
-            MD_Rendering_Enables_Prompts = "\n> Markdown渲染已开启！！！"
-            MD_Rendering_Enables_Prompts = MD_Rendering_Enables_Prompts if enable_md_prompt else ''
-            Reference_Enables_Prompts = "\n> 访客模式（用户：{user_name}），引用上下文已开启！！！"
-            Reference_Enables_Prompts = Reference_Enables_Prompts if reference_context_id else ''
-            data['message'] = '> SystemInfo:\n> 消息发送时间：{time}' + (MD_Rendering_Enables_Prompts) + (Reference_Enables_Prompts) + '\n\n---\n\n' + message
+        data = self._prepare_request_body(
+            message = message,
+            username = username,
+            role_name = role_name,
+            model_type = model_type,
+            load_prompt = load_prompt,
+            enable_md_prompt = enable_md_prompt,
+            reference_context_id = reference_context_id,
+        )
         response = await self._chat_client.post(
             url=url,
             json=data  # 使用 json= 表示请求体数据
@@ -73,6 +67,77 @@ class ChatCore:
             "reasoning": reasoning,
             "content": content
         }
+    
+    async def send_stream_message(
+        self,
+        message: str,
+        username: str,
+        role_name: str | None = None,
+        model_type: str | None = None,
+        load_prompt: bool = True,
+        enable_md_prompt: bool = True,
+        reference_context_id: str | None = None,
+    ) -> AsyncIterator[Any]:
+        """
+        发送消息到AI后端，并获取流式响应
+        
+        :param message: 消息内容
+        :param username: 用户名
+        :
+        :return: AI返回的消息
+        """
+        import json
+        url = f"{self.url}/{CHAT_ROUTE}/{self.session_id}"
+        data = self._prepare_request_body(
+            message = message,
+            username = username,
+            role_name = role_name,
+            model_type = model_type,
+            load_prompt = load_prompt,
+            enable_md_prompt = enable_md_prompt,
+            reference_context_id = reference_context_id,
+        )
+        async with self._chat_client.stream(
+            method="POST",
+            url=url,
+            json=data  # 使用 json= 表示请求体数据
+        ) as response:
+            response.raise_for_status()
+            
+            async for line in response.aiter_lines():
+                if not line.strip():
+                    continue
+
+                yield json.loads(line)
+    
+    def _prepare_request_body(
+        self,
+        message: str,
+        username: str,
+        role_name: str | None = None,
+        model_type: str | None = None,
+        load_prompt: bool = True,
+        enable_md_prompt: bool = True,
+        reference_context_id: str | None = None,
+    ):
+        # 表单数据格式 (Form Data)
+        data = {
+            "user_name": username,
+            "load_prompt": load_prompt,
+        }
+        if model_type:
+            data['model_type'] = model_type
+        if role_name:
+            data['role_name'] = role_name
+        if reference_context_id:
+            data['reference_context_id'] = reference_context_id
+        if message:
+            MD_Rendering_Enables_Prompts = "\n> Markdown rendering is turned on!!"
+            MD_Rendering_Enables_Prompts = MD_Rendering_Enables_Prompts if enable_md_prompt else ''
+            Reference_Enables_Prompts = "\n> Guest mode(User: {user_name})，Citation context is turned on!!"
+            Reference_Enables_Prompts = Reference_Enables_Prompts if reference_context_id else ''
+            data['message'] = '> SystemInfo:\n> Message sending time:{time}' + (MD_Rendering_Enables_Prompts) + (Reference_Enables_Prompts) + '\n\n---\n\n' + message
+        return data
     
     async def text_render(self, text: str) -> dict[Literal['status_code', 'response_text', 'image_url', 'style', 'timeout', 'created', 'created_ms'], str | int]:
         response = await self._client.post(
