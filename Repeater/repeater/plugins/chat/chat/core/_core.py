@@ -7,9 +7,10 @@ from typing import (
 
 from nonebot import logger
 import httpx
-from ..exit_register import ExitRegister
+from ._response_body import ResponseBody, RendedImage
+from ...exit_register import ExitRegister
 
-from ..core_config import *
+from ...core_config import *
 
 exit_register = ExitRegister()
 
@@ -29,7 +30,7 @@ class ChatCore:
         load_prompt: bool = True,
         enable_md_prompt: bool = True,
         reference_context_id: str | None = None,
-    ) -> dict[Literal["status_code", "response_text", "reasoning", "content"], str | int]:
+    ) -> ResponseBody:
         """
         发送消息到AI后端
         
@@ -58,15 +59,20 @@ class ChatCore:
             try:
                 result:dict = response.json()
             except json.JSONDecodeError:
-                return response.text
+                return ResponseBody(
+                    status_code = response.status_code,
+                    response_text = response.text,
+                    reasoning = "",
+                    context = "",
+                )
             reasoning = result.get('reasoning_content', '')
             content = result.get('content', '')
-        return {
-            "status_code": response.status_code,
-            "response_text": response.text,
-            "reasoning": reasoning,
-            "content": content
-        }
+        return ResponseBody(
+            status_code = response.status_code,
+            response_text = response.text,
+            reasoning_content = reasoning,
+            content = content,
+        )
     
     async def send_stream_message(
         self,
@@ -139,22 +145,22 @@ class ChatCore:
             data['message'] = '> SystemInfo:\n> Message sending time:{time}' + (MD_Rendering_Enables_Prompts) + (Reference_Enables_Prompts) + '\n\n---\n\n' + message
         return data
     
-    async def text_render(self, text: str) -> dict[Literal['status_code', 'response_text', 'image_url', 'style', 'timeout', 'created', 'created_ms'], str | int]:
+    async def text_render(self, text: str) -> RendedImage:
         response = await self._client.post(
             f'{self.url}/{TEXT_RENDER_ROUTE}/{self.session_id}',
             data={'text': text}
         )
         response_json:dict = response.json()
-        return {
-            "status_code": response.status_code,
-            "response_text": response.text,
-            "image_url": response_json.get('image_url', ''),
-            "style": response_json.get('style', ''),
-            "timeout": response_json.get('timeout', 0),
-            "created": response_json.get('created', 0),
-            "created_ms": response_json.get('created_ms', 0),
-        }
-    async def content_render(self, content: str, reasoning_content: str = ""):
+        return RendedImage(
+            status_code = response.status_code,
+            response_text = response.text,
+            image_url = response_json.get('image_url', ''),
+            style = response_json.get('style', ''),
+            timeout = response_json.get('timeout', 0),
+            created = response_json.get('created', 0),
+            created_ms = response_json.get('created_ms', 0),
+        )
+    async def content_render(self, content: str, reasoning_content: str = "") -> RendedImage:
         text = ""
         if reasoning_content:
             text += ("> " + reasoning_content.replace('\n', '\n> ') + "\n\n---\n\n")

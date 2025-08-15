@@ -6,6 +6,7 @@ from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
 from .core import ChatCore, RepeaterDebugMode
+from ..assist_func import StrangerInfo, get_first_mentioned_user
 
 seed_user_data_file = on_command('sendUserDataFile', aliases={'sudf', 'send_user_data_file', 'Send_User_Data_File', 'SendUserDataFile'}, rule=to_me(), block=True)
 
