@@ -26,6 +26,8 @@ CLONE_PROMPT_ROUTE = "prompt/clone"
 
 # ==== CONFIG API ==== #
 SET_CONFIG_ROUTE = "userdata/config/set"
+GET_CONFIG_ROUTE = "userdata/config/get"
+REMOVE_CONFIG_KEY_ROUTE = "userdata/config/delkey"
 CLONE_CONFIG_ROUTE = "config/clone"
 CHANGE_CONFIG_BRANCH_ROUTE = "userdata/config/change"
 DELETE_CONFIG_ROUTE = "userdata/config/delete"
@@ -44,6 +46,7 @@ TEXT_RENDER_ROUTE = "render"
 ONLINE_CHECK_ROUTE = "server/online"
 
 # ==== README API ==== #
+README_FILE_ROUTE = "readme.md"
 HTML_README_FILE_ROUTE = "readme.html"
 
 # ==== Balance API ==== #

@@ -6,7 +6,7 @@ from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
 from .core import ChatCore
-from ..assist_func import StrangerInfo
+from ..assist import StrangerInfo
 from .core._send_msg import send_msg 
 
 keepReasoning = on_command("keepReasoning", aliases={"kr", "keep_reasoning", "Keep_Reasoning", "KeepReasoning"}, rule=to_me(), block=True)
@@ -15,7 +15,7 @@ keepReasoning = on_command("keepReasoning", aliases={"kr", "keep_reasoning", "Ke
 async def handle_keep_reasoning(bot: Bot, event: MessageEvent):
     stranger_info = StrangerInfo(bot, event)
 
-    chat_core = ChatCore(stranger_info.name_space)
+    chat_core = ChatCore(stranger_info.name_space.namespace)
 
     response = await chat_core.send_message(username=stranger_info.nickname, model_type="reasoning")
     

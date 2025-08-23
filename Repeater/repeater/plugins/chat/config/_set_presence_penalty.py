@@ -5,22 +5,16 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from .core import ChatCore, RepeaterDebugMode
+from ._core import ChatCore, RepeaterDebugMode
+from ..assist import StrangerInfo
 
 set_presence_penalty = on_command('setPresencePenalty', aliases={'spp', 'set_presence_penalty', 'Set_Presence_Penalty', 'SetPresencePpenalty'}, rule=to_me(), block=True)
 
 @set_presence_penalty.handle()
 async def handle_set_presence_penalty(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
-    msg = args.extract_plain_text().strip()
-    try:
-        whatever, group_id, user_id = event.get_session_id().split('_')  # 获取当前群聊id，发起人id，返回的格式为group_groupid_userid
-        session_id = f"Group:{group_id}:{user_id}"
-    except:  # 如果上面报错了，意味着发起的是私聊，返回格式为userid
-        group_id = None
-        user_id = event.get_session_id()
-        session_id = f"Private:{user_id}"
-    result = await bot.get_stranger_info(user_id=user_id)
-    nickname = result['nickname']
+    stranger_info = StrangerInfo(bot=bot, event=event, args=args)
+
+    msg = stranger_info.message_str.strip()
 
     try:
         if msg.endswith("%"):
@@ -39,10 +33,10 @@ async def handle_set_presence_penalty(bot: Bot, event: MessageEvent, args: Messa
 
 
     reply = MessageSegment.reply(event.message_id)
-    chat_core = ChatCore(session_id)
+    chat_core = ChatCore(stranger_info.name_space.namespace)
     if RepeaterDebugMode:
-        await set_presence_penalty.finish(reply + f'[Chat.Set_Presence_Penalty|{session_id}|{nickname}]:{msg}')
+        await set_presence_penalty.finish(reply + f'[Chat.Set_Presence_Penalty|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')
     else:
-        code, text = await chat_core.set_presence_penalty(presence_penalty=presence_penalty)
+        code, text = await chat_core.set_config('presence_penalty', presence_penalty)
 
-        await set_presence_penalty.finish(reply + f'====Chat.Set_Presence_Penalty====\n> {session_id}\n{text}\nHTTP Code: {code}\n\nPresence_Penalty: {presence_penalty}')
+        await set_presence_penalty.finish(reply + f'====Chat.Set_Presence_Penalty====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}\n\nPresence_Penalty: {presence_penalty}')

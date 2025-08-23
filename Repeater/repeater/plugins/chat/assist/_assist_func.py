@@ -50,12 +50,14 @@ async def image_to_text(bot:Bot, message: Message, format: str = "{text}", cite:
         if segment.type == "image":
             ocrout = await bot.ocr_image(image = segment.data["url"])
             text = ""
+            summary = segment.data.get("summary", "")
             for item in ocrout:
                 text += item["text"] + "\n"
             if text.endswith("\n"):
                 text = text[:-1]
             text = format.format(text = text)
             if text.strip():
+                text = f"[Image tag:{summary}]\n{text}"
                 if cite:
                     text = text.replace("\n", "\n> ")
                 outmsg.append(MessageSegment(type = "text", data = {"text": text}))

@@ -5,22 +5,16 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from .core import ChatCore, RepeaterDebugMode
+from ._core import ChatCore, RepeaterDebugMode
+from ..assist import StrangerInfo
 
 set_top_p = on_command('setTopP', aliases={'stp', 'set_top_p', 'Set_Top_P', 'SetTopP'}, rule=to_me(), block=True)
 
 @set_top_p.handle()
 async def handle_set_top_p(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
-    msg = args.extract_plain_text().strip()
-    try:
-        whatever, group_id, user_id = event.get_session_id().split('_')  # 获取当前群聊id，发起人id，返回的格式为group_groupid_userid
-        session_id = f"Group:{group_id}:{user_id}"
-    except:  # 如果上面报错了，意味着发起的是私聊，返回格式为userid
-        group_id = None
-        user_id = event.get_session_id()
-        session_id = f"Private:{user_id}"
-    result = await bot.get_stranger_info(user_id=user_id)
-    nickname = result['nickname']
+    stranger_info = StrangerInfo(bot=bot, event=event, args=args)
+
+    msg = stranger_info.message_str.strip()
 
     try:
         if msg.endswith("%"):
@@ -39,10 +33,10 @@ async def handle_set_top_p(bot: Bot, event: MessageEvent, args: Message = Comman
 
 
     reply = MessageSegment.reply(event.message_id)
-    chat_core = ChatCore(session_id)
+    chat_core = ChatCore(stranger_info.name_space.namespace)
     if RepeaterDebugMode:
-        await set_top_p.finish(reply + f'[Chat.Set_Top_P|{session_id}|{nickname}]:{msg}')
+        await set_top_p.finish(reply + f'[Chat.Set_Top_P|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')
     else:
-        code, text = await chat_core.set_top_p(top_p=top_p)
+        code, text = await chat_core.set_config("top_p", top_p)
 
-        await set_top_p.finish(reply + f'====Chat.Set_Top_P====\n> {session_id}\n{text}\nHTTP Code: {code}\n\nTop_P: {top_p}')
+        await set_top_p.finish(reply + f'====Chat.Set_Top_P====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}\n\nTop_P: {top_p}')

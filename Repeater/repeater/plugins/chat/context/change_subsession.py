@@ -6,28 +6,21 @@ from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
 from .core import ChatCore, RepeaterDebugMode
+from ..assist import StrangerInfo
 
 change_context_branch = on_command('changeContextBranch', aliases={'ccb', 'change_context_branch', 'Change_Context_Branch', 'ChangeContextBranch'}, rule=to_me(), block=True)
 
 @change_context_branch.handle()
 async def handle_change_context_branch(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
-    msg =  args.extract_plain_text().strip()
-    try:
-        whatever, group_id, user_id = event.get_session_id().split('_')  # 获取当前群聊id，发起人id，返回的格式为group_groupid_userid
-        session_id = f"Group:{group_id}:{user_id}"
-    except:  # 如果上面报错了，意味着发起的是私聊，返回格式为userid
-        group_id = None
-        user_id = event.get_session_id()
-        session_id = f"Private:{user_id}"
-    result = await bot.get_stranger_info(user_id=user_id)
-    nickname = result['nickname']
-
+    stranger_info = StrangerInfo(bot=bot, event=event, args=args)
+    
+    msg = stranger_info.message_str.strip()
     
     reply = MessageSegment.reply(event.message_id)
-    chat_core = ChatCore(session_id)
+    chat_core = ChatCore(stranger_info.name_space.namespace)
     if RepeaterDebugMode:
-        await change_context_branch.finish(reply + f'[Chat.Change_Context_Branch|{session_id}|{nickname}]:{msg}')
+        await change_context_branch.finish(reply + f'[Chat.Change_Context_Branch|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')
     else:
         code, text = await chat_core.change_context_branch(msg)
 
-        await change_context_branch.finish(reply + f'====Chat.Change_Context_Branch====\n> {session_id}\n{text}\nHTTP Code: {code}')
+        await change_context_branch.finish(reply + f'====Chat.Change_Context_Branch====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}')

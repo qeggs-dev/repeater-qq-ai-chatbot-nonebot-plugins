@@ -11,7 +11,7 @@ from .core_config import RepeaterDebugMode
 
 get_session_id = on_command('getSessionId', aliases={'gs', 'get_session_id', 'Get_Session_Id', 'GetSessionId'}, rule=to_me(), block=True)
 
-from .assist_func import get_first_mentioned_user
+from .assist import get_first_mentioned_user
 
 @get_session_id.handle()
 async def handle_get_session_id(bot: Bot, event: MessageEvent, args: Message = CommandArg()):

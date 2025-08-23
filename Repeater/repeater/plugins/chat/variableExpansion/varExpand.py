@@ -5,33 +5,23 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from .core import ChatCore, RepeaterDebugMode, MAX_LENGTH
+from .core import ChatCore, RepeaterDebugMode
+from ..assist import StrangerInfo
 
 var_Expand = on_command("varExpand", aliases={"ve", "var_expand", "Var_Expand", "VarExpand"}, rule=to_me(), block=True)
 
 @var_Expand.handle()
 async def handle_var_expand(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
-    msg = args.extract_plain_text().strip()
-    reply = MessageSegment.reply(event.message_id) # 获取回复消息头
-    
-    try:
-        whatever, group_id, user_id = event.get_session_id().split('_')  # 获取当前群聊id，发起人id，返回的格式为group_groupid_userid
-        session_id = f"Group:{group_id}:{user_id}"
-        mode = "group"
-    except:  # 如果上面报错了，意味着发起的是私聊，返回格式为userid
-        group_id = None
-        user_id = event.get_session_id()
-        session_id = f"Private:{user_id}"
-        mode = "private"
-    result = await bot.get_stranger_info(user_id=user_id)
-    nickname = result['nickname']
+    stranger_info = StrangerInfo(bot=bot, event=event, args=args)
 
-    chat_core = ChatCore(session_id)
+    msg = args.extract_plain_text().strip()
+
+    chat_core = ChatCore(stranger_info.name_space.namespace)
     if RepeaterDebugMode:
-        await var_Expand.finish(reply + f'[Chat.Var_Expand|{session_id}|{nickname}]：{msg}')
+        await var_Expand.finish(stranger_info.reply + f'[Chat.Var_Expand|{chat_core.name_space}|{stranger_info.nickname}]：{msg}')
     else:
-        code, text = await chat_core.expand_variable(username=nickname, text=msg)
+        code, text = await chat_core.expand_variable(username=stranger_info.nickname, text=msg)
         if code == 200:
-            await var_Expand.finish(reply + text)
+            await var_Expand.finish(stranger_info.reply + text)
         else:
-            await var_Expand.finish(reply + f'====Chat.Var_Expand====\n> {session_id}\n{text}\nHTTP Code: {code}')
+            await var_Expand.finish(stranger_info.reply + f'====Chat.Var_Expand====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}')

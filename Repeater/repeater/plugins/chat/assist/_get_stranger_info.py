@@ -5,21 +5,21 @@ from ._assist_func import (
     handle_at_with_name,
     image_to_text
 )
+from ._namespace import MessageSource, Namespace
 
 class StrangerInfo:
     def __init__(self, bot: Bot, event: MessageEvent, args: Message | None = None):
         self.group_id: str | None = None
         self.user_id: str = event.user_id
         self.nickname: str = ""
-        self._mode: Literal["group", "private"] = "group"
+        self._mode: MessageSource = MessageSource.GROUP
         self._args: Message = args
-        self._reply = MessageSegment.reply(event.message_id)
         self._bot: Bot = bot
         self._message_event: MessageEvent = event
         
-        self._mode = event.message_type
+        self._mode = MessageSource(event.message_type.strip().lower())
 
-        if self._mode == "group":
+        if self._mode == MessageSource.GROUP:
             try:
                 self.group_id = event.model_dump()["group_id"]
                 if self.group_id is None:
@@ -38,17 +38,17 @@ class StrangerInfo:
 
     @property
     def name_space(self):
-        if self._mode == "group":
-            return f"Group:{self.group_id}:{self.user_id}"
+        if self._mode == MessageSource.GROUP:
+            return Namespace(
+                mode=MessageSource.GROUP,
+                group_id=self.group_id,
+                user_id=self.user_id
+            )
         else:
-            return f"Private:{self.user_id}"
-    
-    @property
-    def public_space_id(self):
-        if self._mode == "group":
-            return f"Group:{self.group_id}_Public_Space"
-        else:
-            return f"Private:{self.user_id}_Public_Space"
+            return Namespace(
+                mode=MessageSource.PRIVATE,
+                user_id=self.user_id
+            )
     
     @property
     def message(self) -> Message:
@@ -63,10 +63,10 @@ class StrangerInfo:
     
     @property
     def reply(self):
-        return self._reply
+        return MessageSegment.reply(self._message_event.message_id)
     
     @property
-    def mode(self) -> Literal['group', 'private']:
+    def mode(self) -> MessageSource:
         return self._mode
     
     @property
