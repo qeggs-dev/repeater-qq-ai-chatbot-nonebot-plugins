@@ -14,13 +14,16 @@ public_space_chat = on_command('publicSpaceChat', aliases={'psc', 'public_space_
 
 @public_space_chat.handle()
 async def handle_public_space_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
-        stranger_info = StrangerInfo(bot, event, args)
+    stranger_info = StrangerInfo(bot, event, args)
 
-        chat_core = ChatCore(stranger_info.name_space.public_space_id)
-        response = await chat_core.send_message(message=stranger_info.message_str.strip(), username=stranger_info.nickname)
-        await send_msg(
-            "Public_Space_Chat",
-            stranger_info,
-            public_space_chat,
-            response
-        )
+    # message = await stranger_info.image_to_text(format="==== OCR Vision Begin ====\n{text}\n===== OCR Vision end =====", excluded_tags={"[动画表情]"})
+    message = stranger_info.message
+
+    chat_core = ChatCore(stranger_info.name_space.public_space_id)
+    response = await chat_core.send_message(message=message.extract_plain_text().strip(), username=stranger_info.nickname)
+    await send_msg(
+        "Public_Space_Chat",
+        stranger_info,
+        public_space_chat,
+        response
+    )

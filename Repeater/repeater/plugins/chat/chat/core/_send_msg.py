@@ -14,7 +14,7 @@ async def send_msg(
     ):
     chat_core = ChatCore(stranger_info.name_space)
     if RepeaterDebugMode:
-        await matcher.finish(stranger_info._reply + f'[{id}|{stranger_info.name_space}|{stranger_info.nickname}]：{stranger_info.message}')
+        await matcher.finish(stranger_info.reply + f'[{id}|{stranger_info.name_space}|{stranger_info.nickname}]：{stranger_info.message}')
     else:
         message = Message()
         lines = response.content.split('\n')
@@ -29,6 +29,6 @@ async def send_msg(
                     message += MessageSegment.image(render_response.image_url)
             else:
                 message = response.content
-            await matcher.finish(stranger_info._reply + message)
+            await matcher.finish(stranger_info.reply + message)
         else:
-            await matcher.finish(stranger_info._reply + f"====Chat.{id}====\n> {stranger_info.name_space}\n{response}\nHTTP Code: {response['status_code']}")
+            await matcher.finish(stranger_info.reply + f"====Chat.{id}====\n> {stranger_info.name_space}\n{response}\nHTTP Code: {response['status_code']}")

@@ -1,6 +1,6 @@
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
 from nonebot.adapters import Bot
-from typing import Literal
+from typing import Literal, Container
 from ._assist_func import (
     handle_at_with_name,
     image_to_text
@@ -95,8 +95,32 @@ class StrangerInfo:
     async def handle_at_with_name(self):
         return await handle_at_with_name(self._bot, self._message_event)
     
-    async def image_to_text(self, format: str = "{text}", cite: bool = True) -> Message:
-        return await image_to_text(self._bot, self.message, format, cite)
+    async def image_to_text(self, format: str = "{text}", cite: bool = True, excluded_tags:Container[str] = {}) -> Message:
+        """将图片转换为文字"""
+        if "image" not in self.message:
+            return self.message
+        outmsg = Message()
+        for segment in self.message:
+            if segment.type == "image":
+                ocrout = await self._bot.ocr_image(image = segment.data["url"])
+                text = ""
+                tag = segment.data.get("summary", "")
+                for item in ocrout:
+                    text += item["text"] + "\n"
+                if text.endswith("\n"):
+                    text = text[:-1]
+                if tag not in excluded_tags:
+                    text = f"[Image tag:{tag}]\n{text}"
+                if text.strip():
+                    text = format.format(text = text)
+                    if cite:
+                        text = text.replace("\n", "\n> ")
+                    outmsg.append(MessageSegment(type = "text", data = {"text": text}))
+                else:
+                    outmsg.append(segment)
+            else:
+                outmsg.append(segment)
+        return outmsg
     
     @property
     def plaintext_message(self) -> str:

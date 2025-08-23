@@ -39,4 +39,4 @@ async def handle_set_frequency_penalty(bot: Bot, event: MessageEvent, args: Mess
     else:
         code, text = await chat_core.set_config("frequency_penalty", frequency_penalty)
 
-        await set_frequency_penalty.finish(reply + f'====Chat.Set_Frequency_Penalty====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}\n\nFrequency_Penalty: {frequency_penalty}')
+        await set_frequency_penalty.finish(reply + f'====Chat.Set_Frequency_Penalty====\n> {chat_core.name_space}\nHTTP Code: {code}\n\nFrequency_Penalty: {frequency_penalty}')

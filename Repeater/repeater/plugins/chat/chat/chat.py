@@ -15,20 +15,22 @@ smart_at: type[Matcher] = on_message(rule=to_me(), priority=100, block=True)
 
 @smart_at.handle()
 async def handle_smart_at(bot: Bot, event: MessageEvent):
-    
     stranger_info = StrangerInfo(bot, event)
+
+    # message = await stranger_info.image_to_text(format="==== OCR Vision Begin ====\n{text}\n===== OCR Vision end =====", excluded_tags={"[动画表情]"})
+    message = stranger_info.message
     
     if not stranger_info.message_str.strip():
         if stranger_info._mode == "group":
             await smart_at.finish(
-                stranger_info._reply + '复读机在线哦~ ο(=•ω＜=)ρ⌒☆'
+                stranger_info.reply + '复读机在线哦~ ο(=•ω＜=)ρ⌒☆'
             )
         else:
             return
     
     core = ChatCore(stranger_info.name_space.namespace)
 
-    response = await core.send_message(stranger_info.message_str.strip(), stranger_info.nickname)
+    response = await core.send_message(message.extract_plain_text().strip(), stranger_info.nickname)
 
     await send_msg(
         "Chat",
@@ -42,9 +44,11 @@ chat: Matcher = on_command('chat', aliases={'c', 'Chat'}, rule=to_me(), block=Tr
 async def handle_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot, event)
 
+    message = await stranger_info.image_to_text(format="==== OCR Vision Begin ====\n{text}\n===== OCR Vision end =====", excluded_tags={"[动画表情]"})
+
     core = ChatCore(stranger_info.name_space.namespace)
 
-    response = await core.send_message(stranger_info.message_str.strip(), stranger_info.nickname)
+    response = await core.send_message(message.extract_plain_text().strip(), stranger_info.nickname)
 
     await send_msg(
         "Chat",

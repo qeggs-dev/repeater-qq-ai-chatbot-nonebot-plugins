@@ -41,7 +41,7 @@ def get_first_mentioned_user(event: MessageEvent) -> Optional[str]:
                 return mentioned_id
     return None
 
-async def image_to_text(bot:Bot, message: Message, format: str = "{text}", cite: bool = True) -> Message:
+async def image_to_text(bot:Bot, message: Message, format: str = "{text}", cite: bool = True, ensure_empty_when_text_exists: bool = False) -> Message:
     """将图片转换为文字"""
     if "image" not in message:
         return message
@@ -56,7 +56,7 @@ async def image_to_text(bot:Bot, message: Message, format: str = "{text}", cite:
             if text.endswith("\n"):
                 text = text[:-1]
             text = format.format(text = text)
-            if text.strip():
+            if (ensure_empty_when_text_exists and message.extract_plain_text().strip()) or text.strip():
                 text = f"[Image tag:{summary}]\n{text}"
                 if cite:
                     text = text.replace("\n", "\n> ")

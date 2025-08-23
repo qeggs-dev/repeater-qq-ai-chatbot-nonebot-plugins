@@ -15,9 +15,12 @@ recomplete = on_command("recomplete", aliases={"rec", "Recomplete"}, rule=to_me(
 async def handle_recomplete(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot, event, args)
 
+    # message = await stranger_info.image_to_text(format="==== OCR Vision Begin ====\n{text}\n===== OCR Vision end =====", excluded_tags={"[动画表情]"})
+    message = stranger_info.message
+
     chat_core = ChatCore(stranger_info.name_space.namespace)
 
-    response = await chat_core.send_message(message=stranger_info.message_str.strip(), username=stranger_info.nickname)
+    response = await chat_core.send_message(message=message.extract_plain_text().strip(), username=stranger_info.nickname)
 
     await send_msg(
         "Recomplete",

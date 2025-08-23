@@ -36,4 +36,4 @@ async def handle_set_max_tokens(bot: Bot, event: MessageEvent, args: Message = C
     else:
         code, text = await chat_core.set_config("max_tokens", max_tokens)
 
-        await set_max_tokens.finish(reply + f'====Chat.Set_Max_Tokens====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}\n\nMax_Tokens: {max_tokens}')
+        await set_max_tokens.finish(reply + f'====Chat.Set_Max_Tokens====\n> {chat_core.name_space}\nHTTP Code: {code}\n\nMax_Tokens: {max_tokens}')

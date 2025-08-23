@@ -22,4 +22,4 @@ async def handle_change_default_personality(bot: Bot, event: MessageEvent, args:
     else:
         code, text = await chat_core.set_config("parset_prompt_name", msg)
 
-        await change_default_personality.finish(stranger_info.reply + f'====Chat.Set_Default_Personality====\n> {stranger_info.name_space}\n{text}\nHTTP Code: {code}')
+        await change_default_personality.finish(stranger_info.reply + f'====Chat.Set_Default_Personality====\n> {stranger_info.name_space}\nHTTP Code: {code}')

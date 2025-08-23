@@ -23,4 +23,4 @@ async def handle_set_render_style(bot: Bot, event: MessageEvent, args: Message =
     else:
         code, text = await chat_core.set_config("render_style", msg)
 
-        await set_render_style.finish(reply + f'====Chat.Set_Render_Style====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}\n\nRender_Style: {msg}')
+        await set_render_style.finish(reply + f'====Chat.Set_Render_Style====\n> {chat_core.name_space}\nHTTP Code: {code}\n\nRender_Style: {msg}')

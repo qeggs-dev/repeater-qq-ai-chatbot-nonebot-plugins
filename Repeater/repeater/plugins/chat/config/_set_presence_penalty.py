@@ -39,4 +39,4 @@ async def handle_set_presence_penalty(bot: Bot, event: MessageEvent, args: Messa
     else:
         code, text = await chat_core.set_config('presence_penalty', presence_penalty)
 
-        await set_presence_penalty.finish(reply + f'====Chat.Set_Presence_Penalty====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}\n\nPresence_Penalty: {presence_penalty}')
+        await set_presence_penalty.finish(reply + f'====Chat.Set_Presence_Penalty====\n> {chat_core.name_space}\nHTTP Code: {code}\n\nPresence_Penalty: {presence_penalty}')

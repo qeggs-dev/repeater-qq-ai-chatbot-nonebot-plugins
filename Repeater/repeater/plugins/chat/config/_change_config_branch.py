@@ -23,4 +23,4 @@ async def handle_change_config_branch(bot: Bot, event: MessageEvent, args: Messa
     else:
         code, text = await chat_core.set_config("new_branch_id", msg)
 
-        await change_config_branch.finish(reply + f'====Chat.Change_Config_Branch====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}')
+        await change_config_branch.finish(reply + f'====Chat.Change_Config_Branch====\n> {chat_core.name_space}\nHTTP Code: {code}')

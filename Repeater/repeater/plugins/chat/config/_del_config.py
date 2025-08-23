@@ -21,4 +21,4 @@ async def handle_del_config(bot: Bot, event: MessageEvent):
     else:
         code, text = await chat_core.delete_config()
 
-        await del_config.finish(reply + f'====Chat.Delete_Config====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}\n')
+        await del_config.finish(reply + f'====Chat.Delete_Config====\n> {chat_core.name_space}\nHTTP Code: {code}\n')

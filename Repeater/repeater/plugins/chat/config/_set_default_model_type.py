@@ -22,4 +22,4 @@ async def handle_set_default_model_type(bot: Bot, event: MessageEvent, args: Mes
     else:
         code, text = await chat_core.set_config("model_type", msg)
 
-        await set_default_model_type.finish(stranger_info.reply + f'====Chat.Set_Default_Model====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}\n\nDefault_Model: {text}')
+        await set_default_model_type.finish(stranger_info.reply + f'====Chat.Set_Default_Model====\n> {chat_core.name_space}\nHTTP Code: {code}\n\nDefault_Model: {text}')

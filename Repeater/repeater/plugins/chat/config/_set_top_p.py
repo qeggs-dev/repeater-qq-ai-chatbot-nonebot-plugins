@@ -39,4 +39,4 @@ async def handle_set_top_p(bot: Bot, event: MessageEvent, args: Message = Comman
     else:
         code, text = await chat_core.set_config("top_p", top_p)
 
-        await set_top_p.finish(reply + f'====Chat.Set_Top_P====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}\n\nTop_P: {top_p}')
+        await set_top_p.finish(reply + f'====Chat.Set_Top_P====\n> {chat_core.name_space}\nHTTP Code: {code}\n\nTop_P: {top_p}')

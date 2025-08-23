@@ -39,4 +39,4 @@ async def handle_set_temperature(bot: Bot, event: MessageEvent, args: Message = 
     else:
         code, text = await chat_core.set_config("temperature", temperature)
 
-        await set_temperature.finish(reply + f'====Chat.Set_Temperature====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}\n\nTemperature: {temperature}')
+        await set_temperature.finish(reply + f'====Chat.Set_Temperature====\n> {chat_core.name_space}\nHTTP Code: {code}\n\nTemperature: {temperature}')

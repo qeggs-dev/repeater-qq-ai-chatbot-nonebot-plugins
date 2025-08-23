@@ -13,10 +13,13 @@ renderChat = on_command('renderChat', aliases={'rc', 'render_chat', 'Render_Chat
 @renderChat.handle()
 async def handle_render_Chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot, event)
+
+    # message = await stranger_info.image_to_text(format="==== OCR Vision Begin ====\n{text}\n===== OCR Vision end =====", excluded_tags={"[动画表情]"})
+    message = stranger_info.message
     
     core = ChatCore(stranger_info.name_space.namespace)
 
-    response = await core.send_message(stranger_info.message_str.strip(), stranger_info.nickname)
+    response = await core.send_message(message.extract_plain_text().strip(), stranger_info.nickname)
 
     await send_msg(
         "Chat",
