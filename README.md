@@ -73,15 +73,6 @@
 
 ---
 
-## 人格预设
-
-| 预设 | 描述 |
-| :---: | :---: |
-| `default` | 默认 |
-| `sister` | 姐姐 |
-
----
-
 ## 模型
 
 | 模型 | 描述 |
@@ -89,14 +80,18 @@
 | `chat` | 聊天 |
 | `reasoner` | 推理 |
 | `coder` | 编码 |
-| `prover` | 证明 |
+| `deepseek-r1` | DeepSeek R1模型 |
+| `deepseek-v3` | DeepSeek V3模型 |
+| `kimi-k2` | Kimi K2模型 |
+
+PS: 使用`sdm`命令带着模型ID设置你需要的模型。
 
 ---
 
 ## 命令表
 
-| 命令                       | 别名    | 全名                      | 类型        | 功能描述                       | 参数描述                                   | 加入版本 | 命令版本 | 备注 |
-| :---                       | :---   | :---                      | :---:       | :---:                         | :---:                                     | :---:    | :---:    | :---: |
+| 命令                       | 别名    | 全名                      | 类型        | 功能描述                       | 参数描述                                   | 加入版本 | 命令版本          | 备注 |
+| :---                       | :---   | :---                      | :---:       | :---:                         | :---:                                     | :---:    | :---:            | :---: |
 | `chat`                     | `c`    | `Chat`                    | `CHAT`      | 与机器人对话                   | 自然语言输入                               | 4.0 Beta | 1.0              | 默认命令，可被`to_me`消息调起 |
 | `keepAnswering`            | `ka`   | `KeepAnswering`           | `CHAT`      | 持续对话(常规)                 | 无                                        | 4.0 Beta | 1.0              | 无须输入，AI再次回复 |
 | `keepReasoning`            | `kr`   | `KeepReasoning`           | `CHAT`      | 持续对话(推理)                 | 无                                        | 4.0 Beta | 1.0              | 无须输入，AI再次使用推理回复 |
@@ -113,6 +108,7 @@
 | `changeDefaultPersonality` | `cdp`  | `ChangeDefaultPersonality`| `CONFIG`    | 修改默认人格                   | [人格预设](#人格预设)                       | 4.0 Beta | 1.0             | 修改默认人格路由 |
 | `deletePrompt`             | `dp`   | `DeletePrompt`            | `PROMPT`    | 删除提示词                     | 无                                        | 4.0 Beta | 1.0             | 删除提示词 |
 | `deleteContext`            | `dc`   | `DeleteContext`           | `CONTEXT`   | 删除上下文                     | 无                                        | 4.0 Beta | 1.0             | 删除上下文 |
+| `deleteSession`            | `ds`   | `DeleteSession`           | `CONTEXT`   | 删除上下文(兼容的旧版命令)      | 无                                        | 4.0 Beta | 1.0             | 删除上下文(兼容旧版命令，与上条命令功能一致) |
 | `varExpand`                | `ve`   | `VarExpand`               | `VAREXPAND` | 变量展开                       | 文本模板(使用大括号作为[变量](#变量表)标记)  | 4.0 Beta | 1.0             | 变量展开 |
 | `setDefaultModel`          | `sdm`  | `SetDefaultModel`         | `CONFIG`    | 设置默认模型                   | [模型](#模型)                              | 4.0 Beta | 1.0             | 设置默认使用的模型 |
 | `setTopP`                  | `stp`  | `SetTopP`                 | `CONFIG`    | 设置Top_P参数                  | 0\~1的浮点数 或`0%`\~`100%`的百分比         | 4.0.1 Beta | 1.0           | 设置Top_P参数 |
@@ -125,4 +121,4 @@
 | `changePromptBranch`       | `cppb` | `ChangePromptBranch`      | `PROMPT`    | 切换提示词分支                 | 分支名称                                    | 4.1.2.0      | 1.0         | 切换提示词分支 |
 | `changeConfigBranch`       | `ccfgb`| `ChangeConfigBranch`      | `CONFIG`    | 切换配置分支                   | 分支名称                                    | 4.1.2.0      | 1.0         | 切换配置分支 |
 | `reference`                | `ref`  | `Reference`               | `CHAT`      | 引用上下文                     | 用户ID                                     | 4.1.2.0      | 1.0         | 引用其他用户的上下文并追加到当前上下文 |
-| `chooseGroupMember`        | `cgm`  | `ChooseGroupMember`       | `OTHER`     | 选择群组成员                   | 抽取数量                                    | 4.1.2.0      | 1.0         | 选择群组成员 |
+| `chooseGroupMember`        | `cgm`  | `ChooseGroupMember`       | `OTHER`     | 抽取群组成员                   | 抽取数量                                    | 4.1.2.0      | 1.0         | 抽取群组成员 |
