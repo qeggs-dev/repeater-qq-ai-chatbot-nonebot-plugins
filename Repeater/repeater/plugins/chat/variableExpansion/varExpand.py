@@ -20,7 +20,7 @@ async def handle_var_expand(bot: Bot, event: MessageEvent, args: Message = Comma
     if RepeaterDebugMode:
         await var_Expand.finish(stranger_info.reply + f'[Chat.Var_Expand|{chat_core.name_space}|{stranger_info.nickname}]：{msg}')
     else:
-        code, text = await chat_core.expand_variable(username=stranger_info.nickname, text=msg)
+        code, text = await chat_core.expand_variable(user_info=stranger_info, text=msg)
         if code == 200:
             await var_Expand.finish(stranger_info.reply + text)
         else:

@@ -9,28 +9,51 @@ from ._namespace import MessageSource, Namespace
 
 class StrangerInfo:
     def __init__(self, bot: Bot, event: MessageEvent, args: Message | None = None):
-        self.group_id: str | None = None
-        self.user_id: str = event.user_id
-        self.nickname: str = ""
-        self._mode: MessageSource = MessageSource.GROUP
-        self._args: Message = args
         self._bot: Bot = bot
         self._message_event: MessageEvent = event
+        self._args: Message = args
+        self._group_id: str | None = None
+        self._mode: MessageSource = MessageSource.GROUP
         
         self._mode = MessageSource(event.message_type.strip().lower())
 
         if self._mode == MessageSource.GROUP:
             try:
-                self.group_id = event.model_dump()["group_id"]
-                if self.group_id is None:
+                self._group_id = event.model_dump()["group_id"]
+                if self._group_id is None:
                     raise ValueError("Is Group, But Group ID is None")
             except KeyError:
                 raise ValueError("Is Group, But Group ID is Not Found")
-
-        if event.sender.card:
-            self.nickname = event.sender.card
+    
+    @property
+    def group_id(self) -> str | None:
+        return self._group_id
+    
+    @property
+    def user_id (self) -> str:
+        return self._message_event.user_id
+    @property
+    def nickname(self) -> str | None:
+        return self._message_event.sender.nickname
+    
+    @property
+    def card(self) -> str | None:
+        return self._message_event.sender.card
+    
+    @property
+    def display_name(self) -> str:
+        if self.card:
+            return self.card
         else:
-            self.nickname = event.sender.nickname
+            return self.nickname
+    
+    @property
+    def age(self) -> int | None:
+        return self._message_event.sender.age
+    
+    @property
+    def gender(self) -> str | None:
+        return self._message_event.sender.sex
     
     @property
     def bot(self):
@@ -41,7 +64,7 @@ class StrangerInfo:
         if self._mode == MessageSource.GROUP:
             return Namespace(
                 mode=MessageSource.GROUP,
-                group_id=self.group_id,
+                group_id=self._group_id,
                 user_id=self.user_id
             )
         else:

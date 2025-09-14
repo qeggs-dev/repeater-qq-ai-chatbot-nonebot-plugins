@@ -23,7 +23,7 @@ async def handle_reference(bot: Bot, event: MessageEvent, args: Message = Comman
     if not stranger_info.noself_at_list:
         await reference.finish("==== Reference ==== \n Please at a member to get reference.")
         
-    response = await chat_core.send_message(message=message.extract_plain_text().strip(), username=stranger_info.nickname, reference_context_id=stranger_info.noself_at_list[0])
+    response = await chat_core.send_message(message=message.extract_plain_text().strip(), user_info = stranger_info, reference_context_id=stranger_info.noself_at_list[0])
 
     await send_msg(
         "Reference",

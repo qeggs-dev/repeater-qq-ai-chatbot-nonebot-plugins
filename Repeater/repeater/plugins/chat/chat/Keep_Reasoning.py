@@ -17,7 +17,7 @@ async def handle_keep_reasoning(bot: Bot, event: MessageEvent):
 
     chat_core = ChatCore(stranger_info.name_space.namespace)
 
-    response = await chat_core.send_message(username=stranger_info.nickname, model_type="reasoning")
+    response = await chat_core.send_message(user_info = stranger_info, model_uid="reasoning")
     
     await send_msg(
         "Keep_Reasoning",

@@ -6,7 +6,12 @@ from typing import Optional
 user_cache = {}  # 缓存用户昵称
 
 async def handle_at_with_name(bot: Bot, event: MessageEvent) -> Message:
-    """处理@消息，将@的QQ号替换为昵称"""
+    """
+    处理@消息，将@的QQ号替换为昵称
+
+    :param bot: Bot对象
+    :param event: MessageEvent对象
+    """
     new_msg = Message()
     
     for seg in event.message:
@@ -28,7 +33,11 @@ async def handle_at_with_name(bot: Bot, event: MessageEvent) -> Message:
     return new_msg
 
 def get_first_mentioned_user(event: MessageEvent) -> Optional[str]:
-    """获取消息中第一个@的QQ号"""
+    """
+    获取消息中第一个@的QQ号
+
+    :param event: 消息事件对象
+    """
     # 获取机器人自己的QQ号
     bot_id = str(event.self_id)
     
@@ -42,7 +51,15 @@ def get_first_mentioned_user(event: MessageEvent) -> Optional[str]:
     return None
 
 async def image_to_text(bot:Bot, message: Message, format: str = "{text}", cite: bool = True, ensure_empty_when_text_exists: bool = False) -> Message:
-    """将图片转换为文字"""
+    """
+    将图片转换为文字
+
+    :param bot: 机器人实例
+    :param message: 消息对象
+    :param format: 转换后的格式，需要填写 {text} 占位符
+    :param cite: 是否引用原始消息
+    :param ensure_empty_when_text_exists: 如果没有识别出文字，且消息中有文本内容，是否返回以空识别结果输出
+    """
     if "image" not in message:
         return message
     outmsg = Message()

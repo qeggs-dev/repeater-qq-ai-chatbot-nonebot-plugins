@@ -7,6 +7,7 @@ from typing import (
 )
 
 from ..core_config import *
+from ..assist import StrangerInfo
 
 class ChatCore:
     _httpx_client = httpx.AsyncClient()
@@ -16,11 +17,16 @@ class ChatCore:
         self.name_space = name_space
     
     # region set note  
-    async def expand_variable(self, username: str, text: str):
+    async def expand_variable(self, user_info: StrangerInfo, text: str):
         response = await self._httpx_client.post(
             f'{self.url}/{VARIABLE_EXPANSION}/{self.name_space}',
-            data={
-                'username': username,
+            json={
+                'user_info':{
+                    'username': user_info.nickname,
+                    'nickname': user_info.display_name,
+                    'gender': user_info.gender,
+                    'age': user_info.age,
+                },
                 'text': text
             }
         )

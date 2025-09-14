@@ -10,6 +10,9 @@ from .prompt import *
 # === Config === #
 from .config import *
 
+# === More Interesting Tools === #
+from .more_interesting_tools import *
+
 # === UserDataFile === #
 from .userFile import (
     handle_send_user_data_file,

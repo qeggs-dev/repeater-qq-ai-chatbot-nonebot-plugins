@@ -17,7 +17,7 @@ async def handle_keep_answering(bot: Bot, event: MessageEvent):
 
     chat_core = ChatCore(stranger_info.name_space.namespace)
 
-    response = await chat_core.send_message(username=stranger_info.nickname)
+    response = await chat_core.send_message(user_info = stranger_info)
     
     await send_msg(
         "Keep_Answering",

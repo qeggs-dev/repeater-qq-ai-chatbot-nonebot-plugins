@@ -7,3 +7,4 @@ from ._core import (
 )
 from ._send_msg import send_msg
 from ._buffer_string_stream import BufferStringStream
+from ._response_body import ResponseBody

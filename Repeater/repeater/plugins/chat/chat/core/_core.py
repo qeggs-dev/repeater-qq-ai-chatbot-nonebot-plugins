@@ -7,8 +7,9 @@ from typing import (
 
 from nonebot import logger
 import httpx
-from ._response_body import ResponseBody, RendedImage
+from ._response_body import ResponseBody
 from ...exit_register import ExitRegister
+from ...assist import StrangerInfo, TextRender, RendedImage
 
 from ...core_config import *
 
@@ -18,15 +19,17 @@ class ChatCore:
     _chat_client = httpx.AsyncClient(timeout=600.0)
     _client = httpx.AsyncClient()
     
-    def __init__(self, session_id: str):
+    def __init__(self, namespace: str):
         self.url = f"{CHAT_API}:{CHAT_PORT}"
-        self.session_id = session_id
+        self.namespace = namespace
+        self._text_render = TextRender(namespace=namespace)
+    
     async def send_message(
         self,
         message: str,
-        username: str,
+        user_info: StrangerInfo,
         role_name: str | None = None,
-        model_type: str | None = None,
+        model_uid: str | None = None,
         load_prompt: bool = True,
         enable_md_prompt: bool = True,
         reference_context_id: str | None = None,
@@ -39,12 +42,12 @@ class ChatCore:
         :
         :return: AI返回的消息
         """
-        url = f"{self.url}/{CHAT_ROUTE}/{self.session_id}"
+        url = f"{self.url}/{CHAT_ROUTE}/{self.namespace}"
         data = self._prepare_request_body(
             message = message,
-            username = username,
+            user_info = user_info,
             role_name = role_name,
-            model_type = model_type,
+            model_uid = model_uid,
             load_prompt = load_prompt,
             enable_md_prompt = enable_md_prompt,
             reference_context_id = reference_context_id,
@@ -77,9 +80,9 @@ class ChatCore:
     async def send_stream_message(
         self,
         message: str,
-        username: str,
+        user_info: StrangerInfo,
         role_name: str | None = None,
-        model_type: str | None = None,
+        model_uid: str | None = None,
         load_prompt: bool = True,
         enable_md_prompt: bool = True,
         reference_context_id: str | None = None,
@@ -93,15 +96,16 @@ class ChatCore:
         :return: AI返回的消息
         """
         import json
-        url = f"{self.url}/{CHAT_ROUTE}/{self.session_id}"
+        url = f"{self.url}/{CHAT_ROUTE}/{self.namespace}"
         data = self._prepare_request_body(
             message = message,
-            username = username,
+            user_info = user_info,
             role_name = role_name,
-            model_type = model_type,
+            model_uid = model_uid,
             load_prompt = load_prompt,
             enable_md_prompt = enable_md_prompt,
             reference_context_id = reference_context_id,
+            stream = True,
         )
         async with self._chat_client.stream(
             method="POST",
@@ -119,24 +123,32 @@ class ChatCore:
     def _prepare_request_body(
         self,
         message: str,
-        username: str,
+        user_info: StrangerInfo,
         role_name: str | None = None,
-        model_type: str | None = None,
+        model_uid: str | None = None,
         load_prompt: bool = True,
         enable_md_prompt: bool = True,
         reference_context_id: str | None = None,
+        stream: bool = False,
     ):
         # 表单数据格式 (Form Data)
         data = {
-            "user_name": username,
+            "user_info": {
+                "username" : user_info.nickname,
+                "nickname" : user_info.display_name,
+                "age": user_info.age,
+                "gender": user_info.gender,
+            },
             "load_prompt": load_prompt,
         }
-        if model_type:
-            data['model_type'] = model_type
+        if model_uid:
+            data['model_uid'] = model_uid
         if role_name:
             data['role_name'] = role_name
         if reference_context_id:
             data['reference_context_id'] = reference_context_id
+        if stream:
+            data['stream'] = stream
         if message:
             MD_Rendering_Enables_Prompts = "\n> Markdown rendering is turned on!!"
             MD_Rendering_Enables_Prompts = MD_Rendering_Enables_Prompts if enable_md_prompt else ''
@@ -146,20 +158,8 @@ class ChatCore:
         return data
     
     async def text_render(self, text: str) -> RendedImage:
-        response = await self._client.post(
-            f'{self.url}/{TEXT_RENDER_ROUTE}/{self.session_id}',
-            data={'text': text}
-        )
-        response_json:dict = response.json()
-        return RendedImage(
-            status_code = response.status_code,
-            response_text = response.text,
-            image_url = response_json.get('image_url', ''),
-            style = response_json.get('style', ''),
-            timeout = response_json.get('timeout', 0),
-            created = response_json.get('created', 0),
-            created_ms = response_json.get('created_ms', 0),
-        )
+        return await self._text_render.render(text)
+    
     async def content_render(self, content: str, reasoning_content: str = "") -> RendedImage:
         text = ""
         if reasoning_content:
@@ -171,7 +171,7 @@ class ChatCore:
     async def inject_context(self, text: str, role: str):
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                f'{self.url}/{INJECT_CONTEXT_ROUTE}/{self.session_id}',
+                f'{self.url}/{INJECT_CONTEXT_ROUTE}/{self.namespace}',
                 data={
                     'text': text,
                     'role': role

@@ -19,12 +19,12 @@ async def handle_render_Chat(bot: Bot, event: MessageEvent, args: Message = Comm
     
     core = ChatCore(stranger_info.name_space.namespace)
 
-    response = await core.send_message(message.extract_plain_text().strip(), stranger_info.nickname)
+    response = await core.send_message(message.extract_plain_text().strip(), user_info = stranger_info)
 
     await send_msg(
         "Chat",
         stranger_info,
         renderChat,
         response,
-        must_image=True
+        must = "image"
     )

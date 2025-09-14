@@ -56,8 +56,8 @@ BALANCE_ROUTE = "balance_query"
 VARIABLE_EXPANSION = "userdata/variable/expand"
 
 # ==== CONFIG ==== #
-MAX_LENGTH = 200
-MAX_SINGLE_LINE_LENGTH = 10
+MAX_LENGTH = 400
+MAX_SINGLE_LINE_LENGTH = 64
 MIN_RENDER_IMAGE_TEXT_LINE = 5
 RepeaterDebugMode = False # 是否开启调试模式，调试模式下，将直接返回消息内容，而不进行后端访问操作
 

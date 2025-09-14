@@ -20,6 +20,6 @@ async def handle_set_default_model_type(bot: Bot, event: MessageEvent, args: Mes
     if RepeaterDebugMode:
         await set_default_model_type.finish(stranger_info.reply + f'[Chat.Set_Default_Model|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')
     else:
-        code, text = await chat_core.set_config("model_type", msg)
+        code, text = await chat_core.set_config("model_uid", msg)
 
         await set_default_model_type.finish(stranger_info.reply + f'====Chat.Set_Default_Model====\n> {chat_core.name_space}\nHTTP Code: {code}\n\nDefault_Model: {text}')

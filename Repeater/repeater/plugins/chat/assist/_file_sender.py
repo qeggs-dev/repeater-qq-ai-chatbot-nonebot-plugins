@@ -7,7 +7,7 @@ class FileSender:
     async def send_file(self, url: str, file_name: str):
         if self.stranger_info._mode == "group":
             data = {
-                "group_id": self.stranger_info.group_id,
+                "group_id": self.stranger_info._group_id,
                 "file": url,
                 "name": file_name,
                 "folder_id": None

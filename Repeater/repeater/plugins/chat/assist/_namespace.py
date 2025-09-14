@@ -16,9 +16,9 @@ class Namespace:
         if self.mode == MessageSource.GROUP:
             if self.group_id is None:
                 raise ValueError("group_id cannot be None when mode is GROUP")
-            return f"{self.mode.value}:{self.group_id}:{self.user_id}"
+            return f"Group:{self.group_id}:{self.user_id}"
         else:
-            return f"{self.mode.value}:{self.user_id}"
+            return f"Private:{self.user_id}"
     
     @property
     def public_space_id(self):
