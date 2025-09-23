@@ -5,11 +5,10 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from .core import ChatCore, RepeaterDebugMode
+from ._core import ChatCore, RepeaterDebugMode
 from ..assist import StrangerInfo
 
 withdraw = on_command('withdraw', aliases={'w', 'Withdraw'}, rule=to_me(), block=True)
-
 
 @withdraw.handle()
 async def handle_withdraw(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
@@ -21,6 +20,15 @@ async def handle_withdraw(bot: Bot, event: MessageEvent, args: Message = Command
     if RepeaterDebugMode:
         await withdraw.finish(stranger_info.reply + f'[Chat.Withdraw|{chat_core.name_space}|{stranger_info.nickname}]')
     else:
-        response_code, response_text = await chat_core.withdraw()
+        response = await chat_core.withdraw()
 
-        await withdraw.finish(stranger_info.reply + f'====Chat.Withdraw====\n> {chat_core.name_space}\n{response_text}\nHTTP Code: {response_code}')
+        if response.status_code == 200:
+            await withdraw.finish(
+                stranger_info.reply + f"====Chat.Withdraw====\n"
+                f"> {chat_core.name_space}\n"
+                f"Deleted: {response.response_body.deleted}\n"
+                f"Remaining: {len(response.response_body.context)}\n"
+                f"HTTP Code: {response.status_code}"
+            )
+        else:
+            await withdraw.finish(stranger_info.reply + f'====Chat.Withdraw====\n> {chat_core.name_space}\nHTTP Code: {response.status_code}')

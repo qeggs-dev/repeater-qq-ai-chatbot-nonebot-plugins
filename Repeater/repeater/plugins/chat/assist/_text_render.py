@@ -17,7 +17,7 @@ class TextRender:
 
     async def render(self, text: str) -> RendedImage:
         response = await self._client.post(
-            f'{self.url}/{TEXT_RENDER_ROUTE}/{self.namespce}',
+            f'{TEXT_RENDER_ROUTE}/{self.namespce}',
             data={'text': text}
         )
         response_json:dict = response.json()

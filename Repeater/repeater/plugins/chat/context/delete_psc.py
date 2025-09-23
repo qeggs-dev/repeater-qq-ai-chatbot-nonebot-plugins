@@ -5,7 +5,7 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from .core import ChatCore, RepeaterDebugMode
+from ._core import ChatCore, RepeaterDebugMode
 from ..assist import StrangerInfo
 
 delete_public_space_context = on_command('deletePublicSpaceContext', aliases={'dpsc', 'delete_public_space_context', 'Delete_Public_Space_Context', 'DeletePublicSpaceContext'}, rule=to_me(), block=True)

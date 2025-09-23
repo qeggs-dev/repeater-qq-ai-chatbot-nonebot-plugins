@@ -1,3 +1,4 @@
+from typing import Generic, TypeVar
 from dataclasses import dataclass, asdict
 
 @dataclass
@@ -13,3 +14,11 @@ class RendedImage:
     @property
     def as_dict(self):
         return asdict(self)
+
+T_Response = TypeVar("T_Response")
+
+@dataclass
+class Response(Generic[T_Response]):
+    status_code: int = 0
+    response_text: str = ""
+    response_body: T_Response | None = None

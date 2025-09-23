@@ -6,7 +6,12 @@ from typing import (
     Union
 )
 
-from ..core_config import *
+from ...core_config import *
+from ._response import (
+    Response,
+    WithdrawResponse,
+    ContextTotalLengthResponse
+)
 
 class ChatCore:
     _httpx_client = httpx.AsyncClient()
@@ -31,7 +36,13 @@ class ChatCore:
         response = await self._httpx_client.post(
             f'{WIHTDRAW_CONTEXT_ROUTE}/{self.name_space}'
         )
-        return response.status_code, response.text
+        return Response(
+            status_code = response.status_code,
+            response_text = response.text,
+            response_body = WithdrawResponse(
+                **response.json()
+            )
+        )
     # endregion
     # region change subsession    
     async def change_context_branch(self, new_branch_id: str):
@@ -62,4 +73,10 @@ class ChatCore:
         response = await self._httpx_client.get(
             f'{GET_CONTEXT_LENGTH_ROUTE}/{self.name_space}'
         )
-        return response.status_code, response.json()
+        return Response(
+            status_code = response.status_code,
+            response_text = response.text,
+            response_body = ContextTotalLengthResponse(
+                **response.json()
+            )
+        )

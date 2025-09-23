@@ -5,7 +5,7 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from .core import ChatCore, RepeaterDebugMode
+from ._core import ChatCore, RepeaterDebugMode
 from ..assist import StrangerInfo
 
 delcontext = on_command('deleteContext', aliases={'dc', 'delete_context', 'Delete_Context', 'DeleteContext'}, rule=to_me(), block=True)

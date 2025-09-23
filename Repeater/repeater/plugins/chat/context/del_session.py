@@ -5,7 +5,7 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from .core import ChatCore, RepeaterDebugMode
+from ._core import ChatCore, RepeaterDebugMode
 
 delsession = on_command('delSession', aliases={'ds', 'delete_session', 'Delete_Session', 'DeleteSession'}, rule=to_me(), block=True)
 

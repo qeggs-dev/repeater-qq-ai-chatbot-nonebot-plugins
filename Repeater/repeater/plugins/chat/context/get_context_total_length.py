@@ -5,7 +5,7 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from .core import ChatCore, RepeaterDebugMode
+from ._core import ChatCore, RepeaterDebugMode
 from ..assist import StrangerInfo
 
 get_context_total_length = on_command('getContextTotalLength', aliases={'gctl', 'get_context_total_length', 'Get_Context_Total_Length', 'GetContextTotalLength'}, rule=to_me(), block=True)
@@ -19,6 +19,16 @@ async def handle_total_context_length(bot: Bot, event: MessageEvent, args: Messa
     if RepeaterDebugMode:
         await get_context_total_length.finish(reply + f'[Chat.Get_Context_Total_Length|{chat_core.name_space}|{stranger_info.nickname}]')
     else:
-        code, body = await chat_core.get_context_total_length()
+        response = await chat_core.get_context_total_length()
 
-        await get_context_total_length.finish(reply + f'====Chat.Get_Context_Total_Length====\n> {chat_core.name_space}\nlength:{body.get("context_length", "0")}\ntotal_text_length:{body.get("total_context_length", "0")}\nHTTP Code: {code}')
+        if response.status_code == 200:
+            await get_context_total_length.finish(
+                reply + f"====Chat.Get_Context_Total_Length====\n"
+                f"> {chat_core.name_space}\n"
+                f"length: {response.response_body.context_length}\n"
+                f"total_text_length: {response.response_body.total_context_length}\n"
+                f"average_content_length: {response.response_body.average_content_length}\n"
+                f"HTTP Code: {response.status_code}"
+            )
+        else:
+            await get_context_total_length.finish(reply + f'====Chat.Get_Context_Total_Length====\n> {chat_core.name_space}\nHTTP Code: {response.status_code}')

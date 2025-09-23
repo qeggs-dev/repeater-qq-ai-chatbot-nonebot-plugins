@@ -5,7 +5,7 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from .core import ChatCore, RepeaterDebugMode
+from ._core import ChatCore, RepeaterDebugMode
 from ..assist import StrangerInfo
 
 change_context_branch = on_command('changeContextBranch', aliases={'ccb', 'change_context_branch', 'Change_Context_Branch', 'ChangeContextBranch'}, rule=to_me(), block=True)

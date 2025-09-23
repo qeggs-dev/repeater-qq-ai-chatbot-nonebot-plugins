@@ -7,9 +7,9 @@ from typing import (
 
 from nonebot import logger
 import httpx
-from ._response_body import ResponseBody
+from ._response_body import ChatResponse, StreamChatChunkResponse
 from ...exit_register import ExitRegister
-from ...assist import StrangerInfo, TextRender, RendedImage
+from ...assist import StrangerInfo, TextRender, RendedImage, Response
 
 from ...core_config import *
 
@@ -32,7 +32,7 @@ class ChatCore:
         load_prompt: bool = True,
         enable_md_prompt: bool = True,
         reference_context_id: str | None = None,
-    ) -> ResponseBody:
+    ):
         """
         发送消息到AI后端
         
@@ -61,19 +61,17 @@ class ChatCore:
             try:
                 result:dict = response.json()
             except json.JSONDecodeError:
-                return ResponseBody(
+                return Response(
                     status_code = response.status_code,
                     response_text = response.text,
-                    reasoning = "",
-                    context = "",
+                    response_body = ChatResponse()
                 )
-            reasoning = result.get('reasoning_content', '')
-            content = result.get('content', '')
-        return ResponseBody(
+        return Response(
             status_code = response.status_code,
             response_text = response.text,
-            reasoning_content = reasoning,
-            content = content,
+            response_body = ChatResponse(
+                **result
+            )
         )
     
     async def send_stream_message(
@@ -117,7 +115,7 @@ class ChatCore:
                 if not line.strip():
                     continue
 
-                yield json.loads(line)
+                yield StreamChatChunkResponse(**json.loads(line))
     
     def _prepare_request_body(
         self,
@@ -166,17 +164,6 @@ class ChatCore:
         text += content
 
         return await self.text_render(text)
-        
-    async def inject_context(self, text: str, role: str):
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
-                f'{INJECT_CONTEXT_ROUTE}/{self.namespace}',
-                data={
-                    'text': text,
-                    'role': role
-                }
-            )
-        return response.status_code, response.text
     
     exit_register.register()
     async def close(self):
