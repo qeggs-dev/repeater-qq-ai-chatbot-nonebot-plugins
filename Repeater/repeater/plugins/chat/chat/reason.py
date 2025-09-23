@@ -19,7 +19,7 @@ async def reason_handle(bot: Bot, event: MessageEvent, args: Message = CommandAr
     message = stranger_info.message
 
     chat_core = ChatCore(stranger_info.name_space.namespace)
-    response = await chat_core.send_message(message=message.extract_plain_text().strip(), user_info = stranger_info, model_uid="reasoner")
+    response = await chat_core.send_message(message=message.extract_plain_text().strip(), user_info = stranger_info, model_uid="deepseek-reasoner")
     await send_msg(
         "Reason",
         stranger_info,

@@ -17,7 +17,6 @@ class ChatCore:
     _httpx_client = httpx.AsyncClient()
 
     def __init__(self, namespace: str):
-        self.url = f"{CHAT_API}:{CHAT_PORT}"
         self.name_space = namespace
     
     # region set config
@@ -39,7 +38,7 @@ class ChatCore:
             if item_type not in TYPES:
                 raise ValueError(f"Unsupported type: {item_type}")
         response = await self._httpx_client.put(
-            f'{self.url}/{SET_CONFIG_ROUTE}/{self.name_space}/{item_type}',
+            f'{SET_CONFIG_ROUTE}/{self.name_space}/{item_type}',
             data={
                 'key': config_key,
                 'value': value
@@ -58,7 +57,7 @@ class ChatCore:
     # region get config
     async def get_config(self, config_key: str):
         response = await self._httpx_client.get(
-            f'{self.url}/{GET_CONFIG_ROUTE}/{self.name_space}'
+            f'{GET_CONFIG_ROUTE}/{self.name_space}'
         )
         if response.status_code == 200:
             return response.json().get(config_key, None)
@@ -69,14 +68,14 @@ class ChatCore:
     # region remove config key
     async def remove_config_key(self, config_key: str):
         response = await self._httpx_client.delete(
-            f'{self.url}/{REMOVE_CONFIG_KEY_ROUTE}/{self.name_space}/{config_key}'
+            f'{REMOVE_CONFIG_KEY_ROUTE}/{self.name_space}/{config_key}'
         )
         return response.status_code, response.text
 
     # region delete
     async def delete_config(self):
         response = await self._httpx_client.delete(
-            f'{self.url}/{DELETE_CONFIG_ROUTE}/{self.name_space}'
+            f'{DELETE_CONFIG_ROUTE}/{self.name_space}'
         )
         return response.status_code, response.text
     # endregion
@@ -94,7 +93,7 @@ class ChatCore:
             data['to_subsession_id'] = to_subsession_id
         
         response = await self._httpx_client.post(
-            f'{self.url}/{CLONE_CONFIG_ROUTE}',
+            f'{CLONE_CONFIG_ROUTE}',
             data=data
         )
         return response.status_code, response.text

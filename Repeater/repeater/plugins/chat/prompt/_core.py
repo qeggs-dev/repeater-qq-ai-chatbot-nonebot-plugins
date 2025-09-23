@@ -12,13 +12,12 @@ class ChatCore:
     _httpx_client = httpx.AsyncClient()
 
     def __init__(self, name_space: str):
-        self.url = f"{CHAT_API}:{CHAT_PORT}"
         self.name_space = name_space
     
     # region set prompt  
     async def set_prompt(self, prompt: str):
         response = await self._httpx_client.post(
-            f'{self.url}/{SET_PROMPT_ROUTE}/{self.name_space}',
+            f'{SET_PROMPT_ROUTE}/{self.name_space}',
             data={
                 'prompt': prompt
             }
@@ -29,13 +28,13 @@ class ChatCore:
     # region delete
     async def delete_prompt(self):
         response = await self._httpx_client.delete(
-            f'{self.url}/{DELETE_PROMPT_ROUTE}/{self.name_space}'
+            f'{DELETE_PROMPT_ROUTE}/{self.name_space}'
         )
         return response.status_code, response.text
     
     async def delete_subprompt(self):
         response = await self._httpx_client.delete(
-            f'{self.url}/{DELETE_SUBSESSION_PROMPT_ROUTE}',
+            f'{DELETE_SUBSESSION_PROMPT_ROUTE}',
             params={'session_id': self.name_space}
         )
         return response.status_code, response.text
@@ -44,7 +43,7 @@ class ChatCore:
     # region change subsession
     async def change_prompt_branch(self, new_branch_id: str):
         response = await self._httpx_client.put(
-            f'{self.url}/{CHANGE_PROMPT_BRANCH_ROUTE}/{self.name_space}',
+            f'{CHANGE_PROMPT_BRANCH_ROUTE}/{self.name_space}',
             params={
                 'new_branch_id': new_branch_id
             }
@@ -65,7 +64,7 @@ class ChatCore:
             data['to_subsession_id'] = to_subsession_id
 
         response = await self._httpx_client.post(
-            f'{self.url}/{CLONE_PROMPT_ROUTE}',
+            f'{CLONE_PROMPT_ROUTE}',
             data=data
         )
         return response.status_code, response.text

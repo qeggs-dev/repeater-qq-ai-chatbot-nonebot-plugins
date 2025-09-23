@@ -19,11 +19,11 @@ async def send_msg(
     if RepeaterDebugMode:
         await matcher.finish(stranger_info.reply + f'[{id}|{stranger_info.name_space}|{stranger_info.nickname}]：{stranger_info.message}')
     else:
-        message = Message()
-        lines = response.content.splitlines()
-        max_line_length = max([len(line) for line in lines]) if lines else 0
-        logger.debug(f"Response content has {len(lines)} lines, max line length is {max_line_length}.")
         if response.status_code == 200:
+            message = Message()
+            lines = response.content.splitlines()
+            max_line_length = max([len(line) for line in lines]) if lines else 0
+            logger.debug(f"Response content has {len(lines)} lines, max line length is {max_line_length}.")
             if response.reasoning_content:
                 render_response = await chat_core.text_render(response.reasoning_content)
                 message.append(MessageSegment.image(render_response.image_url))
@@ -47,4 +47,4 @@ async def send_msg(
         
             await matcher.finish(stranger_info.reply + message)
         else:
-            await matcher.finish(stranger_info.reply + f"====Chat.{id}====\n> {stranger_info.name_space}\n{response}\nHTTP Code: {response['status_code']}")
+            await matcher.finish(stranger_info.reply + f"====Chat.{id}====\n> {stranger_info.name_space}\n{response}\nHTTP Code: {response.status_code}")

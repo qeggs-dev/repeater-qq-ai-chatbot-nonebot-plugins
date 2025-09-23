@@ -13,13 +13,12 @@ class ChatCore:
     _httpx_client = httpx.AsyncClient()
 
     def __init__(self, name_space: str):
-        self.url = f"{CHAT_API}:{CHAT_PORT}"
         self.name_space = name_space
     
     # region set note  
     async def expand_variable(self, user_info: StrangerInfo, text: str):
         response = await self._httpx_client.post(
-            f'{self.url}/{VARIABLE_EXPANSION}/{self.name_space}',
+            f'{VARIABLE_EXPANSION}/{self.name_space}',
             json={
                 'user_info':{
                     'username': user_info.nickname,

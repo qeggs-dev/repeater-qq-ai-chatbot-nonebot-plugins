@@ -20,7 +20,6 @@ class ChatCore:
     _client = httpx.AsyncClient()
     
     def __init__(self, namespace: str):
-        self.url = f"{CHAT_API}:{CHAT_PORT}"
         self.namespace = namespace
         self._text_render = TextRender(namespace=namespace)
     
@@ -42,7 +41,7 @@ class ChatCore:
         :
         :return: AI返回的消息
         """
-        url = f"{self.url}/{CHAT_ROUTE}/{self.namespace}"
+        url = f"{CHAT_ROUTE}/{self.namespace}"
         data = self._prepare_request_body(
             message = message,
             user_info = user_info,
@@ -96,7 +95,7 @@ class ChatCore:
         :return: AI返回的消息
         """
         import json
-        url = f"{self.url}/{CHAT_ROUTE}/{self.namespace}"
+        url = f"{CHAT_ROUTE}/{self.namespace}"
         data = self._prepare_request_body(
             message = message,
             user_info = user_info,
@@ -171,7 +170,7 @@ class ChatCore:
     async def inject_context(self, text: str, role: str):
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                f'{self.url}/{INJECT_CONTEXT_ROUTE}/{self.namespace}',
+                f'{INJECT_CONTEXT_ROUTE}/{self.namespace}',
                 data={
                     'text': text,
                     'role': role
