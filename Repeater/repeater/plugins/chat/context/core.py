@@ -56,13 +56,6 @@ class ChatCore:
             f'{DELETE_CONTEXT_ROUTE}/{self.name_space}'
         )
         return response.status_code, response.text
-        
-    async def delete_subsession(self):
-        response = await self._httpx_client.delete(
-            f'{DELETE_SUBSESSION_ROUTE}',
-            params={'session_id': self.name_space}
-        )
-        return response.status_code, response.text
     # endregion
     
     async def get_context_total_length(self):
@@ -70,27 +63,3 @@ class ChatCore:
             f'{GET_CONTEXT_LENGTH_ROUTE}/{self.name_space}'
         )
         return response.status_code, response.json()
-    
-    # region clone
-    async def clone_session(self, from_session_id:str, to_subsession_id:Optional[str] = None, from_sub_session_id:Optional[str] = None, auto_set_default:bool = True):
-        data = {
-            'from_session_id': from_session_id,
-            'to_session_id': self.name_space,
-            'auto_set_default': True
-        }
-        if from_sub_session_id:
-            data['from_subsession_id'] = from_sub_session_id
-        if to_subsession_id:
-            data['to_subsession_id'] = to_subsession_id
-        
-        response = await self._httpx_client.post(
-            f'{CLONE_SESSION_ROUTE}',
-            data=data
-        )
-        return response.status_code, response.text
-    # endregion
-    
-    # region get_utl
-    async def get_session_file_url(self):
-        return f'{DOWNLOAD_CONTEXT_ROUTE}/{self.name_space}.zip'
-    # endregion
