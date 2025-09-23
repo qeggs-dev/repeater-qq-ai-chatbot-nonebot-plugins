@@ -14,7 +14,7 @@ seed_readme_file = on_command('sendReadmeFile', aliases={'srf', 'send_readme_fil
 async def handle_send_readme_file(bot: Bot, event: MessageEvent):
     stranger_info = StrangerInfo(bot=bot, event=event)
 
-    sfurl = f'{CHAT_API}:{CHAT_PORT}/{HTML_README_FILE_ROUTE}'
+    sfurl = f'{HTML_README_FILE_ROUTE}'
     if RepeaterDebugMode:
         await seed_readme_file.finish(stranger_info.reply + f'[Chat.Send_Readme_File|{stranger_info.name_space.namespace}:{sfurl}]')
     else:
