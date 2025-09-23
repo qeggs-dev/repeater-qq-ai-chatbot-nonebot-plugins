@@ -26,8 +26,10 @@ class StrangerInfo:
                 raise ValueError("Is Group, But Group ID is Not Found")
     
     @property
-    def group_id(self) -> str | None:
-        return self._group_id
+    def group_id(self) -> int | None:
+        if self._group_id is None:
+            return None
+        return int(self._group_id)
     
     @property
     def user_id (self) -> str:
