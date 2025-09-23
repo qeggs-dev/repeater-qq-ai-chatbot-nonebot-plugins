@@ -131,3 +131,4 @@ PS: 使用`sdm`命令带着模型ID设置你需要的模型。
 | `changeConfigBranch`       | `ccfgb`| `ChangeConfigBranch`      | `CONFIG`    | 切换配置分支                   | 分支名称                                    | 4.1.2.0      | 1.0         | 切换配置分支 |
 | `reference`                | `ref`  | `Reference`               | `CHAT`      | 引用上下文                     | 用户ID                                     | 4.1.2.0      | 1.0         | 引用其他用户的上下文并追加到当前上下文 |
 | `chooseGroupMember`        | `cgm`  | `ChooseGroupMember`       | `OTHER`     | 抽取群组成员                   | 抽取数量                                    | 4.1.2.0      | 1.0         | 抽取群组成员 |
+| `withdraw`                 | `w`    | `Withdraw`                | `CONTEXT`   | 撤回消息                       | 无                                         | 4.2.3.0      | 1.0         | 删除复读机上下文中保存的最新一回合对话 |

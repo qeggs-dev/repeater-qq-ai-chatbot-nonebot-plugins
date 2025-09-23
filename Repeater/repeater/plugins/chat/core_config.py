@@ -10,7 +10,7 @@ NPCHAT_ROUTE = f"{CHAT_API}:{CHAT_PORT}/chat/completion/noprompt"
 DELETE_CONTEXT_ROUTE = f"{CHAT_API}:{CHAT_PORT}/userdata/context/delete"
 GET_CONTEXT_LENGTH_ROUTE = f"{CHAT_API}:{CHAT_PORT}/userdata/context/length"
 INJECT_CONTEXT_ROUTE = f"{CHAT_API}:{CHAT_PORT}/session/inject"
-WIHTDRAW_CONTEXT_ROUTE = f"{CHAT_API}:{CHAT_PORT}/session/withdraw"
+WIHTDRAW_CONTEXT_ROUTE = f"{CHAT_API}:{CHAT_PORT}/userdata/context/withdraw"
 CHANGE_CONTEXT_BRANCH_ROUTE = f"{CHAT_API}:{CHAT_PORT}/userdata/context/change"
 
 # ==== PROMPT API ==== #

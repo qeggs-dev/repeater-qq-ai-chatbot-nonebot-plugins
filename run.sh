@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "\033]2;Repeater\007"
+
 PROJECT_DIR="Repeater"
 
 while [[ "$#" -gt 0 ]]; do
