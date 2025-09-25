@@ -7,7 +7,7 @@ class TextRender:
     _client = httpx.AsyncClient()
 
     def __init__(self, namespace: str | Namespace):
-        self.url = f"{CHAT_API}:{CHAT_PORT}"
+        self.url = f"{BACKEND_HOST}:{BACKEND_PORT}"
         if isinstance(namespace, str):
             self.namespce = namespace
         elif isinstance(namespace, Namespace):
