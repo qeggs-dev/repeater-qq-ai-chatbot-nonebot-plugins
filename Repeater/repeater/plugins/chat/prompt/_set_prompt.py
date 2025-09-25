@@ -20,8 +20,8 @@ async def handle_setprompt(bot: Bot, event: MessageEvent, args: Message = Comman
     reply = MessageSegment.reply(event.message_id)
     chat_core = ChatCore(stranger_info.name_space.namespace)
     if RepeaterDebugMode:
-        await setprompt.finish(reply + f'[Chat.Set_Prompt|{chat_core.name_space}]')
+        await setprompt.finish(reply + f'[Prompt.Set_Prompt|{chat_core.name_space}]')
     else:
         code, text = await chat_core.set_prompt(msg)
 
-        await setprompt.finish(reply + f'====Chat.Set_Prompt====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}')
+        await setprompt.finish(reply + f'====Prompt.Set_Prompt====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}')

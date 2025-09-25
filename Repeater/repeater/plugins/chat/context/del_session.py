@@ -25,8 +25,8 @@ async def handle_delete_session(bot: Bot, event: MessageEvent, args: Message = C
     reply = MessageSegment.reply(event.message_id)
     chat_core = ChatCore(session_id)
     if RepeaterDebugMode:
-        await delsession.finish(reply + f'[Chat.Delete_Session|{session_id}|{nickname}]')
+        await delsession.finish(reply + f'[Context.Delete_Session|{session_id}|{nickname}]')
     else:
         code, text = await chat_core.delete_session()
 
-        await delsession.finish(reply + f'====Chat.Delete_Session====\n> {session_id}\n{text}\nHTTP Code: {code}')
+        await delsession.finish(reply + f'====Context.Delete_Session====\n> {session_id}\n{text}\nHTTP Code: {code}')

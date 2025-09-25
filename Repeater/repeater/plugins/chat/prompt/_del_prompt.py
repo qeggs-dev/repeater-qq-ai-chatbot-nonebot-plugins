@@ -20,8 +20,8 @@ async def handle_delete_prompt(bot: Bot, event: MessageEvent, args: Message = Co
     reply = MessageSegment.reply(event.message_id)
     chat_core = ChatCore(stranger_info.name_space.namespace)
     if RepeaterDebugMode:
-        await delprompt.finish(reply + f'[Chat.Delete_Prompt|{chat_core.name_space}|{stranger_info.nickname}]')
+        await delprompt.finish(reply + f'[Prompt.Delete_Prompt|{chat_core.name_space}|{stranger_info.nickname}]')
     else:
         code, text = await chat_core.delete_prompt()
 
-        await delprompt.finish(reply + f'====Chat.Delete_Prompt====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}')
+        await delprompt.finish(reply + f'====Prompt.Delete_Prompt====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}')

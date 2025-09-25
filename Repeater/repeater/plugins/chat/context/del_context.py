@@ -17,8 +17,8 @@ async def handle_delete_context(bot: Bot, event: MessageEvent, args: Message = C
     reply = MessageSegment.reply(event.message_id)
     chat_core = ChatCore(stranger_info.name_space.namespace)
     if RepeaterDebugMode:
-        await delcontext.finish(reply + f'[Chat.Delete_Context|{chat_core.name_space}|{stranger_info.nickname}]')
+        await delcontext.finish(reply + f'[Context.Delete_Context|{chat_core.name_space}|{stranger_info.nickname}]')
     else:
         code, text = await chat_core.delete_context()
 
-        await delcontext.finish(reply + f'====Chat.Delete_Context====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}')
+        await delcontext.finish(reply + f'====Context.Delete_Context====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}')

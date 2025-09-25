@@ -17,13 +17,13 @@ async def handle_total_context_length(bot: Bot, event: MessageEvent, args: Messa
     reply = MessageSegment.reply(event.message_id)
     chat_core = ChatCore(stranger_info.name_space.namespace)
     if RepeaterDebugMode:
-        await get_context_total_length.finish(reply + f'[Chat.Get_Context_Total_Length|{chat_core.name_space}|{stranger_info.nickname}]')
+        await get_context_total_length.finish(reply + f'[Context.Get_Context_Total_Length|{chat_core.name_space}|{stranger_info.nickname}]')
     else:
         response = await chat_core.get_context_total_length()
 
         if response.status_code == 200:
             await get_context_total_length.finish(
-                reply + f"====Chat.Get_Context_Total_Length====\n"
+                reply + f"====Context.Get_Context_Total_Length====\n"
                 f"> {chat_core.name_space}\n"
                 f"length: {response.response_body.context_length}\n"
                 f"total_text_length: {response.response_body.total_context_length}\n"
@@ -31,4 +31,4 @@ async def handle_total_context_length(bot: Bot, event: MessageEvent, args: Messa
                 f"HTTP Code: {response.status_code}"
             )
         else:
-            await get_context_total_length.finish(reply + f'====Chat.Get_Context_Total_Length====\n> {chat_core.name_space}\nHTTP Code: {response.status_code}')
+            await get_context_total_length.finish(reply + f'====Context.Get_Context_Total_Length====\n> {chat_core.name_space}\nHTTP Code: {response.status_code}')

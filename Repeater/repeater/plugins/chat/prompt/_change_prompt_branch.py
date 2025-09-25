@@ -19,8 +19,8 @@ async def handle_change_prompt_branch(bot: Bot, event: MessageEvent, args: Messa
     reply = MessageSegment.reply(event.message_id)
     chat_core = ChatCore(stranger_info.name_space.namespace)
     if RepeaterDebugMode:
-        await change_prompt_branch.finish(reply + f'[Chat.Change_Prompt_Branch|{chat_core.name_space}|{stranger_info.nickname}]: {msg}')
+        await change_prompt_branch.finish(reply + f'[Prompt.Change_Prompt_Branch|{chat_core.name_space}|{stranger_info.nickname}]: {msg}')
     else:
         code, text = await chat_core.change_prompt_branch(msg)
 
-        await change_prompt_branch.finish(reply + f'====Chat.Change_Prompt_Branch====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}')
+        await change_prompt_branch.finish(reply + f'====Prompt.Change_Prompt_Branch====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}')

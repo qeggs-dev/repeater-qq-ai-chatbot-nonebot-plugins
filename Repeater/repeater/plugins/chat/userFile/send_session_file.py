@@ -19,7 +19,7 @@ async def handle_send_user_data_file(bot: Bot, event: MessageEvent):
     chat_core = ChatCore(stranger_info.name_space.namespace)
     sfurl = await chat_core.get_user_data_file_url()
     if RepeaterDebugMode:
-        await seed_user_data_file.finish(stranger_info.reply + f'[Chat.Send_User_Data_File|{chat_core.name_space}:{sfurl}]')
+        await seed_user_data_file.finish(stranger_info.reply + f'[UserDataFile.Send_User_Data_File|{chat_core.name_space}:{sfurl}]')
     else:
         file_sender = FileSender(stranger_info)
 
