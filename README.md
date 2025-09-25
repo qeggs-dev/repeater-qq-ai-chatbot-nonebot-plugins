@@ -59,6 +59,23 @@
 
 ---
 
+## 连接
+
+### 连接OneBot
+> 1. 找到项目目录下的`.env`文件
+> 2. 填写PORT(数字), ONEBOT_ACCESS_TOKEN(字符串) 等字段配置项
+> 3. 执行`run.bat`或`bash run.sh`启动程序
+> 4. 打开OneBot客户端，选择反向WebSocket(部分客户端上称为`WebSocket 客户端`)
+> 5. 填写 `ws_url`(字符串，通常是`ws://127.0.0.1:PORT`，其中`PORT`是你在`.env`文件中填写的端口号)，`token`(字符串，需要与上面的`ONEBOT_ACCESS_TOKEN`一致)
+> 6. 看到NoneBot日志输出中出现`connection open`时, 表示连接成功
+
+### 链接后端
+> 1. 找到项目目录下的`.env`文件
+> 2. 填写`BACKEND_HOST`和`BACKEND_PORT`字段配置项 (其中HOST是后端服务主机的IP地址，PORT是后端服务主端口号，需要你和后端配置中编写的一致)
+> 3. 执行`run.bat`或`bash run.sh`启动程序
+
+---
+
 ## Markdown图片渲染样式
 
 | 风格 | 译名 |
