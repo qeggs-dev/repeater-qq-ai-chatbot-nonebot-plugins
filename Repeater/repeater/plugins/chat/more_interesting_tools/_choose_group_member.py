@@ -39,13 +39,13 @@ async def choose_group_member_handle(bot: Bot, event: MessageEvent, args: Messag
         if n > len(member_list):
             await choose_group_member.finish(reply + f"====Choose_Group_Member====\nN过大，请输入小于等于{len(member_list)}的数字")
         choiced: list[dict[str, Any]] = random.sample(member_list, n)
+        text_list: list[str] = []
         for index, member in enumerate(choiced, start = 1):
             nickname = member.get("card")
             if not nickname:
                 nickname = member.get("nickname")
-            text += f"[{index}] {nickname}\n"
-        if text.endswith("\n"):
-            text = text[:-1]
+            text_list.append(f"[{index}] {nickname}")
+        text = "\n".join(text_list)
         message = reply + f"====Choose_Group_Member====\n"
         if n > 10:
             text_render = TextRender(stranger_info.name_space)
