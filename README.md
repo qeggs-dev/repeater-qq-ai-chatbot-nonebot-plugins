@@ -38,6 +38,7 @@
 |------------|-----------|--------------|----------------------------------------------------------------|------------------|
 | httpx      | 0.28.1    | BSD License  | [BSD-3-Clause](https://opensource.org/license/bsd-3-clause/)   | `chat` Plugins   |
 | nonebot    | 2.4.2     | MIT License  | [MIT](https://github.com/nonebot/nonebot2/blob/master/LICENSE) | *Entire Project* |
+| pydantic   | 2.11.7    | MIT License  | [MIT](https://github.com/pydantic/pydantic/blob/main/LICENSE)  | `chat` Plugins   |
 
 ---
 
@@ -73,6 +74,9 @@
 > 1. 找到项目目录下的`.env`文件
 > 2. 填写`BACKEND_HOST`和`BACKEND_PORT`字段配置项 (其中HOST是后端服务主机的IP地址，PORT是后端服务主端口号，需要你和后端配置中编写的一致)
 > 3. 执行`run.bat`或`bash run.sh`启动程序
+
+PS: 由于OneBot客户端通常为入站服务，所以默认情况下所有服务都不需要配置公网IP访问
+但你需要保证后端可以连接到你设定的API端口，OneBot客户端可以连接到指定社交平台的服务器
 
 ---
 
@@ -149,3 +153,5 @@ PS: 使用`sdm`命令带着模型ID设置你需要的模型。
 | `reference`                | `ref`  | `Reference`               | `CHAT`      | 引用上下文                     | 用户ID                                     | 4.1.2.0      | 1.0         | 引用其他用户的上下文并追加到当前上下文 |
 | `chooseGroupMember`        | `cgm`  | `ChooseGroupMember`       | `OTHER`     | 抽取群组成员                   | 抽取数量                                    | 4.1.2.0      | 1.0         | 抽取群组成员 |
 | `withdraw`                 | `w`    | `Withdraw`                | `CONTEXT`   | 撤回消息                       | 无                                         | 4.2.3.0      | 1.0         | 删除复读机上下文中保存的最新一回合对话 |
+| `recentSpeakingRanking`    | `rsr`  | `RecentSpeakingRanking`   | `OTHER`     | 最近发言排行                   | 无                                         | 4.2.3.0      | 1.0         | 获取群组内最近发言的成员列表 |
+| `setAutoShrinkLength`      | `sasl` | `SetAutoShrinkLength`     | `CONFIG`    | 设置自动缩减长度上限            | 整数                                       | 4.2.4.0      | 1.0         | 设置之后如果你的聊天上下文超过该值，系统会尝试自动删除最旧的上下文直到满足该值 |
