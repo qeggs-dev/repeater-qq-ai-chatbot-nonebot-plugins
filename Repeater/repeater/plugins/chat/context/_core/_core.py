@@ -32,7 +32,7 @@ class ChatCore:
     # endregion
     
     # region withdraw
-    async def withdraw(self):
+    async def withdraw(self) -> Response[WithdrawResponse | None]:
         response = await self._httpx_client.post(
             f'{WIHTDRAW_CONTEXT_ROUTE}/{self.name_space}'
         )
@@ -41,14 +41,14 @@ class ChatCore:
             response_text = response.text,
             response_body = WithdrawResponse(
                 **response.json()
-            )
+            ) if response.status_code == 200 else None
         )
     # endregion
     # region change subsession    
     async def change_context_branch(self, new_branch_id: str):
         response = await self._httpx_client.put(
             f'{CHANGE_CONTEXT_BRANCH_ROUTE}/{self.name_space}',
-            params={
+            data={
                 'new_branch_id': new_branch_id
             }
         )
@@ -69,7 +69,7 @@ class ChatCore:
         return response.status_code, response.text
     # endregion
     
-    async def get_context_total_length(self):
+    async def get_context_total_length(self) -> Response[ContextTotalLengthResponse | None]:
         response = await self._httpx_client.get(
             f'{GET_CONTEXT_LENGTH_ROUTE}/{self.name_space}'
         )
@@ -78,5 +78,5 @@ class ChatCore:
             response_text = response.text,
             response_body = ContextTotalLengthResponse(
                 **response.json()
-            )
+            ) if response.status_code == 200 else None
         )

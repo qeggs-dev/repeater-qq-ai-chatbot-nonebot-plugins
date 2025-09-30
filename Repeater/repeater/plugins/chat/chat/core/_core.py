@@ -32,7 +32,7 @@ class ChatCore:
         load_prompt: bool = True,
         enable_md_prompt: bool = True,
         reference_context_id: str | None = None,
-    ):
+    ) -> Response[ChatResponse | None]:
         """
         发送消息到AI后端
         
@@ -71,7 +71,7 @@ class ChatCore:
             response_text = response.text,
             response_body = ChatResponse(
                 **result
-            )
+            ) if response.status_code == 200 else None
         )
     
     async def send_stream_message(
