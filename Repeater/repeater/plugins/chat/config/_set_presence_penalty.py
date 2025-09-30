@@ -15,6 +15,7 @@ async def handle_set_presence_penalty(bot: Bot, event: MessageEvent, args: Messa
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
 
     msg = stranger_info.message_str.strip()
+    reply = MessageSegment.reply(event.message_id)
 
     try:
         if msg.endswith("%"):
@@ -24,15 +25,16 @@ async def handle_set_presence_penalty(bot: Bot, event: MessageEvent, args: Messa
             presence_penalty = float(msg)
     except ValueError:
         await set_presence_penalty.finish(
-            '====Chat.Set_Presence_Penalty====\n> 存在惩罚设置错误，请输入-2~2之间的浮点数'
+            reply +
+            '====Chat.Set_Presence_Penalty====\n> 存在惩罚设置错误，请输入-2~2之间的浮点数或百分比'
         )
     if presence_penalty < -2 or presence_penalty > 2:
         await set_presence_penalty.finish(
-            '====Chat.Set_Presence_Penalty====\n> 存在惩罚设置错误，请输入-2~2之间的浮点数'
+            reply +
+            '====Chat.Set_Presence_Penalty====\n> 存在惩罚设置错误，请输入-2~2之间的浮点数或百分比'
         )
 
 
-    reply = MessageSegment.reply(event.message_id)
     chat_core = ChatCore(stranger_info.name_space.namespace)
     if RepeaterDebugMode:
         await set_presence_penalty.finish(reply + f'[Chat.Set_Presence_Penalty|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')

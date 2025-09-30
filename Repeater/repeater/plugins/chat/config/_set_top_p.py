@@ -15,6 +15,7 @@ async def handle_set_top_p(bot: Bot, event: MessageEvent, args: Message = Comman
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
 
     msg = stranger_info.message_str.strip()
+    reply = MessageSegment.reply(event.message_id)
 
     try:
         if msg.endswith("%"):
@@ -24,15 +25,15 @@ async def handle_set_top_p(bot: Bot, event: MessageEvent, args: Message = Comman
             top_p = float(msg)
     except ValueError:
         await set_top_p.finish(
+            reply +
             '====Chat.Set_Top_P====\n> Top_P设置错误，请输入0~1之间的浮点数'
         )
     if top_p < -2 or top_p > 2:
         await set_top_p.finish(
+            reply +
             '====Chat.Set_Top_P====\n> Top_P设置错误，请输入0~1之间的浮点数'
         )
 
-
-    reply = MessageSegment.reply(event.message_id)
     chat_core = ChatCore(stranger_info.name_space.namespace)
     if RepeaterDebugMode:
         await set_top_p.finish(reply + f'[Chat.Set_Top_P|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')

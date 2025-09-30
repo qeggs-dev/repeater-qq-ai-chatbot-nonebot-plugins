@@ -15,21 +15,23 @@ async def handle_set_max_tokens(bot: Bot, event: MessageEvent, args: Message = C
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
 
     msg = stranger_info.message_str.strip()
+    reply = MessageSegment.reply(event.message_id)
 
     try:
         max_tokens = int(msg)
     except ValueError:
         await set_max_tokens.finish(
-            '====Chat.Set_Max_Tokens====\n> Max_Tokens设置错误，请输入1~8192的整数'
+            reply +
+            '====Chat.Set_Max_Tokens====\n> Max_Tokens设置错误，请输入整数'
         )
         
     if max_tokens < 1 or max_tokens > 8192:
         await max_tokens.finish(
-            '====Chat.Set_Max_Tokens====\n> Max_Tokens设置错误，请输入1~8192的整数'
+            reply +
+            '====Chat.Set_Max_Tokens====\n> Max_Tokens设置错误，请输入整数'
         )
 
 
-    reply = MessageSegment.reply(event.message_id)
     chat_core = ChatCore(stranger_info.name_space.namespace)
     if RepeaterDebugMode:
         await set_max_tokens.finish(reply + f'[Chat.Set_Max_Tokens|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')

@@ -15,6 +15,7 @@ async def handle_set_temperature(bot: Bot, event: MessageEvent, args: Message = 
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
 
     msg = stranger_info.message_str.strip()
+    reply = MessageSegment.reply(event.message_id)
 
     try:
         if msg.endswith("%"):
@@ -24,18 +25,18 @@ async def handle_set_temperature(bot: Bot, event: MessageEvent, args: Message = 
             temperature = float(msg)
     except ValueError:
         await set_temperature.finish(
-            '====Chat.Set_Temperature====\n> 温度设置错误，请输入0~2之间的浮点数'
+            reply +
+            '====Chat.Set_Temperature====\n> 温度设置错误，请输入0~2之间的浮点数或百分比'
         )
     if temperature < 0 or temperature > 2:
         await set_temperature.finish(
-            '====Chat.Set_Temperature====\n> 温度设置错误，请输入0~2之间的浮点数'
+            reply +
+            '====Chat.Set_Temperature====\n> 温度设置错误，请输入0~2之间的浮点数或百分比'
         )
 
-
-    reply = MessageSegment.reply(event.message_id)
     chat_core = ChatCore(stranger_info.name_space.namespace)
     if RepeaterDebugMode:
-        await set_temperature.finish(reply + f'[Chat.Set_Temperature|{chat_core.name_space}|{set_temperature.nickname}]:{msg}')
+        await set_temperature.finish(reply + f'[Chat.Set_Temperature|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')
     else:
         code, text = await chat_core.set_config("temperature", temperature)
 

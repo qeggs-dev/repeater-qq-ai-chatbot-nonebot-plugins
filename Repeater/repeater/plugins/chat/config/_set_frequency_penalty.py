@@ -15,6 +15,7 @@ async def handle_set_frequency_penalty(bot: Bot, event: MessageEvent, args: Mess
     stranger_info = StrangerInfo(bot, event, args)
 
     msg = stranger_info.message_str.strip()
+    reply = MessageSegment.reply(event.message_id)
 
     try:
         if msg.endswith("%"):
@@ -24,15 +25,16 @@ async def handle_set_frequency_penalty(bot: Bot, event: MessageEvent, args: Mess
             frequency_penalty = float(msg)
     except ValueError:
         await set_frequency_penalty.finish(
-            '====Chat.Set_Frequency_Penalty====\n> 频率惩罚设置错误，请输入-2~2之间的浮点数'
+            reply +
+            '====Chat.Set_Frequency_Penalty====\n> 频率惩罚设置错误，请输入-2~2之间的浮点数或百分比'
         )
     if frequency_penalty < -2 or frequency_penalty > 2:
         await set_frequency_penalty.finish(
-            '====Chat.Set_Frequency_Penalty====\n> 频率惩罚设置错误，请输入-2~2之间的浮点数'
+            reply +
+            '====Chat.Set_Frequency_Penalty====\n> 频率惩罚设置错误，请输入-2~2之间的浮点数或百分比'
         )
 
 
-    reply = MessageSegment.reply(event.message_id)
     chat_core = ChatCore(stranger_info.name_space.namespace)
     if RepeaterDebugMode:
         await set_frequency_penalty.finish(reply + f'[Chat.Set_Frequency_Penalty|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')
