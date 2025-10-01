@@ -1,3 +1,4 @@
+from ._auto_shrink_length import handle_set_auto_shrink_length
 from ._set_default_model_type import handle_set_default_model_type
 from ._set_temperature import handle_set_temperature
 from ._set_frequency_penalty import handle_set_frequency_penalty
@@ -10,6 +11,7 @@ from ._set_max_tokens import handle_set_max_tokens
 from ._set_top_p import handle_set_top_p
 
 __all__ = [
+    "handle_set_auto_shrink_length",
     "handle_set_default_model_type",
     "handle_set_temperature",
     "handle_set_frequency_penalty",
