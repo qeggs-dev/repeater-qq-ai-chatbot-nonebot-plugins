@@ -32,7 +32,7 @@ class ChatCore:
         load_prompt: bool = True,
         enable_md_prompt: bool = True,
         reference_context_id: str | None = None,
-    ) -> Response[ChatResponse | None]:
+    ) -> Response[ChatResponse]:
         """
         发送消息到AI后端
         
@@ -55,8 +55,6 @@ class ChatCore:
             url=url,
             json=data  # 使用 json= 表示请求体数据
         )
-        reasoning = ''
-        content = ''
         if response.status_code == 200:
             try:
                 result:dict = response.json()
@@ -66,12 +64,17 @@ class ChatCore:
                     response_text = response.text,
                     response_body = ChatResponse()
                 )
+        try:
+            response_body = ChatResponse(
+                **result
+            )
+        except Exception as e:
+            response_body = ChatResponse()
+            
         return Response(
             status_code = response.status_code,
             response_text = response.text,
-            response_body = ChatResponse(
-                **result
-            ) if response.status_code == 200 else None
+            response_body = response_body
         )
     
     async def send_stream_message(
