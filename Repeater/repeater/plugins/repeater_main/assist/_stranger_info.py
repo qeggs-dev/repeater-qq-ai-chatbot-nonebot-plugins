@@ -62,7 +62,7 @@ class StrangerInfo:
         return self._bot
 
     @property
-    def name_space(self):
+    def namespace(self):
         if self._mode == MessageSource.GROUP:
             return Namespace(
                 mode=MessageSource.GROUP,
@@ -74,6 +74,14 @@ class StrangerInfo:
                 mode=MessageSource.PRIVATE,
                 user_id=self.user_id
             )
+    
+    @property
+    def namespace_str(self):
+        return self.namespace.namespace
+    
+    @property
+    def public_namespace_str(self) -> str:
+        return self.namespace.public_space_id
     
     @property
     def message(self) -> Message:

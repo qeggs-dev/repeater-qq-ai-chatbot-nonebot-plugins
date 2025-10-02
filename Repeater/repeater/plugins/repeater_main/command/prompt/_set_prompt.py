@@ -18,7 +18,7 @@ async def handle_setprompt(bot: Bot, event: MessageEvent, args: Message = Comman
     msg = stranger_info.message_str.strip()
     
     reply = MessageSegment.reply(event.message_id)
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
     if RepeaterDebugMode:
         await setprompt.finish(reply + f'[Prompt.Set_Prompt|{chat_core.name_space}]')
     else:

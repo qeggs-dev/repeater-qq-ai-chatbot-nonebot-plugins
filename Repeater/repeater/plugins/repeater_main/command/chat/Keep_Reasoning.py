@@ -15,7 +15,7 @@ keepReasoning = on_command("keepReasoning", aliases={"kr", "keep_reasoning", "Ke
 async def handle_keep_reasoning(bot: Bot, event: MessageEvent):
     stranger_info = StrangerInfo(bot, event)
 
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
 
     response = await chat_core.send_message(user_info = stranger_info, model_uid="reasoning")
     

@@ -13,11 +13,11 @@ async def send_msg(
         response: Response[ChatResponse],
         must: Literal["image", "text"] | None = None,
     ):
-    chat_core = ChatCore(stranger_info.name_space)
+    chat_core = ChatCore(stranger_info.namespace)
     if must not in {"image", "text", None}:
         raise ValueError("Parameter 'must' must be 'image', 'text', or None.")
     if RepeaterDebugMode:
-        await matcher.finish(stranger_info.reply + f'[{id}|{stranger_info.name_space}|{stranger_info.nickname}]：{stranger_info.message}')
+        await matcher.finish(stranger_info.reply + f'[{id}|{stranger_info.namespace}|{stranger_info.nickname}]：{stranger_info.message}')
     else:
         if response.status_code == 200:
             message = Message()
@@ -47,4 +47,4 @@ async def send_msg(
         
             await matcher.finish(stranger_info.reply + message)
         else:
-            await matcher.finish(stranger_info.reply + f"====Chat.{id}====\n> {stranger_info.name_space}\n{response.response_text}\nHTTP Code: {response.status_code}")
+            await matcher.finish(stranger_info.reply + f"====Chat.{id}====\n> {stranger_info.namespace}\n{response.response_text}\nHTTP Code: {response.status_code}")

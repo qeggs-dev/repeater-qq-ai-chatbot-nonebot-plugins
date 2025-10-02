@@ -16,7 +16,7 @@ async def handle_var_expand(bot: Bot, event: MessageEvent, args: Message = Comma
 
     msg = args.extract_plain_text().strip()
 
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
     if RepeaterDebugMode:
         await var_Expand.finish(stranger_info.reply + f'[Var_Expand.Expand|{chat_core.name_space}|{stranger_info.nickname}]：{msg}')
     else:

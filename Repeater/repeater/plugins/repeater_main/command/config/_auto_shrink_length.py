@@ -26,7 +26,7 @@ async def handle_set_auto_shrink_length(bot: Bot, event: MessageEvent, args: Mes
         )
 
 
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
     if RepeaterDebugMode:
         await set_auto_shrink_length.finish(reply + f'[Chat.Set_Auto_Shrink_Length|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')
     else:

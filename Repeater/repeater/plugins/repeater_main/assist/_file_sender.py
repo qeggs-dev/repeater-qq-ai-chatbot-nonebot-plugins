@@ -1,4 +1,4 @@
-from ._get_stranger_info import StrangerInfo
+from ._stranger_info import StrangerInfo
 
 class FileSender:
     def __init__(self, stranger_info: StrangerInfo):

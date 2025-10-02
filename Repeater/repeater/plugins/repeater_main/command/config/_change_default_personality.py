@@ -16,10 +16,10 @@ async def handle_change_default_personality(bot: Bot, event: MessageEvent, args:
     
     msg = stranger_info.message_str.strip()
     
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
     if RepeaterDebugMode:
-        await change_default_personality.finish(stranger_info.reply + f'[Chat.Set_Default_Personality|{stranger_info.name_space}]: {msg}')
+        await change_default_personality.finish(stranger_info.reply + f'[Chat.Set_Default_Personality|{stranger_info.namespace}]: {msg}')
     else:
         code, text = await chat_core.set_config("parset_prompt_name", msg)
 
-        await change_default_personality.finish(stranger_info.reply + f'====Chat.Set_Default_Personality====\n> {stranger_info.name_space}\nHTTP Code: {code}')
+        await change_default_personality.finish(stranger_info.reply + f'====Chat.Set_Default_Personality====\n> {stranger_info.namespace}\nHTTP Code: {code}')

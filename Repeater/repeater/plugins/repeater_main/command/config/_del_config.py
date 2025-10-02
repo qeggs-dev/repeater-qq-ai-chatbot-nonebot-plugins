@@ -15,7 +15,7 @@ async def handle_del_config(bot: Bot, event: MessageEvent):
     stranger_info = StrangerInfo(bot, event)
 
     reply = MessageSegment.reply(event.message_id)
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
     if RepeaterDebugMode:
         await del_config.finish(reply + f'[Chat.Delete_Config|{chat_core.name_space}|{stranger_info.nickname}]')
     else:

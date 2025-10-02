@@ -48,7 +48,7 @@ async def choose_group_member_handle(bot: Bot, event: MessageEvent, args: Messag
         text = "\n".join(text_list)
         message = reply + f"====Choose_Group_Member====\n"
         if n > 10:
-            text_render = TextRender(stranger_info.name_space)
+            text_render = TextRender(stranger_info.namespace)
             image = await text_render.render(text)
             if image.status_code == 200:
                 message += MessageSegment.image(image.image_url)

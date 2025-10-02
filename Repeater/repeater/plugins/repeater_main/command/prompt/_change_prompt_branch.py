@@ -17,7 +17,7 @@ async def handle_change_prompt_branch(bot: Bot, event: MessageEvent, args: Messa
     msg = args.extract_plain_text().strip()
     
     reply = MessageSegment.reply(event.message_id)
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
     if RepeaterDebugMode:
         await change_prompt_branch.finish(reply + f'[Prompt.Change_Prompt_Branch|{chat_core.name_space}|{stranger_info.nickname}]: {msg}')
     else:

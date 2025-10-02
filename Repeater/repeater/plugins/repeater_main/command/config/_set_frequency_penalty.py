@@ -35,7 +35,7 @@ async def handle_set_frequency_penalty(bot: Bot, event: MessageEvent, args: Mess
         )
 
 
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
     if RepeaterDebugMode:
         await set_frequency_penalty.finish(reply + f'[Chat.Set_Frequency_Penalty|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')
     else:

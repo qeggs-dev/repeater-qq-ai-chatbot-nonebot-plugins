@@ -34,7 +34,7 @@ async def handle_set_temperature(bot: Bot, event: MessageEvent, args: Message = 
             '====Chat.Set_Temperature====\n> 温度设置错误，请输入0~2之间的浮点数或百分比'
         )
 
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
     if RepeaterDebugMode:
         await set_temperature.finish(reply + f'[Chat.Set_Temperature|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')
     else:

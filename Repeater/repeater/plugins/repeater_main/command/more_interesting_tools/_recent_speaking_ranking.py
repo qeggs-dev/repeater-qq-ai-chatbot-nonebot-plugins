@@ -68,7 +68,7 @@ async def recent_speaking_ranking_handle(bot: Bot, event: MessageEvent, args: Me
         line_count = text.count('\n') + 1
         
         if line_count > 10:
-            text_render = TextRender(stranger_info.name_space)
+            text_render = TextRender(stranger_info.namespace)
             image = await text_render.render(text)
             if image.status_code == 200:
                 message += MessageSegment.image(image.image_url)

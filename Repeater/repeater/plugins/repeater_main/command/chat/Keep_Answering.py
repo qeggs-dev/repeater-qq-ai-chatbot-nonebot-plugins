@@ -15,7 +15,7 @@ keepAnswering = on_command("keepAnswering", aliases={"ka", "keep_answering", "Ke
 async def handle_keep_answering(bot: Bot, event: MessageEvent):
     stranger_info = StrangerInfo(bot, event)
 
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
 
     response = await chat_core.send_message(user_info = stranger_info)
     

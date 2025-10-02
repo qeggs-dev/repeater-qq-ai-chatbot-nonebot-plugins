@@ -15,7 +15,7 @@ async def handle_delete_public_space_context(bot: Bot, event: MessageEvent, args
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
 
     reply = MessageSegment.reply(event.message_id)
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
     if RepeaterDebugMode:
         await delete_public_space_context.finish(reply + f'[Context.Delete_Public_Space_Context|{chat_core.name_space}|{stranger_info.nickname}]')
     else:

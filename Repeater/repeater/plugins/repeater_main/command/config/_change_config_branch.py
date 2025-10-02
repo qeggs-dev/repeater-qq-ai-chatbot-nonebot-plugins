@@ -17,7 +17,7 @@ async def handle_change_config_branch(bot: Bot, event: MessageEvent, args: Messa
     msg = stranger_info.message_str.strip()
     
     reply = MessageSegment.reply(event.message_id)
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
     if RepeaterDebugMode:
         await change_config_branch.finish(reply + f'[Chat.Change_Config_Branch|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')
     else:

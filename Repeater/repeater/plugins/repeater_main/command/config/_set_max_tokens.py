@@ -32,7 +32,7 @@ async def handle_set_max_tokens(bot: Bot, event: MessageEvent, args: Message = C
         )
 
 
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
     if RepeaterDebugMode:
         await set_max_tokens.finish(reply + f'[Chat.Set_Max_Tokens|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')
     else:

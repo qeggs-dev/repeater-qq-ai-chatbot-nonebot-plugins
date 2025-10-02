@@ -18,7 +18,7 @@ async def handle_reference(bot: Bot, event: MessageEvent, args: Message = Comman
     # message = await stranger_info.image_to_text(format="==== OCR Vision Begin ====\n{text}\n===== OCR Vision end =====", excluded_tags={"[动画表情]"})
     message = stranger_info.message
 
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
 
     if not stranger_info.noself_at_list:
         await reference.finish("==== Reference ==== \n Please at a member to get reference.")

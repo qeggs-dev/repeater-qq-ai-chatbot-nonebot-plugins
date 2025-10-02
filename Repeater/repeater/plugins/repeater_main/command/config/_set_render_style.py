@@ -17,7 +17,7 @@ async def handle_set_render_style(bot: Bot, event: MessageEvent, args: Message =
     msg = stranger_info.message_str.strip()
 
     reply = MessageSegment.reply(event.message_id)
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
     if RepeaterDebugMode:
         await set_render_style.finish(reply + f'[Chat.Set_Render_Style|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')
     else:

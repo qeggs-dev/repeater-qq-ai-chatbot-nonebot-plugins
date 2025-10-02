@@ -16,7 +16,7 @@ async def handle_withdraw(bot: Bot, event: MessageEvent, args: Message = Command
 
     msg = stranger_info.message_str.strip()
 
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
     if RepeaterDebugMode:
         await withdraw.finish(stranger_info.reply + f'[Context.Withdraw|{chat_core.name_space}|{stranger_info.nickname}]')
     else:

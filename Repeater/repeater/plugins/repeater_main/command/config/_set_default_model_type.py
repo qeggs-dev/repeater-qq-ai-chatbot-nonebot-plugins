@@ -16,7 +16,7 @@ async def handle_set_default_model_type(bot: Bot, event: MessageEvent, args: Mes
 
     msg: str = stranger_info.message_str.strip()
 
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
     if RepeaterDebugMode:
         await set_default_model_type.finish(stranger_info.reply + f'[Chat.Set_Default_Model|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')
     else:

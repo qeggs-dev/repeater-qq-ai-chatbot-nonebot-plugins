@@ -17,7 +17,7 @@ async def handle_change_context_branch(bot: Bot, event: MessageEvent, args: Mess
     msg = stranger_info.message_str.strip()
     
     reply = MessageSegment.reply(event.message_id)
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
     if RepeaterDebugMode:
         await change_context_branch.finish(reply + f'[Context.Change_Context_Branch|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')
     else:

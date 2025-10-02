@@ -34,7 +34,7 @@ async def handle_set_top_p(bot: Bot, event: MessageEvent, args: Message = Comman
             '====Chat.Set_Top_P====\n> Top_P设置错误，请输入0~1之间的浮点数'
         )
 
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
     if RepeaterDebugMode:
         await set_top_p.finish(reply + f'[Chat.Set_Top_P|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')
     else:

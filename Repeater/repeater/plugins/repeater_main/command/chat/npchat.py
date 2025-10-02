@@ -18,7 +18,7 @@ async def handle_npchat(bot: Bot, event: MessageEvent, args: Message = CommandAr
     # message = await stranger_info.image_to_text(format="==== OCR Vision Begin ====\n{text}\n===== OCR Vision end =====", excluded_tags={"[动画表情]"})
     message = stranger_info.message
 
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
 
     response = await chat_core.send_message(message.extract_plain_text().strip(), user_info = stranger_info)
 

@@ -15,7 +15,7 @@ async def handle_total_context_length(bot: Bot, event: MessageEvent, args: Messa
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
     
     reply = MessageSegment.reply(event.message_id)
-    chat_core = ChatCore(stranger_info.name_space.namespace)
+    chat_core = ChatCore(stranger_info.namespace_str)
     if RepeaterDebugMode:
         await get_context_total_length.finish(reply + f'[Context.Get_Context_Total_Length|{chat_core.name_space}|{stranger_info.nickname}]')
     else:
