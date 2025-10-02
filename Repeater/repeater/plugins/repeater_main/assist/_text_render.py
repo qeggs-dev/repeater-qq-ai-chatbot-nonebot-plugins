@@ -1,4 +1,4 @@
-from ..core_config import *
+from ..core_net_configs import *
 from ._response_body import RendedImage
 from ._namespace import Namespace
 import httpx

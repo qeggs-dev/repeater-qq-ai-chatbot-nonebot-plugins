@@ -8,7 +8,7 @@ from typing import (
 )
 
 # 服务端配置
-from ...core_config import *
+from ...core_net_configs import *
 from ...exit_register import ExitRegister
 
 exit_register = ExitRegister()

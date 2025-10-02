@@ -4,5 +4,6 @@ from pydantic import BaseModel
 class ChatConfig(BaseModel):
     backend_host: str = "127.0.0.1"
     backend_port: int = 8123
+    repeater_debug_mode: bool = False
 
-config = get_plugin_config(ChatConfig)
+net_config = get_plugin_config(ChatConfig)

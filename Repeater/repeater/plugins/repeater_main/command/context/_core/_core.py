@@ -6,7 +6,7 @@ from typing import (
     Union
 )
 
-from ....core_config import *
+from ....core_net_configs import *
 from ._response import (
     Response,
     WithdrawResponse,

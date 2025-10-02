@@ -1,9 +1,9 @@
 # 服务端配置
-from ._load_config import config
+from ._net_config import net_config
 
 # ==== CHAT API ==== #
-BACKEND_HOST = config.backend_host
-BACKEND_PORT = config.backend_port
+BACKEND_HOST = net_config.backend_host
+BACKEND_PORT = net_config.backend_port
 CHAT_ROUTE = f"{BACKEND_HOST}:{BACKEND_PORT}/chat/completion"
 NPCHAT_ROUTE = f"{BACKEND_HOST}:{BACKEND_PORT}/chat/completion/noprompt"
 
@@ -56,5 +56,5 @@ VARIABLE_EXPANSION = f"{BACKEND_HOST}:{BACKEND_PORT}/userdata/variable/expand"
 MAX_LENGTH = 400
 MAX_SINGLE_LINE_LENGTH = 64
 MIN_RENDER_IMAGE_TEXT_LINE = 5
-RepeaterDebugMode = False # 是否开启调试模式，调试模式下，将直接返回消息内容，而不进行后端访问操作
+RepeaterDebugMode = net_config.repeater_debug_mode # 是否开启调试模式，调试模式下，将直接返回消息内容，而不进行后端访问操作
 
