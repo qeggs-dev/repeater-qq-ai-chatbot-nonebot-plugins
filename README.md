@@ -20,7 +20,7 @@
 > 注：拟人化并非复读机的赛道，复读机不对拟人化需求做过多保证，如有需要请自行引导或编写提示词。
 
 ## 注意事项:
- - 本服务由一位 `16岁自学开发者` 使用AI协作开发，公益项目，如果你愿意捐赠，可以在机器人的**QQ空间**中找到赞赏码以支持项目运营(或是支持开发者)。
+ - 本服务由一位 `16岁自学开发者`(现在17了) 使用AI协作开发，公益项目，如果你愿意捐赠，可以在机器人的**QQ空间**中找到赞赏码以支持项目运营(或是支持开发者)。
  - 初始服务仅作为实验项目运行，不保证服务稳定性（存在维修断电以及临时消息丢失的可能，但这与项目本身无关，~~只是我不懂运维罢了~~），有需要可自行部署。
  - 项目随时可能会因为开发者个人原因，或API额度耗尽等因素而被迫中止。
  - 仅供学习和非商业用途。使用者需确认生成内容的合法性，并自行承担使用本服务可能产生的风险。
@@ -34,11 +34,15 @@
 ---
 
 ## 依赖
-| Name       | Version   | License      | License Text Link                                              | Where it is used |
-|------------|-----------|--------------|----------------------------------------------------------------|------------------|
-| httpx      | 0.28.1    | BSD License  | [BSD-3-Clause](https://opensource.org/license/bsd-3-clause/)   | `chat` Plugins   |
-| nonebot    | 2.4.2     | MIT License  | [MIT](https://github.com/nonebot/nonebot2/blob/master/LICENSE) | *Entire Project* |
-| pydantic   | 2.11.7    | MIT License  | [MIT](https://github.com/pydantic/pydantic/blob/main/LICENSE)  | `chat` Plugins   |
+| Name       | Version   | License      | License Text Link                                                  | Where it is used |
+|------------|-----------|--------------|--------------------------------------------------------------------|------------------|
+| httpx      | 0.28.1    | BSD License  | [BSD-3-Clause](https://opensource.org/license/bsd-3-clause/)       | *Entire Project* |
+| nonebot    | 2.4.3     | MIT License  | [MIT](https://github.com/nonebot/nonebot2/blob/master/LICENSE)     | *Entire Project* |
+| pydantic   | 2.12.0    | MIT License  | [MIT](https://github.com/pydantic/pydantic/blob/main/LICENSE)      | *Entire Project* |
+| aiofiles   | 25.1.0    | MIT License  | [Apache-2.0](https://github.com/Tinche/aiofiles/blob/main/LICENSE) | `storage`        |
+| pyyaml     | 6.0.3     | MIT License  | [MIT](https://github.com/yaml/pyyaml/blob/main/LICENSE)            | `storage`        |
+| orjson     | 3.11.3    | Apache Software License; MIT License | [Apache-2.0](https://github.com/ijl/orjson/blob/master/LICENSE-APACHE) / [MIT](https://github.com/ijl/orjson/blob/master/LICENSE-MIT) | `storage` |
+
 
 ---
 
@@ -126,7 +130,7 @@ PS: 使用`sdm`命令带着模型ID设置你需要的模型。
 | `keepAnswering`            | `ka`   | `KeepAnswering`           | `CHAT`      | 持续对话(常规)                 | 无                                        | 4.0 Beta | 1.0              | 无须输入，AI再次回复 |
 | `keepReasoning`            | `kr`   | `KeepReasoning`           | `CHAT`      | 持续对话(推理)                 | 无                                        | 4.0 Beta | 1.0              | 无须输入，AI再次使用推理回复 |
 | `renderChat`               | `rc`   | `RenderChat`              | `CHAT`      | 渲染Markdown回复               | 自然语言输入                               | 4.0 Beta | 1.0              | 强制渲染图片输出 |
-| `setRenderStyle`           | `srs`  | `SetRenderStyle`          | `RENDER`    | 设置渲染样式                   | [渲染样式](#Markdown图片渲染样式)           | 4.0 Beta | 1.0              | 设置Markdown图片渲染样式 |
+| `setRenderStyle`           | `srs`  | `SetRenderStyle`          | `CONFIG`    | 设置渲染样式                   | [渲染样式](#Markdown图片渲染样式)           | 4.0 Beta | 1.0              | 设置Markdown图片渲染样式 |
 | `npChat`                   | `np`   | `NoPromptChat`            | `CHAT`      | 不加载提示词进行对话            | 自然语言输入                               | 4.0 Beta | 1.0              | 使用常规模型 |
 | ~~`prover`~~               | ~~`p`~~| ~~`Prover`~~              | `CHAT`      | 使用Prover模型进行数学形式化证明 | 自然语言输入                               | 4.0 Beta | ~~1.0~~(已弃用)  | 使用`Prover`模型(已弃用) |
 | `reason`                   | `r`    | `Reason`                  | `CHAT`      | 使用Reasoner模型进行推理        | 自然语言输入                               | 4.0 Beta | 1.0             | 使用`Reasoner`模型 |
