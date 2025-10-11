@@ -5,8 +5,8 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from .core_net_configs import *
-from .assist import StrangerInfo, FileSender
+from ..core_net_configs import *
+from ..assist import StrangerInfo, FileSender
 
 seed_readme_file = on_command('sendReadmeFile', aliases={'srf', 'send_readme_file', 'Send_Readme_File', 'SendReadmeFile'}, rule=to_me(), block=True)
 

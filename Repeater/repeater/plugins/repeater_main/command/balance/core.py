@@ -1,6 +1,6 @@
 import httpx
 
-from ..core_config import *
+from ...core_net_configs import *
 
 class ChatCore:
     def __init__(self, session_id: str):

@@ -16,7 +16,7 @@ class ChatCore:
     
     # region set prompt  
     async def set_prompt(self, prompt: str):
-        response = await self._httpx_client.post(
+        response = await self._httpx_client.put(
             f'{SET_PROMPT_ROUTE}/{self.name_space}',
             data={
                 'prompt': prompt

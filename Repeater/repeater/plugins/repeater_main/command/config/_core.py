@@ -54,6 +54,18 @@ class ChatCore:
             return response.status_code, response.text
     # endregion
 
+    # region cache config
+    async def cache_config(self, branch_id: str):
+        response = await self._httpx_client.put(
+            url = f"{CHANGE_CONFIG_BRANCH_ROUTE}/{self.name_space}",
+            data = {
+                'new_branch_id': branch_id
+            }
+        )
+
+        return response.status_code, response.text
+
+
     # region get config
     async def get_config(self, config_key: str):
         response = await self._httpx_client.get(

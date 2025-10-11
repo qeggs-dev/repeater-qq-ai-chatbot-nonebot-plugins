@@ -32,4 +32,4 @@ async def handle_set_auto_shrink_length(bot: Bot, event: MessageEvent, args: Mes
     else:
         code, text = await chat_core.set_config("auto_shrink_length", auto_shrink_length)
 
-        await set_auto_shrink_length.finish(reply + f'====Chat.Set_Auto_Shrink_Length====\n> {chat_core.name_space}\nHTTP Code: {code}\n\nTemperature: {auto_shrink_length}')
+        await set_auto_shrink_length.finish(reply + f'====Chat.Set_Auto_Shrink_Length====\n> {chat_core.name_space}\nHTTP Code: {code}\nAuto Shrink Length: {auto_shrink_length}')
