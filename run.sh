@@ -1,13 +1,13 @@
 #!/bin/bash
 
-echo "\033]2;Repeater\007"
+PROJECT="Repeater"
 
-PROJECT_DIR="Repeater"
+echo "\033]2;$PROJECT\007"
 
 while [[ "$#" -gt 0 ]]; do
     case "$1" in
         -d|--directory)
-            PROJECT_DIR="$2"
+            PROJECT="$2"
             shift 2
             ;;
         *)
@@ -18,9 +18,9 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 cd "$(dirname "$0")/$PROJECT_DIR" || {
-    echo "Could not change directory to $PROJECT_DIR"
+    echo "Could not change directory to $PROJECT"
     exit 1
 }
-./venv/bin/nb run --reload
+./venv/bin/nb run
 
 read -p "Press enter to exit"
