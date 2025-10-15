@@ -1,4 +1,4 @@
-from ._sync_base_storage import BinaryStorage
+from ._async_base_storage import BinaryStorage
 from pathlib import Path
 from typing import Any, AsyncGenerator, AsyncIterable, Iterable, TypeVar
 import orjson
@@ -16,7 +16,7 @@ class OrjsonStorage(BinaryStorage):
         try:
             logger.info(f"Loading json from {path}")
             return orjson.loads(
-                self.load(path)
+                await self.load(path)
             )
         except Exception as e:
             logger.error(f"Error loading json from {path}: {e}")
@@ -28,7 +28,7 @@ class OrjsonStorage(BinaryStorage):
     async def save_json(self, path: Path | str, data: Any):
         try:
             logger.info(f"Saving json to {path}")
-            self.save(
+            await self.save(
                 path,
                 orjson.dumps(data)
             )
