@@ -6,6 +6,7 @@ from ._assist_func import (
 from ._stranger_info import StrangerInfo
 from ._file_sender import FileSender
 from ._namespace import MessageSource, Namespace
-from ._response_body import RendedImage, Response
-from ._text_render import TextRender
+from ._response_body import Response
+from ._text_render import TextRender, RendedImage
 from ._file_url import FileUrl
+from ._send_msg import SendMsg
