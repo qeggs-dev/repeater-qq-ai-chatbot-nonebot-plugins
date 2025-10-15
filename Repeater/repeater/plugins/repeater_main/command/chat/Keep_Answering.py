@@ -7,7 +7,7 @@ from nonebot.adapters import Bot
 
 from .core import ChatCore, RepeaterDebugMode, MAX_LENGTH, MAX_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE_TEXT_LINE
 from ...assist import StrangerInfo
-from .core._send_msg import send_msg
+from .core import Send_msg
 
 keepAnswering = on_command("keepAnswering", aliases={"ka", "keep_answering", "Keep_Answering", "KeepAnswering"}, rule=to_me(), block=True)
 
@@ -19,9 +19,10 @@ async def handle_keep_answering(bot: Bot, event: MessageEvent):
 
     response = await chat_core.send_message(user_info = stranger_info)
     
-    await send_msg(
+    send_msg = Send_msg(
         "Keep_Answering",
         stranger_info,
         keepAnswering,
         response
     )
+    await send_msg.send()

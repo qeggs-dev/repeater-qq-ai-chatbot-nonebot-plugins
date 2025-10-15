@@ -7,7 +7,7 @@ from nonebot.adapters import Bot
 
 from .core import ChatCore
 from ...assist import StrangerInfo
-from .core._send_msg import send_msg
+from .core import Send_msg
 
 npchat = on_command('npChat', aliases={'np', 'no_prompt_chat', 'No_Prompt_Chat', 'NoPromptChat'}, rule=to_me(), block=True)
 
@@ -22,9 +22,10 @@ async def handle_npchat(bot: Bot, event: MessageEvent, args: Message = CommandAr
 
     response = await chat_core.send_message(message.extract_plain_text().strip(), user_info = stranger_info)
 
-    await send_msg(
+    send_msg = Send_msg(
         "NPChat",
         stranger_info,
         npchat,
         response
     )
+    await send_msg.send()

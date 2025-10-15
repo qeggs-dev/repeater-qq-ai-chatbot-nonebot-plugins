@@ -3,13 +3,12 @@ from nonebot.internal.matcher.matcher import Matcher
 from nonebot.rule import to_me
 from nonebot.params import CommandArg
 from nonebot.adapters import Message
-from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
+from nonebot.adapters.onebot.v11 import MessageEvent
 from nonebot.adapters import Bot
-from nonebot import logger
 
-from .core import ChatCore, RepeaterDebugMode, MAX_LENGTH, MAX_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE_TEXT_LINE
+from .core import ChatCore
 from ...assist import StrangerInfo, MessageSource
-from .core._send_msg import send_msg
+from .core import Send_msg
 
 smart_at: type[Matcher] = on_message(rule=to_me(), priority=100, block=True)
 
@@ -28,16 +27,17 @@ async def handle_smart_at(bot: Bot, event: MessageEvent):
         else:
             return
     
-    core = ChatCore(stranger_info.namespace_str)
+    core = ChatCore(stranger_info)
     
     response = await core.send_message(message.extract_plain_text().strip(), user_info = stranger_info)
     
-    await send_msg(
-        "Chat",
+    send_msg = Send_msg(
+        "Chat.Smart_at",
         stranger_info,
         smart_at,
         response
     )
+    await send_msg.send()
 
 chat: type[Matcher] = on_command('chat', aliases={'c', 'Chat'}, rule=to_me(), block=True)
 
@@ -52,10 +52,10 @@ async def handle_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg(
 
     response = await core.send_message(message.extract_plain_text().strip(), user_info = stranger_info)
 
-    await send_msg(
-        "Chat",
+    send_msg = Send_msg(
+        "Chat.Chat",
         stranger_info,
         chat,
-        response,
-        must = "text"
+        response
     )
+    await send_msg.send_text()

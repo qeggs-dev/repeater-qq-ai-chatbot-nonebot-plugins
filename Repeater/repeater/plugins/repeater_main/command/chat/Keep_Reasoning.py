@@ -7,7 +7,7 @@ from nonebot.adapters import Bot
 
 from .core import ChatCore
 from ...assist import StrangerInfo
-from .core._send_msg import send_msg 
+from .core import Send_msg
 
 keepReasoning = on_command("keepReasoning", aliases={"kr", "keep_reasoning", "Keep_Reasoning", "KeepReasoning"}, rule=to_me(), block=True)
 
@@ -19,9 +19,10 @@ async def handle_keep_reasoning(bot: Bot, event: MessageEvent):
 
     response = await chat_core.send_message(user_info = stranger_info, model_uid="deepseek-reasoner")
     
-    await send_msg(
+    send_msg = Send_msg(
         "Keep_Reasoning",
         stranger_info,
         keepReasoning,
         response
     )
+    await send_msg.send()
