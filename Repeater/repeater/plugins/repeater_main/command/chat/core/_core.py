@@ -19,14 +19,13 @@ class ChatCore:
     _chat_client = httpx.AsyncClient(timeout=600.0)
     _client = httpx.AsyncClient()
     
-    def __init__(self, namespace: str):
-        self.namespace = namespace
-        self._text_render = TextRender(namespace=namespace)
+    def __init__(self, strangerinfo: StrangerInfo):
+        self._strangerinfo = strangerinfo
+        self._text_render = TextRender(namespace = self._strangerinfo.namespace)
     
     async def send_message(
         self,
         message: str,
-        user_info: StrangerInfo,
         role_name: str | None = None,
         model_uid: str | None = None,
         load_prompt: bool = True,
@@ -41,10 +40,9 @@ class ChatCore:
         :
         :return: AI返回的消息
         """
-        url = f"{CHAT_ROUTE}/{self.namespace}"
+        url = f"{CHAT_ROUTE}/{self._strangerinfo.namespace_str}"
         data = self._prepare_request_body(
             message = message,
-            user_info = user_info,
             role_name = role_name,
             model_uid = model_uid,
             load_prompt = load_prompt,
@@ -60,9 +58,9 @@ class ChatCore:
                 result:dict = response.json()
             except json.JSONDecodeError:
                 return Response(
-                    status_code = response.status_code,
-                    response_text = response.text,
-                    response_body = ChatResponse()
+                    code = response.status_code,
+                    text = response.text,
+                    data = ChatResponse()
                 )
         try:
             response_body = ChatResponse(
@@ -72,15 +70,14 @@ class ChatCore:
             response_body = ChatResponse()
             
         return Response(
-            status_code = response.status_code,
-            response_text = response.text,
-            response_body = response_body
+            code = response.status_code,
+            text = response.text,
+            data = response_body
         )
     
     async def send_stream_message(
         self,
         message: str,
-        user_info: StrangerInfo,
         role_name: str | None = None,
         model_uid: str | None = None,
         load_prompt: bool = True,
@@ -96,10 +93,9 @@ class ChatCore:
         :return: AI返回的消息
         """
         import json
-        url = f"{CHAT_ROUTE}/{self.namespace}"
+        url = f"{CHAT_ROUTE}/{self._strangerinfo.namespace_str}"
         data = self._prepare_request_body(
             message = message,
-            user_info = user_info,
             role_name = role_name,
             model_uid = model_uid,
             load_prompt = load_prompt,
@@ -123,7 +119,6 @@ class ChatCore:
     def _prepare_request_body(
         self,
         message: str,
-        user_info: StrangerInfo,
         role_name: str | None = None,
         model_uid: str | None = None,
         load_prompt: bool = True,
@@ -134,10 +129,10 @@ class ChatCore:
         # 表单数据格式 (Form Data)
         data = {
             "user_info": {
-                "username" : user_info.nickname,
-                "nickname" : user_info.display_name,
-                "age": user_info.age,
-                "gender": user_info.gender,
+                "username" : self._strangerinfo.nickname,
+                "nickname" : self._strangerinfo.display_name,
+                "age": self._strangerinfo.age,
+                "gender": self._strangerinfo.gender,
             },
             "load_prompt": load_prompt,
         }
