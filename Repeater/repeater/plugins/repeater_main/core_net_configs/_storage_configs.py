@@ -5,7 +5,7 @@ from nonebot import logger
 class StorageConfigs(BaseModel):
     max_text_length: int = 400
     max_single_line_length: int = 64
-    max_text_lines: int = 10
+    max_text_lines: int = 5
 
 try:
     storage_config = StorageConfigs(**json_storage.load_json("configs/main_api.json"))
