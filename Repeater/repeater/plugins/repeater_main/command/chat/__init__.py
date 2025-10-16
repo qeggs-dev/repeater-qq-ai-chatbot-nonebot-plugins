@@ -8,6 +8,7 @@ from .recomplete import handle_recomplete
 from .reference import handle_reference
 from .render_chat import handle_render_Chat
 from .public_space_chat import handle_public_space_chat
+from .tts_chat import handle_tts_chat
 
 __all__ = [
     "handle_chat",
@@ -21,4 +22,5 @@ __all__ = [
     "handle_reference",
     "handle_render_Chat",
     "handle_public_space_chat",
+    "handle_tts_chat",
 ]

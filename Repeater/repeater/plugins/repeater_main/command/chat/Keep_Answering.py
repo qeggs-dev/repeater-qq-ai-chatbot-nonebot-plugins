@@ -5,7 +5,7 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from .core import ChatCore, RepeaterDebugMode, MAX_LENGTH, MAX_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE_TEXT_LINE
+from .core import ChatCore, RepeaterDebugMode, MAX_LENGTH, MIN_RENDER_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE_TEXT_LINES
 from ...assist import StrangerInfo
 from .core import Send_msg
 
@@ -17,7 +17,7 @@ async def handle_keep_answering(bot: Bot, event: MessageEvent):
 
     chat_core = ChatCore(stranger_info.namespace_str)
 
-    response = await chat_core.send_message(user_info = stranger_info)
+    response = await chat_core.send_message()
     
     send_msg = Send_msg(
         "Keep_Answering",

@@ -17,9 +17,11 @@ async def handle_render_Chat(bot: Bot, event: MessageEvent, args: Message = Comm
     # message = await stranger_info.image_to_text(format="==== OCR Vision Begin ====\n{text}\n===== OCR Vision end =====", excluded_tags={"[动画表情]"})
     message = stranger_info.message
     
-    core = ChatCore(stranger_info.namespace_str)
+    core = ChatCore(stranger_info)
 
-    response = await core.send_message(message.extract_plain_text().strip(), user_info = stranger_info)
+    response = await core.send_message(
+        message = message.extract_plain_text().strip()
+    )
 
     send_msg = Send_msg(
         "Render_Chat",

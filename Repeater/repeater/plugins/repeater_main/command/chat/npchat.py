@@ -20,7 +20,7 @@ async def handle_npchat(bot: Bot, event: MessageEvent, args: Message = CommandAr
 
     chat_core = ChatCore(stranger_info.namespace_str)
 
-    response = await chat_core.send_message(message.extract_plain_text().strip(), user_info = stranger_info)
+    response = await chat_core.send_message(message.extract_plain_text().strip())
 
     send_msg = Send_msg(
         "NPChat",

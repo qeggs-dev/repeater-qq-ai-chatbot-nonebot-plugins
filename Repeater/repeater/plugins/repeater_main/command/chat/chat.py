@@ -29,7 +29,9 @@ async def handle_smart_at(bot: Bot, event: MessageEvent):
     
     core = ChatCore(stranger_info)
     
-    response = await core.send_message(message.extract_plain_text().strip(), user_info = stranger_info)
+    response = await core.send_message(
+        message = message.extract_plain_text().strip()
+    )
     
     send_msg = Send_msg(
         "Chat.Smart_at",
@@ -50,7 +52,9 @@ async def handle_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg(
 
     core = ChatCore(stranger_info.namespace_str)
 
-    response = await core.send_message(message.extract_plain_text().strip(), user_info = stranger_info)
+    response = await core.send_message(
+        message = message.extract_plain_text().strip()
+    )
 
     send_msg = Send_msg(
         "Chat.Chat",
