@@ -19,13 +19,21 @@ class ChatCore:
     _chat_client = httpx.AsyncClient(timeout=600.0)
     _client = httpx.AsyncClient()
     
-    def __init__(self, strangerinfo: StrangerInfo):
+    def __init__(self, strangerinfo: StrangerInfo, public_space_chat: bool = False):
         self._strangerinfo = strangerinfo
-        self._text_render = TextRender(namespace = self._strangerinfo.namespace)
+        self._public_space_chat: bool = public_space_chat
+        self._text_render = TextRender(namespace = self.namespace)
+    
+    @property
+    def namespace(self) -> str:
+        if self._public_space_chat:
+            return self._strangerinfo.namespace.public_space_id
+        else:
+            return self._strangerinfo.namespace_str
     
     async def send_message(
         self,
-        message: str,
+        message: str | None = None,
         role_name: str | None = None,
         model_uid: str | None = None,
         load_prompt: bool = True,
@@ -40,7 +48,7 @@ class ChatCore:
         :
         :return: AI返回的消息
         """
-        url = f"{CHAT_ROUTE}/{self._strangerinfo.namespace_str}"
+        url = f"{CHAT_ROUTE}/{self.namespace}"
         data = self._prepare_request_body(
             message = message,
             role_name = role_name,
@@ -50,8 +58,8 @@ class ChatCore:
             reference_context_id = reference_context_id,
         )
         response = await self._chat_client.post(
-            url=url,
-            json=data  # 使用 json= 表示请求体数据
+            url = url,
+            json = data
         )
         if response.status_code == 200:
             try:
@@ -93,7 +101,7 @@ class ChatCore:
         :return: AI返回的消息
         """
         import json
-        url = f"{CHAT_ROUTE}/{self._strangerinfo.namespace_str}"
+        url = f"{CHAT_ROUTE}/{self.namespace}"
         data = self._prepare_request_body(
             message = message,
             role_name = role_name,
@@ -118,7 +126,7 @@ class ChatCore:
     
     def _prepare_request_body(
         self,
-        message: str,
+        message: str | None = None,
         role_name: str | None = None,
         model_uid: str | None = None,
         load_prompt: bool = True,
