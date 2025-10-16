@@ -70,10 +70,10 @@ async def recent_speaking_ranking_handle(bot: Bot, event: MessageEvent, args: Me
         if line_count > 10:
             text_render = TextRender(stranger_info.namespace)
             image = await text_render.render(text)
-            if image.status_code == 200:
-                message += MessageSegment.image(image.image_url)
+            if image.code == 200:
+                message += MessageSegment.image(image.data.image_url)
             else:
-                message += f"Error: Render Error\n{image.response_text}"
+                message += f"Error: Render Error\n{image.text}"
         else:
             message += text
         await recent_speaking_ranking.finish(message)

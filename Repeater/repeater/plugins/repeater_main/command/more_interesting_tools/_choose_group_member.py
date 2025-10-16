@@ -50,10 +50,10 @@ async def choose_group_member_handle(bot: Bot, event: MessageEvent, args: Messag
         if n > 10:
             text_render = TextRender(stranger_info.namespace)
             image = await text_render.render(text)
-            if image.status_code == 200:
-                message += MessageSegment.image(image.image_url)
+            if image.code == 200:
+                message += MessageSegment.image(image.data.image_url)
             else:
-                message += f"Error: Render Error\n{image.response_text}"
+                message += f"Error: Render Error\n{image.text}"
         else:
             message += text
         await choose_group_member.finish(message)
