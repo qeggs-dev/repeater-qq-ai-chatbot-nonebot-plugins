@@ -1,5 +1,6 @@
 # 服务端配置
 from ._net_config import net_config
+from ._storage_configs import storage_config
 
 # ==== CHAT API ==== #
 BACKEND_HOST = net_config.backend_host
@@ -53,8 +54,8 @@ BALANCE_ROUTE = f"{BACKEND_HOST}:{BACKEND_PORT}/balance_query"
 VARIABLE_EXPANSION = f"{BACKEND_HOST}:{BACKEND_PORT}/userdata/variable/expand"
 
 # ==== CONFIG ==== #
-MAX_LENGTH = 400
-MAX_SINGLE_LINE_LENGTH = 64
-MIN_RENDER_IMAGE_TEXT_LINE = 5
+MAX_LENGTH = storage_config.max_text_length
+MIN_RENDER_SINGLE_LINE_LENGTH = storage_config.max_single_line_length
+MIN_RENDER_IMAGE_TEXT_LINES = storage_config.max_text_lines
 RepeaterDebugMode = net_config.repeater_debug_mode # 是否开启调试模式，调试模式下，将直接返回消息内容，而不进行后端访问操作
 
