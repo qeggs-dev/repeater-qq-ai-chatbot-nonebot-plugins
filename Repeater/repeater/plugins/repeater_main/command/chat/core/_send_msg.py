@@ -2,12 +2,12 @@ from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
 from nonebot.internal.matcher.matcher import Matcher
 from ....chattts import ChatTTSAPI
 from ._core import ChatCore, RepeaterDebugMode, MIN_RENDER_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE_TEXT_LINES, MAX_LENGTH
-from ....assist import StrangerInfo, MessageSource, Response, TextRender, RendedImage
+from ....assist import StrangerInfo, MessageSource, Response, TextRender, RendedImage, SendMsg as BaseSendMsg
 from ._response_body import ChatResponse
 from typing import Callable, Any
 from nonebot import logger
 
-class Send_msg:
+class Send_msg(BaseSendMsg):
     def __init__(
             self,
             component: str,
@@ -31,49 +31,42 @@ class Send_msg:
                 lines = self.response.data.content.splitlines()
                 max_line_length = max([len(line) for line in lines]) if lines else 0
                 logger.debug(f"Response content has {len(lines)} lines, max line length is {max_line_length}.")
-
-                if self.response.data.reasoning_content:
-                    render_response = await self.text_render(self.response.data.reasoning_content)
-                    message.append(render_response)
-                
                 if (self.stranger_info.mode == MessageSource.GROUP and (len(lines) > MIN_RENDER_IMAGE_TEXT_LINES or max_line_length > MIN_RENDER_SINGLE_LINE_LENGTH)) or len(self.response.data.content) > MAX_LENGTH:
-                    if self.response.data.content:
-                        render_response = await self.text_render(self.response.data.content)
-                        message.append(render_response)
+                    self.send_image()
                 else:
-                    message.append(self.response.data.content)
+                    self.send_text()
             
                 await self.matcher.finish(self.stranger_info.reply + message)
             else:
                 await self.send_error(self.response)
     
-    async def send_tts(self):
+    async def send_tts(self, send_picture_first: bool = False):
         if RepeaterDebugMode:
             await self.send_debug_mode()
         else:
             if self.response.code == 200:
+                message = Message()
                 if self.response.data.reasoning_content:
                     render_response = await self.text_render(self.response.data.reasoning_content)
-                    self.matcher.send(self.stranger_info.reply + render_response)
+                    message.append(render_response)
+                    if not send_picture_first:
+                        await self.matcher.send(self.stranger_info.reply + message)
                 
                 if self.response.data.content:
+                    if send_picture_first:
+                        message.append(
+                            await self.text_render(self.response.data.content)
+                        )
+                        message.append(self.stranger_info.reply)
+                        await self.matcher.send(self.stranger_info.reply + message)
                     response = await self._chat_tts_api.text_to_speech(self.response.data.content)
-
+                    if response.code == 200:
+                        await self.matcher.finish(MessageSegment.record(response.data.audio_files[0].url))
+                    else:
+                        await self.send_response(response, message_handler=lambda _: "TTS Error.")
     
     async def send_debug_mode(self):
         await self.matcher.finish(self.stranger_info.reply + f'[{self.component}|{self.stranger_info.namespace}|{self.stranger_info.nickname}]: {self.stranger_info.message}')
-    
-    async def send_error(
-            self,
-            response: Response,
-            component: str | None = None,
-            message_handler: Callable[[Response[Any]], str] | None = None,
-        ):
-        if callable(message_handler):
-            message = message_handler(response)
-        else:
-            message = response.text
-        await self.matcher.finish(self.stranger_info.reply + f"===={component or self.component}====\n> {self.stranger_info.namespace}\n{message}\nHTTP Code: {response.code}")
     
     async def send_text(self, text: str | None = None):
         if RepeaterDebugMode:
@@ -106,12 +99,13 @@ class Send_msg:
                     message.append(
                         await self.text_render(self.response.data.reasoning_content)
                     )
+                    message.append("^ CoT \t Context v")
                 if self.response.data.content:
                     message.append(
                         await self.text_render(self.response.data.content)
                     )
                 else:
-                    message.append("Message is empty.")
+                    message.append("[Message is empty.]")
                 await self.matcher.finish(message)
             else:
                 await self.send_error(self.response, text)
