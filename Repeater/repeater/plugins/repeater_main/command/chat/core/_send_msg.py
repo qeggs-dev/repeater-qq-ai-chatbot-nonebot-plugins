@@ -1,6 +1,7 @@
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
 from nonebot.internal.matcher.matcher import Matcher
-from ._core import ChatCore, RepeaterDebugMode, MAX_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE_TEXT_LINE, MAX_LENGTH
+from ....chattts import ChatTTSAPI
+from ._core import ChatCore, RepeaterDebugMode, MIN_RENDER_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE_TEXT_LINES, MAX_LENGTH
 from ....assist import StrangerInfo, MessageSource, Response, TextRender, RendedImage
 from ._response_body import ChatResponse
 from typing import Callable, Any
@@ -19,6 +20,7 @@ class Send_msg:
         self.matcher: Matcher = matcher
         self.response: Response[ChatResponse] = response
         self._text_render = TextRender(namespace = self.stranger_info.namespace)
+        self._chat_tts_api = ChatTTSAPI()
 
     async def send(self):
         if RepeaterDebugMode:
@@ -34,7 +36,7 @@ class Send_msg:
                     render_response = await self.text_render(self.response.data.reasoning_content)
                     message.append(render_response)
                 
-                if (self.stranger_info.mode == MessageSource.GROUP and (len(lines) > MIN_RENDER_IMAGE_TEXT_LINE or max_line_length > MAX_SINGLE_LINE_LENGTH)) or len(self.response.data.content) > MAX_LENGTH:
+                if (self.stranger_info.mode == MessageSource.GROUP and (len(lines) > MIN_RENDER_IMAGE_TEXT_LINES or max_line_length > MIN_RENDER_SINGLE_LINE_LENGTH)) or len(self.response.data.content) > MAX_LENGTH:
                     if self.response.data.content:
                         render_response = await self.text_render(self.response.data.content)
                         message.append(render_response)
@@ -44,6 +46,19 @@ class Send_msg:
                 await self.matcher.finish(self.stranger_info.reply + message)
             else:
                 await self.send_error(self.response)
+    
+    async def send_tts(self):
+        if RepeaterDebugMode:
+            await self.send_debug_mode()
+        else:
+            if self.response.code == 200:
+                if self.response.data.reasoning_content:
+                    render_response = await self.text_render(self.response.data.reasoning_content)
+                    self.matcher.send(self.stranger_info.reply + render_response)
+                
+                if self.response.data.content:
+                    response = await self._chat_tts_api.text_to_speech(self.response.data.content)
+
     
     async def send_debug_mode(self):
         await self.matcher.finish(self.stranger_info.reply + f'[{self.component}|{self.stranger_info.namespace}|{self.stranger_info.nickname}]: {self.stranger_info.message}')
