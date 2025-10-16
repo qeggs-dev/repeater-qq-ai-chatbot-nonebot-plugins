@@ -10,7 +10,7 @@ class YamlStorage(TextStorage):
 
     存储文件格式为 YAML
     """
-    async def load(self, path: Path | str, encoding: str = "utf-8") -> Any:
+    async def load_yaml(self, path: Path | str, encoding: str = "utf-8") -> Any:
         try:
             logger.info(f"Loading yaml from {path}")
             return await self.load(
@@ -21,7 +21,7 @@ class YamlStorage(TextStorage):
             logger.error(f"load yaml error: {e}")
             return None
     
-    async def save(self, path: Path | str, data: Any, encoding: str = "utf-8"):
+    async def save_yaml(self, path: Path | str, data: Any, encoding: str = "utf-8"):
         try:
             logger.info(f"Saving yaml to {path}")
             await self.save(

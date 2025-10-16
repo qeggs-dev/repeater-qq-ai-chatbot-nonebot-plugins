@@ -1,6 +1,6 @@
 from ._sync_base_storage import BinaryStorage
 from pathlib import Path
-from typing import Any, AsyncGenerator, AsyncIterable, Iterable, TypeVar
+from typing import Any, Generator, Iterable, TypeVar
 import orjson
 from nonebot import logger
 
@@ -12,7 +12,7 @@ class OrjsonStorage(BinaryStorage):
 
     存储json数据
     """
-    async def load_json(self, path: Path | str, default: T = None) -> Any | T:
+    def load_json(self, path: Path | str, default: T = None) -> Any | T:
         try:
             logger.info(f"Loading json from {path}")
             return orjson.loads(
@@ -25,7 +25,7 @@ class OrjsonStorage(BinaryStorage):
             else:
                 return default
     
-    async def save_json(self, path: Path | str, data: Any):
+    def save_json(self, path: Path | str, data: Any):
         try:
             logger.info(f"Saving json to {path}")
             self.save(
@@ -36,10 +36,10 @@ class OrjsonStorage(BinaryStorage):
             logger.error(f"Error saving json to {path}: {e}")
             raise
     
-    async def load_jsonl(self, path: Path | str, default: T = None) -> AsyncGenerator[Any | T, None]:
+    def load_jsonl(self, path: Path | str, default: T = None) -> Generator[Any | T, None]:
         try:
             logger.info(f"Loading jsonl from {path}")
-            async for line in self.load_line_stream(path):
+            for line in self.load_line_stream(path):
                 try:
                     yield orjson.loads(line)
                 except Exception as e:
@@ -54,7 +54,7 @@ class OrjsonStorage(BinaryStorage):
             else:
                 yield default
             
-    async def save_jsonl(self, path: Path | str, data: Iterable[Any], append: bool = False):
+    def save_jsonl(self, path: Path | str, data: Iterable[Any], append: bool = False):
         try:
             logger.info(f"Saving jsonl to {path}")
             def json_dumps(obj: Iterable[Any]):
@@ -62,23 +62,7 @@ class OrjsonStorage(BinaryStorage):
                     yield orjson.dumps(line)
                     yield b"\n"
             
-            await self.save_stream(
-                path,
-                json_dumps(data),
-                append = append
-            )
-        except Exception as e:
-            logger.error(f"Error saving jsonl to {path}: {e}")
-            raise
-    
-    async def save_jsonl_a(self, path: Path | str, data: AsyncIterable[Any], append: bool = False):
-        try:
-            async def json_dumps(obj: AsyncIterable[Any]):
-                async for line in obj:
-                    yield orjson.dumps(line)
-                    yield b"\n"
-            
-            await self.save_astream(
+            self.save_stream(
                 path,
                 json_dumps(data),
                 append = append

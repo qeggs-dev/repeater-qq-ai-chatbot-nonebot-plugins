@@ -11,7 +11,7 @@ class TextStorage(Storage[str]):
             with open(path, "r", encoding = encoding) as f:
                 return f.read()
         except Exception as e:
-            logger.exception(f"Load {path} failed: {e}")
+            logger.error(f"Load {path} failed: {e}")
             raise
     
     def load_line_stream(self, path: Path | str, encoding: str = "utf-8") -> Generator[str, None]:
@@ -22,7 +22,7 @@ class TextStorage(Storage[str]):
                 for line in f:
                     yield line
         except Exception as e:
-            logger.exception(f"Load {path} failed: {e}")
+            logger.error(f"Load {path} failed: {e}")
             raise
     
     def load_stream(self, path: Path | str, encoding: str = "utf-8", chunk_size: int = 1024) -> Generator[str, None]:
@@ -36,7 +36,7 @@ class TextStorage(Storage[str]):
                         break
                     yield chunk
         except Exception as e:
-            logger.exception(f"Load {path} failed: {e}")
+            logger.error(f"Load {path} failed: {e}")
             raise
 
     def save(self, path: Path | str, data: str, encoding: str = "utf-8", append: bool = False) -> None:
@@ -48,7 +48,7 @@ class TextStorage(Storage[str]):
             with open(path, "w" if not append else "a", encoding=encoding) as f:
                 f.write(data)
         except Exception as e:
-            logger.exception(f"Save {path} failed: {e}")
+            logger.error(f"Save {path} failed: {e}")
             raise
     
     def save_stream(self, path: Path | str, data: Iterable[str], encoding: str = "utf-8", append: bool = False) -> None:
@@ -61,5 +61,5 @@ class TextStorage(Storage[str]):
                 for line in data:
                     f.write(line)
         except Exception as e:
-            logger.exception(f"Save {path} failed: {e}")
+            logger.error(f"Save {path} failed: {e}")
             raise

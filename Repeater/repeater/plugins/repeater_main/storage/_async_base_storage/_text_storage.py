@@ -12,7 +12,7 @@ class TextStorage(Storage[str]):
             async with aiofiles.open(path, "r", encoding = encoding) as f:
                 return await f.read()
         except Exception as e:
-            logger.exception(f"Load {path} failed: {e}")
+            logger.error(f"Load {path} failed: {e}")
             raise
     
     async def load_line_stream(self, path: Path | str, encoding: str = "utf-8") -> AsyncGenerator[str, None]:
@@ -23,7 +23,7 @@ class TextStorage(Storage[str]):
                 async for line in f:
                     yield line
         except Exception as e:
-            logger.exception(f"Load {path} failed: {e}")
+            logger.error(f"Load {path} failed: {e}")
             raise
     
     async def load_stream(self, path: Path | str, encoding: str = "utf-8", chunk_size: int = 1024) -> AsyncGenerator[str, None]:
@@ -37,7 +37,7 @@ class TextStorage(Storage[str]):
                         break
                     yield chunk
         except Exception as e:
-            logger.exception(f"Load {path} failed: {e}")
+            logger.error(f"Load {path} failed: {e}")
             raise
 
     async def save(self, path: Path | str, data: str, encoding: str = "utf-8", append: bool = False) -> None:
@@ -49,7 +49,7 @@ class TextStorage(Storage[str]):
             async with aiofiles.open(path, "w" if not append else "a", encoding=encoding) as f:
                 await f.write(data)
         except Exception as e:
-            logger.exception(f"Save {path} failed: {e}")
+            logger.error(f"Save {path} failed: {e}")
             raise
     
     async def save_stream(self, path: Path | str, data: Iterable[str], encoding: str = "utf-8", append: bool = False) -> None:
@@ -62,7 +62,7 @@ class TextStorage(Storage[str]):
                 for line in data:
                     await f.write(line)
         except Exception as e:
-            logger.exception(f"Save {path} failed: {e}")
+            logger.error(f"Save {path} failed: {e}")
             raise
     
     async def save_astream(self, path: Path | str, data: AsyncIterable[str], encoding: str = "utf-8", append: bool = False) -> None:
@@ -75,5 +75,5 @@ class TextStorage(Storage[str]):
                 async for line in data:
                     await f.write(line)
         except Exception as e:
-            logger.exception(f"Save {path} failed: {e}")
+            logger.error(f"Save {path} failed: {e}")
             raise

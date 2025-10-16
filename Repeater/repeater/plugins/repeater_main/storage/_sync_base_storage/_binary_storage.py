@@ -13,7 +13,7 @@ class BinaryStorage(Storage[bytes]):
             with open(path, "rb") as f:
                 return f.read()
         except Exception as e:
-            logger.exception(f"Error loading binary from {path}: {e}")
+            logger.error(f"Error loading binary from {path}: {e}")
             raise
     
     def load_line_stream(self, path: Path | str) -> Generator[bytes, None]:
@@ -24,7 +24,7 @@ class BinaryStorage(Storage[bytes]):
                 for line in f:
                     yield line
         except Exception as e:
-            logger.exception(f"Error loading binary line stream from {path}: {e}")
+            logger.error(f"Error loading binary line stream from {path}: {e}")
             raise
     
     def load_stream(self, path: Path | str, chunk_size: int = 1024) -> Generator[bytes, None]:
@@ -38,7 +38,7 @@ class BinaryStorage(Storage[bytes]):
                         break
                     yield chunk
         except Exception as e:
-            logger.exception(f"Error loading binary stream from {path}: {e}")
+            logger.error(f"Error loading binary stream from {path}: {e}")
             raise
     
     def save(self, path: Path | str, data: bytes, append: bool = False) -> None:
@@ -50,7 +50,7 @@ class BinaryStorage(Storage[bytes]):
             with open(path, "wb" if not append else "ab") as f:
                 f.write(data)
         except Exception as e:
-            logger.exception(f"Error saving binary to {path}: {e}")
+            logger.error(f"Error saving binary to {path}: {e}")
             raise
     
     def save_stream(self, path: Path | str, stream: Iterable[bytes], append: bool = False) -> None:
@@ -63,5 +63,5 @@ class BinaryStorage(Storage[bytes]):
                 for line in stream:
                     f.write(line)
         except Exception as e:
-            logger.exception(f"Error saving binary stream to {path}: {e}")
+            logger.error(f"Error saving binary stream to {path}: {e}")
             raise
