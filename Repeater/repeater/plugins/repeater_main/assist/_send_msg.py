@@ -1,6 +1,7 @@
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
 from nonebot.internal.matcher.matcher import Matcher
 from nonebot.exception import FinishedException
+from ._http_code import HTTP_Code
 from ._stranger_info import StrangerInfo
 from ._text_render import TextRender
 from ._response_body import Response
@@ -36,17 +37,17 @@ class SendMsg:
             reply = reply,
             continue_handler = continue_handler,
         )
+
     
     async def send_response(
             self,
             response: Response,
-            component: str | None = None,
             message_handler: Callable[[Response[Any]], str] | None = None,
             reply: bool = True,
             continue_handler: bool = False,
         ):
         """
-        发送响应对象中的内容，主要用于错误提示
+        发送响应对象中的内容，主要用于HTTP错误提示
 
         :param response: 响应对象
         :param component: 组件名称
@@ -57,12 +58,84 @@ class SendMsg:
             message = message_handler(response)
         else:
             message = response.text
-        await self._send(
-            self.stranger_info.reply + (
-                f"===={component or self.component}====\n"
-                f"> {self.stranger_info.namespace}\n"
+        await self.send_prompt(
+            (
                 f"{message}\n"
-                f"HTTP Code: {response.code}"
+                f"HTTP Code: {response.code}({HTTP_Code(response.code)})"
+            ),
+            reply = reply,
+            continue_handler = continue_handler
+        )
+    
+    async def send_prompt(
+            self,
+            prompt: str,
+            reply: bool = True,
+            continue_handler: bool = False
+        ):
+        """
+        发送提示信息
+
+        :param prompt: 提示信息
+        :param reply: 是否携带引用
+        :param continue_handler: 是否继续处理
+        """
+        await self._send(
+            (
+                f"==== {self.component} ====\n"
+                f"> [{self.stranger_info.namespace}]\n"
+                f"{prompt}"
+            ),
+            reply = reply,
+            continue_handler = continue_handler
+        )
+    
+    async def send_error(
+            self,
+            error: str,
+            reply: bool = True,
+            continue_handler: bool = False
+        ):
+        """
+        发送错误信息
+
+        :param error: 错误信息
+        :param reply: 是否携带引用
+        :param continue_handler: 是否继续处理
+        """
+        if isinstance(error, Exception):
+            await self.send_prompt(
+                (
+                    f"{error.__class__.__name__}: {error}"
+                ),
+                reply = reply,
+                continue_handler = continue_handler
+            )
+        else:
+            await self.send_prompt(
+                (
+                    f"Error: {error}"
+                ),
+                reply = reply,
+                continue_handler = continue_handler
+            )
+    
+    async def send_warning(
+            self,
+            warning: str,
+            reply: bool = True,
+            continue_handler: bool = True
+        ):
+        """
+        发送警告信息
+
+        :param warning: 警告信息
+        :param reply: 是否携带引用
+        :param continue_handler: 是否继续处理
+        """
+        await self.send_prompt(
+            (
+                f"Warning: {warning}"
             ),
             reply = reply,
             continue_handler = continue_handler
