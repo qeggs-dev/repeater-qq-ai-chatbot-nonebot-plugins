@@ -7,7 +7,7 @@ from typing import (
 
 from nonebot import logger
 import httpx
-from ._response_body import ChatResponse, StreamChatChunkResponse
+from .._response_body import ChatResponse, StreamChatChunkResponse
 from ....exit_register import ExitRegister
 from ....assist import StrangerInfo, TextRender, RendedImage, Response
 
@@ -20,16 +20,16 @@ class ChatCore:
     _client = httpx.AsyncClient()
     
     def __init__(self, strangerinfo: StrangerInfo, public_space_chat: bool = False):
-        self._strangerinfo = strangerinfo
+        self._info = strangerinfo
         self._public_space_chat: bool = public_space_chat
         self._text_render = TextRender(namespace = self.namespace)
     
     @property
     def namespace(self) -> str:
         if self._public_space_chat:
-            return self._strangerinfo.namespace.public_space_id
+            return self._info.namespace.public_space_id
         else:
-            return self._strangerinfo.namespace_str
+            return self._info.namespace_str
     
     async def send_message(
         self,
@@ -137,10 +137,10 @@ class ChatCore:
         # 表单数据格式 (Form Data)
         data = {
             "user_info": {
-                "username" : self._strangerinfo.nickname,
-                "nickname" : self._strangerinfo.display_name,
-                "age": self._strangerinfo.age,
-                "gender": self._strangerinfo.gender,
+                "username" : self._info.nickname,
+                "nickname" : self._info.display_name,
+                "age": self._info.age,
+                "gender": self._info.gender,
             },
             "load_prompt": load_prompt,
         }

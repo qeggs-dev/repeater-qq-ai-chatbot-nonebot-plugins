@@ -6,9 +6,8 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent
 from nonebot.adapters import Bot
 
-from .core import ChatCore
+from .._core import ChatCore, Send_msg
 from ...assist import StrangerInfo, MessageSource
-from .core import Send_msg
 
 smart_at: type[Matcher] = on_message(rule=to_me(), priority=100, block=True)
 

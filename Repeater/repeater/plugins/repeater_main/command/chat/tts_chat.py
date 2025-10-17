@@ -1,6 +1,6 @@
 from ...assist import StrangerInfo
 from ...chattts import ChatTTSAPI
-from .core import ChatCore, Send_msg
+from .._core import ChatCore, Send_msg
 from nonebot import on_command
 from nonebot.rule import to_me
 from nonebot.adapters.onebot.v11 import Bot, MessageEvent, Message

@@ -1,10 +1,10 @@
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
 from nonebot.internal.matcher.matcher import Matcher
-from ....chattts import ChatTTSAPI
-from ._core import ChatCore, RepeaterDebugMode, MIN_RENDER_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE_TEXT_LINES, MAX_LENGTH
-from ....assist import StrangerInfo, MessageSource, Response, TextRender, RendedImage, SendMsg as BaseSendMsg
+from ...chattts import ChatTTSAPI
+from .clients._chat_core import ChatCore, RepeaterDebugMode, MIN_RENDER_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE_TEXT_LINES, MAX_LENGTH
+from ...assist import StrangerInfo, MessageSource, Response, TextRender, RendedImage, SendMsg as BaseSendMsg
 from ._response_body import ChatResponse
-from typing import Callable, Any
+from typing import Callable, Any, NoReturn
 from nonebot import logger
 
 class Send_msg(BaseSendMsg):
@@ -31,12 +31,21 @@ class Send_msg(BaseSendMsg):
                 lines = self.response.data.content.splitlines()
                 max_line_length = max([len(line) for line in lines]) if lines else 0
                 logger.debug(f"Response content has {len(lines)} lines, max line length is {max_line_length}.")
-                if (self.stranger_info.mode == MessageSource.GROUP and (len(lines) > MIN_RENDER_IMAGE_TEXT_LINES or max_line_length > MIN_RENDER_SINGLE_LINE_LENGTH)) or len(self.response.data.content) > MAX_LENGTH:
-                    self.send_image()
+                if (
+                        (
+                        self.stranger_info.mode == MessageSource.GROUP
+                        and
+                        (
+                            len(lines) > MIN_RENDER_IMAGE_TEXT_LINES
+                            or
+                            max_line_length > MIN_RENDER_SINGLE_LINE_LENGTH)
+                        )
+                        or
+                        len(self.response.data.content) > MAX_LENGTH
+                    ):
+                    await self.send_image()
                 else:
-                    self.send_text()
-            
-                await self.matcher.finish(self.stranger_info.reply + message)
+                    await self.send_text()
             else:
                 await self.send_error(self.response)
     
@@ -63,12 +72,12 @@ class Send_msg(BaseSendMsg):
                     if response.code == 200:
                         await self.matcher.finish(MessageSegment.record(response.data.audio_files[0].url))
                     else:
-                        await self.send_response(response, message_handler=lambda _: "TTS Error.")
+                        await self.send_response(response, message=lambda _: "TTS Error.")
     
     async def send_debug_mode(self):
         await self.matcher.finish(self.stranger_info.reply + f'[{self.component}|{self.stranger_info.namespace}|{self.stranger_info.nickname}]: {self.stranger_info.message}')
     
-    async def send_text(self, text: str | None = None):
+    async def send_text(self, text: str | None = None) -> NoReturn:
         if RepeaterDebugMode:
             await self.send_debug_mode()
         else:
@@ -88,7 +97,7 @@ class Send_msg(BaseSendMsg):
             else:
                 await self.send_error(self.response, text)
     
-    async def send_image(self, text: str | None = None):
+    async def send_image(self, text: str | None = None) -> NoReturn:
         if RepeaterDebugMode:
             await self.send_debug_mode()
         else:
@@ -99,7 +108,6 @@ class Send_msg(BaseSendMsg):
                     message.append(
                         await self.text_render(self.response.data.reasoning_content)
                     )
-                    message.append("^ CoT \t Context v")
                 if self.response.data.content:
                     message.append(
                         await self.text_render(self.response.data.content)

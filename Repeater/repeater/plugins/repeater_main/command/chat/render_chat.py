@@ -5,7 +5,7 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from .core import ChatCore, Send_msg
+from .._core import ChatCore, Send_msg
 from ...assist import image_to_text, StrangerInfo
 
 renderChat = on_command('renderChat', aliases={'rc', 'render_chat', 'Render_Chat', 'RenderChat'}, rule=to_me(), block=True)
