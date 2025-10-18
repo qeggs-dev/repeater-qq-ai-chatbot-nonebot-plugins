@@ -5,8 +5,8 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from ._core import ChatCore, RepeaterDebugMode
-from ...assist import StrangerInfo
+from .._clients import PromptCore
+from ...assist import StrangerInfo, SendMsg
 
 setprompt = on_command('setPrompt', aliases={'sp', 'set_prompt', 'Set_Prompt', 'SetPrompt'}, rule=to_me(), block=True)
 
@@ -14,14 +14,13 @@ setprompt = on_command('setPrompt', aliases={'sp', 'set_prompt', 'Set_Prompt', '
 @setprompt.handle()
 async def handle_setprompt(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
+    sendmsg = SendMsg("Prompt.Set_Prompt", setprompt, stranger_info)
 
     msg = stranger_info.message_str.strip()
     
-    reply = MessageSegment.reply(event.message_id)
-    chat_core = ChatCore(stranger_info.namespace_str)
-    if RepeaterDebugMode:
-        await setprompt.finish(reply + f'[Prompt.Set_Prompt|{chat_core.name_space}]')
+    chat_core = PromptCore(stranger_info)
+    if sendmsg.is_debug_mode:
+        await sendmsg.send_debug_mode()
     else:
-        code, text = await chat_core.set_prompt(msg)
-
-        await setprompt.finish(reply + f'====Prompt.Set_Prompt====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}')
+        response = await chat_core.set_prompt(msg)
+        await sendmsg.send_response(response, f"Set Prompt{'successfully' if response.code == 200 else 'failed'}")

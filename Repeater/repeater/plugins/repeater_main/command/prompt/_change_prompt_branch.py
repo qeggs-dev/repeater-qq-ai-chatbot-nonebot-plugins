@@ -5,22 +5,21 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from ._core import ChatCore, RepeaterDebugMode
-from ...assist import StrangerInfo
+from .._clients import PromptCore
+from ...assist import StrangerInfo, SendMsg
 
 change_prompt_branch = on_command('changePromptBranch', aliases={'cpb', 'change_prompt_branch', 'Change_Prompt_Branch', 'ChangePromptBranch'}, rule=to_me(), block=True)
 
 @change_prompt_branch.handle()
 async def handle_change_prompt_branch(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
+    sendmsg = SendMsg("Chat.Change_Prompt_Branch", change_prompt_branch, stranger_info)
 
     msg = args.extract_plain_text().strip()
     
-    reply = MessageSegment.reply(event.message_id)
-    chat_core = ChatCore(stranger_info.namespace_str)
-    if RepeaterDebugMode:
-        await change_prompt_branch.finish(reply + f'[Prompt.Change_Prompt_Branch|{chat_core.name_space}|{stranger_info.nickname}]: {msg}')
+    chat_core = PromptCore(stranger_info.namespace_str)
+    if sendmsg.is_debug_mode:
+        await sendmsg.send_debug_mode()
     else:
-        code, text = await chat_core.change_prompt_branch(msg)
-
-        await change_prompt_branch.finish(reply + f'====Prompt.Change_Prompt_Branch====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}')
+        response = await chat_core.change_prompt_branch(msg)
+        sendmsg.send_response(response, f"Change Prompt Branch to {msg}")
