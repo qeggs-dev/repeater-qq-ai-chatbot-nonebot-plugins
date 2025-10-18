@@ -1,24 +1,31 @@
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
 from nonebot.internal.matcher.matcher import Matcher
 from nonebot.exception import FinishedException
+from ..core_net_configs import RepeaterDebugMode
 from ._http_code import HTTP_Code
 from ._stranger_info import StrangerInfo
 from ._text_render import TextRender
 from ._response_body import Response
-from typing import Callable, Any, NoReturn
+from typing import Callable, Any, NoReturn, TypeVar, Type
 from nonebot import logger
+
+T_RESPONSE = TypeVar("T_RESPONSE")
 
 class SendMsg:
     def __init__(
             self,
             component: str,
-            matcher: Matcher,
+            matcher: Type[Matcher],
             stranger_info: StrangerInfo,
         ):
-        self.component: str = component
-        self.stranger_info: StrangerInfo = stranger_info
-        self.matcher: Matcher = matcher
-        self._text_render = TextRender(namespace = self.stranger_info.namespace)
+        self._component: str = component
+        self._stranger_info: StrangerInfo = stranger_info
+        self._matcher: Type[Matcher] = matcher
+        self._text_render = TextRender(namespace = self._stranger_info.namespace)
+    
+    @property
+    def is_debug_mode(self) -> bool:
+        return RepeaterDebugMode
     
     async def send_debug_mode(
             self,
@@ -31,8 +38,8 @@ class SendMsg:
         :param reply: 是否携带引用
         """
         await self._send(
-            self.stranger_info.reply + (
-                f"[{self.component}|{self.stranger_info.namespace}|{self.stranger_info.nickname}]: {self.stranger_info.message}"
+            self._stranger_info.reply + (
+                f"[{self._component}|{self._stranger_info.namespace}|{self._stranger_info.nickname}]: {self._stranger_info.message}"
             ),
             reply = reply,
             continue_handler = continue_handler,
@@ -41,8 +48,8 @@ class SendMsg:
     
     async def send_response(
             self,
-            response: Response,
-            message_handler: Callable[[Response[Any]], str] | None = None,
+            response: Response[T_RESPONSE],
+            message: Callable[[Response[T_RESPONSE]], str] | str | None = None,
             reply: bool = True,
             continue_handler: bool = False,
         ):
@@ -54,8 +61,10 @@ class SendMsg:
         :param message_handler: 自定义消息文本解析处理函数
         :param reply: 是否携带引用
         """
-        if callable(message_handler):
-            message = message_handler(response)
+        if callable(message):
+            message = message(response)
+        elif isinstance(message, str):
+            message = message
         else:
             message = response.text
         await self.send_prompt(
@@ -82,8 +91,8 @@ class SendMsg:
         """
         await self._send(
             (
-                f"==== {self.component} ====\n"
-                f"> [{self.stranger_info.namespace}]\n"
+                f"==== {self._component} ====\n"
+                f"> [{self._stranger_info.namespace}]\n"
                 f"{prompt}"
             ),
             reply = reply,
@@ -212,8 +221,8 @@ class SendMsg:
         :param continue_handler: 是否继续运行当前处理流程
         """
         if reply:
-            message = self.stranger_info.reply + message
-        await self.matcher.send(message)
+            message = self._stranger_info.reply + message
+        await self._matcher.send(message)
         if not continue_handler:
             await self.break_handler()
     
