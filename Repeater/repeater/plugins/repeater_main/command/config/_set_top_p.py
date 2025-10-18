@@ -24,15 +24,9 @@ async def handle_set_top_p(bot: Bot, event: MessageEvent, args: Message = Comman
         else:
             top_p = float(msg)
     except ValueError:
-        await set_top_p.finish(
-            reply +
-            '====Chat.Set_Top_P====\n> Top_P设置错误，请输入0~1之间的浮点数'
-        )
+        await sendmsg.send_error("Top_P setting error, please enter a floating-point number or percentage between 0 and 1!")
     if top_p < -2 or top_p > 2:
-        await set_top_p.finish(
-            reply +
-            '====Chat.Set_Top_P====\n> Top_P设置错误，请输入0~1之间的浮点数'
-        )
+        await sendmsg.send_error("Top_P setting error, please enter a floating-point number or percentage between 0 and 1!")
 
     chat_core = ConfigCore(stranger_info.namespace_str)
     if sendmsg.is_debug_mode:
