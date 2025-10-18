@@ -12,25 +12,24 @@ from nonebot.params import (
     ArgPlainText,
     Arg
 )
-from ...assist import StrangerInfo, MessageSource, RendedImage, TextRender
+from ...assist import StrangerInfo, MessageSource, SendMsg
 
 recent_speaking_ranking = on_command("recentSpeakingRanking", aliases={"rsr",'recent_speaking_ranking', 'Recent_Speaking_Ranking', 'RecentSpeakingRanking'}, rule=to_me(), block=True)
 
 @recent_speaking_ranking.handle()
 async def recent_speaking_ranking_handle(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot, event, args)
-    mode = stranger_info.mode
-    reply = stranger_info.reply
+    sendmsg = SendMsg("More.ChooseGroupMember", recent_speaking_ranking, stranger_info)
     
-    if mode == MessageSource.PRIVATE:
-        await recent_speaking_ranking.finish(reply + "====Recent_Speaking_Ranking====\n私聊模式下无法使用该功能")
+    if stranger_info.mode == MessageSource.PRIVATE:
+        await sendmsg.send_error("The current feature cannot be used in private chat.")
     
     group_id = stranger_info.group_id
     
     try:
         n = int(args.extract_plain_text())
     except (ValueError, TypeError):
-        await recent_speaking_ranking.finish(reply + "====Recent_Speaking_Ranking====\n请输入数字")
+        await sendmsg.send_error("Please enter a valid number.")
     if n > 0:
         text = ""
         message_list = await bot.get_group_msg_history(
@@ -59,23 +58,17 @@ async def recent_speaking_ranking_handle(bot: Bot, event: MessageEvent, args: Me
 
         text_list: list[str] = []
         for index, (name, speech_count) in enumerate(sorted_member_speech_count_list, start = 1):
-            text_list.append(f"[{index}] {name}: {speech_count}")
+            text_list.append(f"{index}. {name}: {speech_count}")
         text = "\n".join(text_list)
 
-        message = reply + f"====Recent_Speaking_Ranking====\n"
+        sendmsg.add_prefix("====Recent_Speaking_Ranking====\n")
         if validation_failure_counter > 0:
-            message += f"Warning: There are {validation_failure_counter} message verification failures.\n"
+            sendmsg.send_warning(f"Warning: There are {validation_failure_counter} message verification failures.\n")
         line_count = text.count('\n') + 1
         
         if line_count > 10:
-            text_render = TextRender(stranger_info.namespace)
-            image = await text_render.render(text)
-            if image.code == 200:
-                message += MessageSegment.image(image.data.image_url)
-            else:
-                message += f"Error: Render Error\n{image.text}"
+            sendmsg.send_render(text)
         else:
-            message += text
-        await recent_speaking_ranking.finish(message)
+            sendmsg.send_text(text)
     else:
-        await recent_speaking_ranking.finish(reply + "====Recent_Speaking_Ranking====\n请输入大于0的数字")
+        await sendmsg.send_error("The input must be a positive integer!")

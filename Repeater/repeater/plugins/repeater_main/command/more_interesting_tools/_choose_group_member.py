@@ -2,34 +2,31 @@ import random
 from typing import Any
 from nonebot import on_command
 from nonebot.rule import to_me
-from nonebot.adapters import Message
-from nonebot.matcher import Matcher
-from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
+from nonebot.adapters.onebot.v11 import Message, MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 from nonebot.params import (
     CommandArg,
     ArgPlainText,
     Arg
 )
-from ...assist import StrangerInfo, MessageSource, RendedImage, TextRender
+from ...assist import StrangerInfo, MessageSource, SendMsg, TextRender
 
 choose_group_member = on_command("chooseGroupMember", aliases={"cgm",'choose_group_member', 'Choose_Group_Member', 'ChooseGroupMember'}, rule=to_me(), block=True)
 
 @choose_group_member.handle()
 async def choose_group_member_handle(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot, event, args)
-    mode = stranger_info.mode
-    reply = stranger_info.reply
+    sendmsg = SendMsg("More.Choose_Group_Member", choose_group_member, stranger_info)
     
-    if mode == MessageSource.PRIVATE:
-        await choose_group_member.finish(reply + "====Choose_Group_Member====\n私聊模式下无法使用该功能")
+    if stranger_info.mode == MessageSource.PRIVATE:
+        await sendmsg.send_error("The current feature cannot be used in private chat.")
     
     group_id = stranger_info.group_id
     
     try:
         n = int(args.extract_plain_text())
     except (ValueError, TypeError):
-        await choose_group_member.finish(reply + "====Choose_Group_Member====\n请输入数字")
+        await sendmsg.send_error("Please enter a number.")
     if n > 0:
         text = ""
         member_list = await bot.get_group_member_list(
@@ -37,25 +34,19 @@ async def choose_group_member_handle(bot: Bot, event: MessageEvent, args: Messag
             no_cache = False
         )
         if n > len(member_list):
-            await choose_group_member.finish(reply + f"====Choose_Group_Member====\nN过大，请输入小于等于{len(member_list)}的数字")
+            await sendmsg.send_error(f"The current number is too large, please enter a number less than {len(member_list)}.")
         choiced: list[dict[str, Any]] = random.sample(member_list, n)
         text_list: list[str] = []
         for index, member in enumerate(choiced, start = 1):
             nickname = member.get("card")
             if not nickname:
                 nickname = member.get("nickname")
-            text_list.append(f"[{index}] {nickname}")
+            text_list.append(f"{index}. {nickname}")
         text = "\n".join(text_list)
-        message = reply + f"====Choose_Group_Member====\n"
+        sendmsg.add_prefix("====Choose_Group_Member====\n")
         if n > 10:
-            text_render = TextRender(stranger_info.namespace)
-            image = await text_render.render(text)
-            if image.code == 200:
-                message += MessageSegment.image(image.data.image_url)
-            else:
-                message += f"Error: Render Error\n{image.text}"
+            await sendmsg.send_render(text)
         else:
-            message += text
-        await choose_group_member.finish(message)
+            await sendmsg.send_text(text)
     else:
-        await choose_group_member.finish(reply + "====Choose_Group_Member====\n请输入大于0的数字")
+        await sendmsg.send_error("The input must be a positive integer!")
