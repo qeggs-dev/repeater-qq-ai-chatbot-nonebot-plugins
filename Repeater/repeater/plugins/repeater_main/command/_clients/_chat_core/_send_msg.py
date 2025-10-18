@@ -1,8 +1,8 @@
 from nonebot.adapters.onebot.v11 import MessageSegment, Message
 from nonebot.internal.matcher.matcher import Matcher
-from ...chattts import ChatTTSAPI
-from .clients._chat_core._chat_core import MIN_RENDER_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE_TEXT_LINES, MAX_LENGTH
-from ...assist import StrangerInfo, MessageSource, Response, TextRender, SendMsg as BaseSendMsg
+from ....chattts import ChatTTSAPI
+from ....core_net_configs import MIN_RENDER_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE_TEXT_LINES, MAX_LENGTH
+from ....assist import StrangerInfo, MessageSource, Response, TextRender, SendMsg as BaseSendMsg
 from ._response_body import ChatResponse
 from typing import NoReturn
 from nonebot import logger

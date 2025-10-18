@@ -1,0 +1,37 @@
+import json
+import httpx
+from nonebot import logger
+from typing import (
+    Optional,
+    Union
+)
+
+from ....core_net_configs import *
+from ....assist import StrangerInfo, Response
+
+class VariableExpansionCore:
+    _httpx_client = httpx.AsyncClient()
+
+    def __init__(self, info: StrangerInfo):
+        self._info = info
+    
+    # region set note  
+    async def expand_variable(self, text: str) -> Response[None]:
+        response = await self._httpx_client.post(
+            f'{VARIABLE_EXPANSION}/{self._info.namespace_str}',
+            json={
+                'user_info':{
+                    'username': self._info.nickname,
+                    'nickname': self._info.display_name,
+                    'gender': self._info.gender,
+                    'age': self._info.age,
+                },
+                'text': text
+            }
+        )
+        return Response(
+            code = response.status_code,
+            text = response.text,
+            data = None
+        )
+    # endregion

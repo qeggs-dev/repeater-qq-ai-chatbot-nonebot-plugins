@@ -8,6 +8,15 @@ from ._chat_core import (
 from ._context_core import (
     ContextCore,
 )
+from ._prompt_core import (
+    PromptCore,
+)
 from ._config_core import (
     ConfigCore,
+)
+from ._user_file_core import (
+    UserFileCore,
+)
+from ._variable_expansion_core import (
+    VariableExpansionCore,
 )
