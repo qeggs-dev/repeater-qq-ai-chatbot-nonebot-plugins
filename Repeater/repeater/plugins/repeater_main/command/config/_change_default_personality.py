@@ -2,7 +2,7 @@ from nonebot import on_command
 from nonebot.rule import to_me
 from nonebot.params import CommandArg
 from nonebot.adapters import Message
-from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
+from nonebot.adapters.onebot.v11 import MessageEvent
 from nonebot.adapters import Bot
 
 from .._core import ConfigCore

@@ -2,7 +2,7 @@ from nonebot import on_command
 from nonebot.rule import to_me
 from nonebot.params import CommandArg
 from nonebot.adapters import Message
-from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
+from nonebot.adapters.onebot.v11 import MessageEvent
 from nonebot.adapters import Bot
 
 from .._core import ConfigCore
@@ -16,7 +16,6 @@ async def handle_set_presence_penalty(bot: Bot, event: MessageEvent, args: Messa
     sendmsg = SendMsg("Chat.Set_Presence_Penalty", set_presence_penalty, stranger_info)
 
     msg = stranger_info.message_str.strip()
-    reply = MessageSegment.reply(event.message_id)
 
     try:
         if msg.endswith("%"):
