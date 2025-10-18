@@ -5,23 +5,24 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from ._core import ChatCore, RepeaterDebugMode
-from ...assist import StrangerInfo
+from .._clients import VariableExpansionCore
+from ...assist import StrangerInfo, SendMsg
 
 var_Expand = on_command("varExpand", aliases={"ve", "var_expand", "Var_Expand", "VarExpand"}, rule=to_me(), block=True)
 
 @var_Expand.handle()
 async def handle_var_expand(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
+    sendmsg = SendMsg("VarExpand", var_Expand, stranger_info)
 
     msg = args.extract_plain_text().strip()
 
-    chat_core = ChatCore(stranger_info.namespace_str)
-    if RepeaterDebugMode:
-        await var_Expand.finish(stranger_info.reply + f'[Var_Expand.Expand|{chat_core.name_space}|{stranger_info.nickname}]：{msg}')
+    chat_core = VariableExpansionCore(stranger_info)
+    if sendmsg.is_debug_mode:
+        sendmsg.send_debug_mode()
     else:
-        code, text = await chat_core.expand_variable(user_info=stranger_info, text=msg)
-        if code == 200:
-            await var_Expand.finish(stranger_info.reply + text)
+        response = await chat_core.expand_variable(text=msg)
+        if response.code == 200:
+            await sendmsg.send_text(response.text)
         else:
-            await var_Expand.finish(stranger_info.reply + f'====Var_Expand.Expand====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}')
+            await sendmsg.send_response(response, "Error: VariableExpansion")
