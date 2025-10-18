@@ -5,7 +5,7 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent
 from nonebot.adapters import Bot
 
-from .._core import ConfigCore
+from .._clients import ConfigCore
 from ...assist import StrangerInfo, SendMsg
 
 change_config_branch = on_command('changeConfigBranch', aliases={'ccfgb', 'change_config_branch', 'Change_Config_Branch', 'ChangeConfigBranch'}, rule=to_me(), block=True)

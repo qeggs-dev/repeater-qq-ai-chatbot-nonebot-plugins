@@ -5,7 +5,7 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent
 from nonebot.adapters import Bot
 
-from .._core import ConfigCore
+from .._clients import ConfigCore
 from ...assist import StrangerInfo, SendMsg
 
 set_frequency_penalty = on_command('setFrequencyPenalty', aliases={'sfp', 'set_frequency_penalty', 'Set_Frequency_Penalty', 'SetFrequencyPenalty'}, rule=to_me(), block=True)

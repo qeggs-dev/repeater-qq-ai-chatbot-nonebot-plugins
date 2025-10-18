@@ -5,7 +5,7 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent
 from nonebot.adapters import Bot
 
-from .._core import ConfigCore
+from .._clients import ConfigCore
 from ...assist import StrangerInfo, SendMsg
 
 set_max_tokens = on_command('setMaxTokens', aliases={'smt', 'set_max_tokens', 'Set_Max_Tokens', 'SetMaxTokens'}, rule=to_me(), block=True)

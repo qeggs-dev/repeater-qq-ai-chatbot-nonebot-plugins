@@ -5,7 +5,7 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent
 from nonebot.adapters import Bot
 
-from .._core import ConfigCore
+from .._clients import ConfigCore
 from ...assist import StrangerInfo, SendMsg
 
 set_temperature = on_command('setTemperature', aliases={'st', 'set_temperature', 'Set_Temperature', 'SetTemperature'}, rule=to_me(), block=True)
