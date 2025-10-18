@@ -1,5 +1,6 @@
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
 from nonebot.adapters import Bot
+from nonebot import get_driver
 from typing import Literal, Container
 from ._assist_func import (
     handle_at_with_name,
@@ -24,6 +25,16 @@ class StrangerInfo:
                     raise ValueError("Is Group, But Group ID is None")
             except KeyError:
                 raise ValueError("Is Group, But Group ID is Not Found")
+    
+    @property
+    def is_superuser(self) -> bool:
+        if self._bot.config.superusers is None:
+            return False
+        return self.user_id in self._bot.config.superusers
+    
+    @property
+    def superusers(self) -> list[int]:
+        return self._bot.config.superusers.copy()
     
     @property
     def message_id(self) -> int:
@@ -86,6 +97,10 @@ class StrangerInfo:
     @property
     def public_namespace_str(self) -> str:
         return self.namespace.public_space_id
+    
+    @property
+    def event_message(self) -> Message:
+        return self._message_event.message
     
     @property
     def message(self) -> Message:
