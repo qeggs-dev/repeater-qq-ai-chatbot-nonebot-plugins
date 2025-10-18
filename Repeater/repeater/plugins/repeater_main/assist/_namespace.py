@@ -2,11 +2,17 @@ from dataclasses import dataclass
 from enum import Enum
 
 class MessageSource(Enum):
+    """
+    消息来源
+    """
     GROUP = "group"
     PRIVATE = "private"
 
 @dataclass
 class Namespace:
+    """
+    用户命名空间
+    """
     mode: MessageSource = MessageSource.GROUP
     group_id: str | None = None
     user_id: str = ""

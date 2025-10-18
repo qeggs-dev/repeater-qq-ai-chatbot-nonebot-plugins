@@ -22,6 +22,13 @@ class SendMsg:
         self._stranger_info: StrangerInfo = stranger_info
         self._matcher: Type[Matcher] = matcher
         self._text_render = TextRender(namespace = self._stranger_info.namespace)
+        self._prefix: Message = Message()
+    
+    def add_prefix(self, prefix: MessageSegment | str):
+        self._prefix.append(prefix)
+    
+    def clear_prefix(self):
+        self._prefix = Message()
     
     @property
     def is_debug_mode(self) -> bool:
@@ -207,25 +214,6 @@ class SendMsg:
             continue_handler = continue_handler
         )
     
-    async def _send(
-            self,
-            message: Message,
-            reply: bool = True,
-            continue_handler: bool = False
-        ):
-        """
-        发送消息
-
-        :param message: 消息对象
-        :param reply: 是否携带引用
-        :param continue_handler: 是否继续运行当前处理流程
-        """
-        if reply:
-            message = self._stranger_info.reply + message
-        await self._matcher.send(message)
-        if not continue_handler:
-            await self.break_handler()
-    
     async def break_handler(self) -> NoReturn:
         """
         跳出当前处理函数
@@ -245,3 +233,23 @@ class SendMsg:
             else:
                 await self.send_response(render_response, text)
         return message
+    
+    async def _send(
+            self,
+            message: Message,
+            reply: bool = True,
+            continue_handler: bool = False
+        ):
+        """
+        发送消息
+
+        :param message: 消息对象
+        :param reply: 是否携带引用
+        :param continue_handler: 是否继续运行当前处理流程
+        """
+        send_msg = self._prefix + message
+        if reply:
+            send_msg = self._stranger_info.reply + send_msg
+        await self._matcher.send(send_msg)
+        if not continue_handler:
+            await self.break_handler()
