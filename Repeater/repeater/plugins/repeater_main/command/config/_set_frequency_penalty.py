@@ -5,17 +5,17 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from ._core import ChatCore, RepeaterDebugMode
-from ...assist import StrangerInfo
+from .._core import ConfigCore
+from ...assist import StrangerInfo, SendMsg
 
 set_frequency_penalty = on_command('setFrequencyPenalty', aliases={'sfp', 'set_frequency_penalty', 'Set_Frequency_Penalty', 'SetFrequencyPenalty'}, rule=to_me(), block=True)
 
 @set_frequency_penalty.handle()
 async def handle_set_frequency_penalty(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot, event, args)
+    sendmsg = SendMsg("Chat.Set_Frequency_Penalty", set_frequency_penalty, stranger_info)
 
-    msg = stranger_info.message_str.strip()
-    reply = MessageSegment.reply(event.message_id)
+    msg = stranger_info.message_str
 
     try:
         if msg.endswith("%"):
@@ -24,21 +24,15 @@ async def handle_set_frequency_penalty(bot: Bot, event: MessageEvent, args: Mess
         else:
             frequency_penalty = float(msg)
     except ValueError:
-        await set_frequency_penalty.finish(
-            reply +
-            '====Chat.Set_Frequency_Penalty====\n> 频率惩罚设置错误，请输入-2~2之间的浮点数或百分比'
-        )
+        await sendmsg.send_error("Frequency_Penalty setting is incorrect, please enter a floating-point number or percentage between -2 and 2!")
     if frequency_penalty < -2 or frequency_penalty > 2:
-        await set_frequency_penalty.finish(
-            reply +
-            '====Chat.Set_Frequency_Penalty====\n> 频率惩罚设置错误，请输入-2~2之间的浮点数或百分比'
-        )
+        await sendmsg.send_error("Frequency_Penalty setting is incorrect, please enter a floating-point number or percentage between -2 and 2!")
 
 
-    chat_core = ChatCore(stranger_info.namespace_str)
-    if RepeaterDebugMode:
-        await set_frequency_penalty.finish(reply + f'[Chat.Set_Frequency_Penalty|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')
+    chat_core = ConfigCore(stranger_info)
+    if sendmsg.is_debug_mode:
+        await sendmsg.send_debug_mode()
     else:
-        code, text = await chat_core.set_config("frequency_penalty", frequency_penalty)
-
-        await set_frequency_penalty.finish(reply + f'====Chat.Set_Frequency_Penalty====\n> {chat_core.name_space}\nHTTP Code: {code}\n\nFrequency_Penalty: {frequency_penalty}')
+        response = await chat_core.set_config("frequency_penalty", frequency_penalty)
+        await sendmsg.send_response(response, f"Set Frequency_Penalty to {frequency_penalty}")
+        

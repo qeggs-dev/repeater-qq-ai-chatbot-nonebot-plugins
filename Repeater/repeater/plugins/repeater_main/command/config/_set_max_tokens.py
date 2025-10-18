@@ -5,37 +5,30 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from ._core import ChatCore, RepeaterDebugMode
-from ...assist import StrangerInfo
+from .._core import ConfigCore
+from ...assist import StrangerInfo, SendMsg
 
 set_max_tokens = on_command('setMaxTokens', aliases={'smt', 'set_max_tokens', 'Set_Max_Tokens', 'SetMaxTokens'}, rule=to_me(), block=True)
 
 @set_max_tokens.handle()
 async def handle_set_max_tokens(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
+    sendmsg = SendMsg("Chat.Set_Max_Tokens", stranger_info, set_max_tokens, None)
 
     msg = stranger_info.message_str.strip()
-    reply = MessageSegment.reply(event.message_id)
 
     try:
         max_tokens = int(msg)
     except ValueError:
-        await set_max_tokens.finish(
-            reply +
-            '====Chat.Set_Max_Tokens====\n> Max_Tokens设置错误，请输入整数'
-        )
+        await sendmsg.send_error("Max_Tokens setting is incorrect, please enter an integer!")
         
     if max_tokens < 1 or max_tokens > 8192:
-        await max_tokens.finish(
-            reply +
-            '====Chat.Set_Max_Tokens====\n> Max_Tokens设置错误，请输入整数'
-        )
+        await sendmsg.send_error("Max_Tokens setting is incorrect, please enter an integer between 1 and 8192!")
 
 
-    chat_core = ChatCore(stranger_info.namespace_str)
-    if RepeaterDebugMode:
-        await set_max_tokens.finish(reply + f'[Chat.Set_Max_Tokens|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')
+    chat_core = ConfigCore(stranger_info)
+    if sendmsg.is_debug_mode:
+        await sendmsg.send_debug_mode()
     else:
-        code, text = await chat_core.set_config("max_tokens", max_tokens)
-
-        await set_max_tokens.finish(reply + f'====Chat.Set_Max_Tokens====\n> {chat_core.name_space}\nHTTP Code: {code}\n\nMax_Tokens: {max_tokens}')
+        response = await chat_core.set_config("max_tokens", max_tokens)
+        await sendmsg.send_response(response, f"Set Max_Tokens to {max_tokens}")

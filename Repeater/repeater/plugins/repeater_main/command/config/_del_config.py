@@ -5,20 +5,19 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from ._core import ChatCore, RepeaterDebugMode
-from ...assist import StrangerInfo
+from .._core import ConfigCore
+from ...assist import StrangerInfo, SendMsg
 
 del_config = on_command('delConfig', aliases={'dcfg', 'delete_config', 'Delete_Config', 'DeleteConfig'}, rule=to_me(), block=True)
 
 @del_config.handle()
 async def handle_del_config(bot: Bot, event: MessageEvent):
     stranger_info = StrangerInfo(bot, event)
+    sendmsg = SendMsg("Chat.Delete_Config", del_config, stranger_info)
 
-    reply = MessageSegment.reply(event.message_id)
-    chat_core = ChatCore(stranger_info.namespace_str)
-    if RepeaterDebugMode:
-        await del_config.finish(reply + f'[Chat.Delete_Config|{chat_core.name_space}|{stranger_info.nickname}]')
+    chat_core = ConfigCore(stranger_info)
+    if sendmsg.is_debug_mode:
+        await sendmsg.send_debug_mode()
     else:
-        code, text = await chat_core.delete_config()
-
-        await del_config.finish(reply + f'====Chat.Delete_Config====\n> {chat_core.name_space}\nHTTP Code: {code}\n')
+        response = await chat_core.delete_config()
+        await sendmsg.send_response(response, f"Delete Config {stranger_info.namespace_str}")
