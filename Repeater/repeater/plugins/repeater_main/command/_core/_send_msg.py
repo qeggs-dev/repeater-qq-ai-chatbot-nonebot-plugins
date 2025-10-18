@@ -1,10 +1,10 @@
-from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
+from nonebot.adapters.onebot.v11 import MessageSegment, Message
 from nonebot.internal.matcher.matcher import Matcher
 from ...chattts import ChatTTSAPI
-from .clients._chat_core import ChatCore, RepeaterDebugMode, MIN_RENDER_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE_TEXT_LINES, MAX_LENGTH
-from ...assist import StrangerInfo, MessageSource, Response, TextRender, RendedImage, SendMsg as BaseSendMsg
+from .clients._chat_core import MIN_RENDER_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE_TEXT_LINES, MAX_LENGTH
+from ...assist import StrangerInfo, MessageSource, Response, TextRender, SendMsg as BaseSendMsg
 from ._response_body import ChatResponse
-from typing import Callable, Any, NoReturn
+from typing import NoReturn
 from nonebot import logger
 
 class Send_msg(BaseSendMsg):
@@ -23,7 +23,7 @@ class Send_msg(BaseSendMsg):
         self._chat_tts_api = ChatTTSAPI()
 
     async def send(self):
-        if RepeaterDebugMode:
+        if self.is_debug_mode:
             await self.send_debug_mode()
         else:
             if self.response.code == 200:
@@ -50,7 +50,7 @@ class Send_msg(BaseSendMsg):
                 await self.send_error(self.response)
     
     async def send_tts(self, send_picture_first: bool = False):
-        if RepeaterDebugMode:
+        if self.is_debug_mode:
             await self.send_debug_mode()
         else:
             if self.response.code == 200:
@@ -72,13 +72,13 @@ class Send_msg(BaseSendMsg):
                     if response.code == 200:
                         await self.matcher.finish(MessageSegment.record(response.data.audio_files[0].url))
                     else:
-                        await self.send_response(response, message=lambda _: "TTS Error.")
+                        await self.send_response(response, message = "TTS Error.")
     
     async def send_debug_mode(self):
         await self.matcher.finish(self.stranger_info.reply + f'[{self.component}|{self.stranger_info.namespace}|{self.stranger_info.nickname}]: {self.stranger_info.message}')
     
     async def send_text(self, text: str | None = None) -> NoReturn:
-        if RepeaterDebugMode:
+        if self.is_debug_mode:
             await self.send_debug_mode()
         else:
             if self.response.code == 200:
@@ -98,7 +98,7 @@ class Send_msg(BaseSendMsg):
                 await self.send_error(self.response, text)
     
     async def send_image(self, text: str | None = None) -> NoReturn:
-        if RepeaterDebugMode:
+        if self.is_debug_mode:
             await self.send_debug_mode()
         else:
             if self.response.code == 200:
