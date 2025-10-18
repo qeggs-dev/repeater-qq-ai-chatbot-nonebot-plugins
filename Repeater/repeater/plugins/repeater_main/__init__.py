@@ -14,7 +14,7 @@ from .command.config import *
 from .command.more_interesting_tools import *
 
 # === UserDataFile === #
-from .command.userFile import (
+from .command.user_file import (
     handle_send_user_data_file,
 )
 
