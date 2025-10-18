@@ -26,6 +26,10 @@ class StrangerInfo:
                 raise ValueError("Is Group, But Group ID is Not Found")
     
     @property
+    def message_id(self) -> int:
+        return self._message_event.message_id
+
+    @property
     def group_id(self) -> int | None:
         if self._group_id is None:
             return None
@@ -86,9 +90,9 @@ class StrangerInfo:
     @property
     def message(self) -> Message:
         if self._args is not None:
-            return self._args
+            return self._args.copy()
         else:
-            return self._message_event.message
+            return self._message_event.message.copy()
     
     @property
     def message_str(self) -> str:
@@ -96,7 +100,7 @@ class StrangerInfo:
     
     @property
     def reply(self):
-        return MessageSegment.reply(self._message_event.message_id)
+        return MessageSegment.reply(self.message_id)
     
     @property
     def mode(self) -> MessageSource:
