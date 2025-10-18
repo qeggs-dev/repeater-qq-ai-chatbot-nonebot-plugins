@@ -2,23 +2,22 @@ from nonebot import on_command
 from nonebot.rule import to_me
 from nonebot.params import CommandArg
 from nonebot.adapters import Message
-from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
+from nonebot.adapters.onebot.v11 import MessageEvent
 from nonebot.adapters import Bot
 
-from ._core import ChatCore, RepeaterDebugMode
-from ...assist import StrangerInfo
+from .._clients import ContextCore
+from ...assist import StrangerInfo, SendMsg
 
 delcontext = on_command('deleteContext', aliases={'dc', 'delete_context', 'Delete_Context', 'DeleteContext'}, rule=to_me(), block=True)
 
 @delcontext.handle()
 async def handle_delete_context(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
+    sendmsg = SendMsg("Chat.Delete_Context", delcontext, stranger_info)
     
-    reply = MessageSegment.reply(event.message_id)
-    chat_core = ChatCore(stranger_info.namespace_str)
-    if RepeaterDebugMode:
-        await delcontext.finish(reply + f'[Context.Delete_Context|{chat_core.name_space}|{stranger_info.nickname}]')
+    chat_core = ContextCore(stranger_info.namespace_str)
+    if sendmsg.is_debug_mode:
+        await sendmsg.send_debug_mode()
     else:
-        code, text = await chat_core.delete_context()
-
-        await delcontext.finish(reply + f'====Context.Delete_Context====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}')
+        response = await chat_core.delete_context()
+        await sendmsg.send_response(response, f"Delete Context from {stranger_info.namespace_str}")

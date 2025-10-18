@@ -2,25 +2,24 @@ from nonebot import on_command
 from nonebot.rule import to_me
 from nonebot.params import CommandArg
 from nonebot.adapters import Message
-from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
+from nonebot.adapters.onebot.v11 import MessageEvent
 from nonebot.adapters import Bot
 
-from ._core import ChatCore, RepeaterDebugMode
-from ...assist import StrangerInfo
+from .._clients import ContextCore
+from ...assist import StrangerInfo, SendMsg
 
 change_context_branch = on_command('changeContextBranch', aliases={'ccb', 'change_context_branch', 'Change_Context_Branch', 'ChangeContextBranch'}, rule=to_me(), block=True)
 
 @change_context_branch.handle()
 async def handle_change_context_branch(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
+    sendmsg = SendMsg("Chat.Change_Context_Branch", change_context_branch, stranger_info)
     
     msg = stranger_info.message_str.strip()
     
-    reply = MessageSegment.reply(event.message_id)
-    chat_core = ChatCore(stranger_info.namespace_str)
-    if RepeaterDebugMode:
-        await change_context_branch.finish(reply + f'[Context.Change_Context_Branch|{chat_core.name_space}|{stranger_info.nickname}]:{msg}')
+    chat_core = ContextCore(stranger_info)
+    if sendmsg.is_debug_mode:
+        await sendmsg.send_debug_mode()
     else:
-        code, text = await chat_core.change_context_branch(msg)
-
-        await change_context_branch.finish(reply + f'====Context.Change_Context_Branch====\n> {chat_core.name_space}\n{text}\nHTTP Code: {code}')
+        response = await chat_core.change_context_branch(msg)
+        await sendmsg.send_response(response, f"Change Context Branch to {msg}")

@@ -5,30 +5,27 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from ._core import ChatCore, RepeaterDebugMode
-from ...assist import StrangerInfo
+from .._clients import ContextCore
+from ...assist import StrangerInfo, SendMsg
 
 withdraw = on_command('withdraw', aliases={'w', 'Withdraw'}, rule=to_me(), block=True)
 
 @withdraw.handle()
 async def handle_withdraw(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
+    sendmsg = SendMsg("Chat.Withdraw", withdraw, stranger_info)
 
-    msg = stranger_info.message_str.strip()
-
-    chat_core = ChatCore(stranger_info.namespace_str)
-    if RepeaterDebugMode:
-        await withdraw.finish(stranger_info.reply + f'[Context.Withdraw|{chat_core.name_space}|{stranger_info.nickname}]')
+    chat_core = ContextCore(stranger_info.namespace_str)
+    if sendmsg.is_debug_mode:
+        await sendmsg.send_debug_mode()
     else:
         response = await chat_core.withdraw()
 
-        if response.status_code == 200:
-            await withdraw.finish(
-                stranger_info.reply + f"====Context.Withdraw====\n"
-                f"> {chat_core.name_space}\n"
-                f"Deleted: {response.response_body.deleted}\n"
-                f"Remaining: {len(response.response_body.context)}\n"
-                f"HTTP Code: {response.status_code}"
+        if response.code == 200:
+            await sendmsg.send_prompt(
+                f"Deleted: {response.data.deleted}\n"
+                f"Remaining: {len(response.data.context)}\n"
             )
+            
         else:
-            await withdraw.finish(stranger_info.reply + f'====Context.Withdraw====\n> {chat_core.name_space}\nHTTP Code: {response.status_code}')
+            await sendmsg.send_response(response, "Withdraw Failed")
