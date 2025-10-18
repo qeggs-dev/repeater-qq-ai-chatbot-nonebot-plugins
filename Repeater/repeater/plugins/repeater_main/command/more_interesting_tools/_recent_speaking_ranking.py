@@ -5,8 +5,7 @@ from nonebot import on_command
 from nonebot.rule import to_me
 from nonebot.adapters import Message
 from nonebot.matcher import Matcher
-from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
-from nonebot.adapters import Bot
+from nonebot.adapters.onebot.v11 import Bot, MessageEvent, MessageSegment
 from nonebot.params import (
     CommandArg,
     ArgPlainText,

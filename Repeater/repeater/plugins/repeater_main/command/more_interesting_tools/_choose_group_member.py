@@ -2,8 +2,7 @@ import random
 from typing import Any
 from nonebot import on_command
 from nonebot.rule import to_me
-from nonebot.adapters.onebot.v11 import Message, MessageEvent, MessageSegment
-from nonebot.adapters import Bot
+from nonebot.adapters.onebot.v11 import Bot, Message, MessageEvent, MessageSegment
 from nonebot.params import (
     CommandArg,
     ArgPlainText,
