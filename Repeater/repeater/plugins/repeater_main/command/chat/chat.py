@@ -6,7 +6,7 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent
 from nonebot.adapters import Bot
 
-from .._core import ChatCore, Send_msg
+from .._clients import ChatCore, ChatSendMsg
 from ...assist import StrangerInfo, MessageSource
 
 smart_at: type[Matcher] = on_message(rule=to_me(), priority=100, block=True)
@@ -32,7 +32,7 @@ async def handle_smart_at(bot: Bot, event: MessageEvent):
         message = message.extract_plain_text().strip()
     )
     
-    send_msg = Send_msg(
+    send_msg = ChatSendMsg(
         "Chat.Smart_at",
         stranger_info,
         smart_at,
@@ -55,7 +55,7 @@ async def handle_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg(
         message = message.extract_plain_text().strip()
     )
 
-    send_msg = Send_msg(
+    send_msg = ChatSendMsg(
         "Chat.Chat",
         stranger_info,
         chat,

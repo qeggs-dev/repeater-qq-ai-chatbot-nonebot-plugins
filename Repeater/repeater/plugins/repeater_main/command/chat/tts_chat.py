@@ -1,6 +1,6 @@
 from ...assist import StrangerInfo
 from ...chattts import ChatTTSAPI
-from .._core import ChatCore, Send_msg
+from .._clients import ChatCore, ChatSendMsg
 from nonebot import on_command
 from nonebot.rule import to_me
 from nonebot.adapters.onebot.v11 import Bot, MessageEvent, Message
@@ -20,7 +20,7 @@ async def handle_tts_chat(bot: Bot, event: MessageEvent, args: Message = Command
         message = stranger_info.message_str
     )
 
-    send_msg = Send_msg(
+    send_msg = ChatSendMsg(
         "TTS_Chat",
         stranger_info = stranger_info,
         matcher = tts_chat,

@@ -5,7 +5,7 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from .._core import ChatCore, Send_msg
+from .._clients import ChatCore, ChatSendMsg
 from ...assist import StrangerInfo
 
 recomplete = on_command("recomplete", aliases={"rec", "Recomplete"}, rule=to_me(), block=True)
@@ -23,7 +23,7 @@ async def handle_recomplete(bot: Bot, event: MessageEvent, args: Message = Comma
         message = message.extract_plain_text().strip()
     )
 
-    send_msg = Send_msg(
+    send_msg = ChatSendMsg(
         "Recomplete",
         stranger_info,
         recomplete,

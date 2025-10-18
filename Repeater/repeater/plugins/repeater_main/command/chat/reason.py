@@ -5,7 +5,7 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from .._core import ChatCore, Send_msg
+from .._clients import ChatCore, ChatSendMsg
 from ...assist import StrangerInfo
 
 reason = on_command("reason", aliases={"r", "Reason"}, rule=to_me(), block=True)
@@ -23,7 +23,7 @@ async def reason_handle(bot: Bot, event: MessageEvent, args: Message = CommandAr
         model_uid="deepseek-reasoner"
     )
     
-    send_msg = Send_msg(
+    send_msg = ChatSendMsg(
         "Reason",
         stranger_info,
         reason,

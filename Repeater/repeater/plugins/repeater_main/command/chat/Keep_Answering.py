@@ -5,7 +5,7 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from .._core import ChatCore, Send_msg
+from .._clients import ChatCore, ChatSendMsg
 from ...assist import StrangerInfo
 
 keepAnswering = on_command("keepAnswering", aliases={"ka", "keep_answering", "Keep_Answering", "KeepAnswering"}, rule=to_me(), block=True)
@@ -18,7 +18,7 @@ async def handle_keep_answering(bot: Bot, event: MessageEvent):
 
     response = await chat_core.send_message()
     
-    send_msg = Send_msg(
+    send_msg = ChatSendMsg(
         "Keep_Answering",
         stranger_info,
         keepAnswering,

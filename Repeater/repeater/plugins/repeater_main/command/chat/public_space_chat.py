@@ -5,7 +5,7 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from .._core import ChatCore, Send_msg
+from .._clients import ChatCore, ChatSendMsg
 from ...assist import StrangerInfo
 
 public_space_chat = on_command('publicSpaceChat', aliases={'psc', 'public_space_chat', 'Public_Space_Chat', 'PublicSpaceChat'}, rule=to_me(), block=True)
@@ -19,7 +19,7 @@ async def handle_public_space_chat(bot: Bot, event: MessageEvent, args: Message 
 
     chat_core = ChatCore(stranger_info)
     response = await chat_core.send_message(message.extract_plain_text().strip())
-    send_msg = Send_msg(
+    send_msg = ChatSendMsg(
         "Public_Space_Chat",
         stranger_info,
         public_space_chat,

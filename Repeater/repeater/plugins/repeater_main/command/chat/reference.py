@@ -5,7 +5,7 @@ from nonebot.adapters import Message
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
-from .._core import ChatCore, Send_msg
+from .._clients import ChatCore, ChatSendMsg
 from ...assist import StrangerInfo
 
 reference = on_command("Reference", aliases={"ref", "Reference"}, rule=to_me(), block=True)
@@ -26,7 +26,7 @@ async def handle_reference(bot: Bot, event: MessageEvent, args: Message = Comman
         message = message.extract_plain_text().strip(), reference_context_id=stranger_info.noself_at_list[0]
     )
 
-    send_msg = Send_msg(
+    send_msg = ChatSendMsg(
         "Reference",
         stranger_info,
         reference,
