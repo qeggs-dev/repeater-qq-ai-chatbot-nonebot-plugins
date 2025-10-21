@@ -5,7 +5,9 @@ from ....core_net_configs import MIN_RENDER_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE
 from ....assist import StrangerInfo, MessageSource, Response, TextRender, SendMsg as BaseSendMsg
 from ._response_body import ChatResponse
 from typing import NoReturn
-from ....logger import logger
+from ....logger import logger as base_logger
+
+logger = base_logger.bind(module = "Chat.SendMsg")
 
 class Send_msg(BaseSendMsg):
     def __init__(

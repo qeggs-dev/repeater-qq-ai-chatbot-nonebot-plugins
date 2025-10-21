@@ -1,5 +1,5 @@
 import httpx
-from ....logger import logger
+from ....logger import logger as base_logger
 from typing import (
     Optional,
     Union,
@@ -12,6 +12,7 @@ from ....core_net_configs import *
 from ....exit_register import ExitRegister
 
 exit_register = ExitRegister()
+logger = base_logger.bind(module = "Config.Core")
 
 class ConfigCore:
     _httpx_client = httpx.AsyncClient()
