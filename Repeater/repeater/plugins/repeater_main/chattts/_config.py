@@ -1,7 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Literal
-from ..storage import json_storage
-from nonebot import logger
+from ..configs import Loader, Mode
 
 class API_ARGS(BaseModel):
     voice: str = ""
@@ -23,12 +22,10 @@ class TTSConfig(BaseModel):
     api_args: API_ARGS = Field(default_factory=API_ARGS)
     timeout: float = 60.0
 
-try:
-    tts_config = TTSConfig(**json_storage.load_json("configs/tts.json"))
-except Exception:
-    logger.warning("config/tts.json not found, using default config")
-    tts_config = TTSConfig()
-    try:
-        json_storage.save_json("config/tts.json", tts_config.model_dump())
-    except Exception as e:
-        logger.error(f"Failed to save tts.json({e})")
+loader: Loader[TTSConfig] = Loader(
+    model = TTSConfig,
+    path = "configs/tts.json",
+    mode = Mode.JSON
+)
+
+tts_config: TTSConfig = loader.load(write_on_failure=True)
