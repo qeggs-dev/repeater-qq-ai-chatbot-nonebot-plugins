@@ -42,6 +42,7 @@
 | aiofiles   | 25.1.0    | MIT License  | [Apache-2.0](https://github.com/Tinche/aiofiles/blob/main/LICENSE) | `storage`        |
 | pyyaml     | 6.0.3     | MIT License  | [MIT](https://github.com/yaml/pyyaml/blob/main/LICENSE)            | `storage`        |
 | orjson     | 3.11.3    | Apache Software License; MIT License | [Apache-2.0](https://github.com/ijl/orjson/blob/master/LICENSE-APACHE) / [MIT](https://github.com/ijl/orjson/blob/master/LICENSE-MIT) | `storage` |
+| loguru     | 0.7.3     | MIT License  | [MIT](https://github.com/Delgan/loguru/blob/master/LICENSE)        | *Entire Project* |
 
 
 ---
