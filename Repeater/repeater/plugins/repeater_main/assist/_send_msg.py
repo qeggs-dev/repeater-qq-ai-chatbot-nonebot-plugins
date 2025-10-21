@@ -1,13 +1,12 @@
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
 from nonebot.internal.matcher.matcher import Matcher
 from nonebot.exception import FinishedException
-from ..core_net_configs import RepeaterDebugMode
+from ..core_net_configs import RepeaterDebugMode, HELLO_CONTENT
 from ._http_code import HTTP_Code
 from ._stranger_info import StrangerInfo
 from ._text_render import TextRender
 from ._response_body import Response
 from typing import Callable, Any, NoReturn, TypeVar, Type
-from nonebot import logger
 
 T_RESPONSE = TypeVar("T_RESPONSE")
 
@@ -33,6 +32,22 @@ class SendMsg:
     @property
     def is_debug_mode(self) -> bool:
         return RepeaterDebugMode
+    
+    @property
+    def stranger_info(self) -> StrangerInfo:
+        return self._stranger_info
+    
+    @property
+    def matcher(self) -> Type[Matcher]:
+        return self._matcher
+    
+    @property
+    def component(self) -> str:
+        return self._component
+    
+    @property
+    def hello_content(self) -> str:
+        return HELLO_CONTENT
     
     async def send_debug_mode(
             self,
