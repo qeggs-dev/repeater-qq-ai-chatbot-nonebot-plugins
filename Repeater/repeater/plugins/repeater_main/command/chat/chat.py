@@ -7,22 +7,21 @@ from nonebot.adapters.onebot.v11 import MessageEvent
 from nonebot.adapters import Bot
 
 from .._clients import ChatCore, ChatSendMsg
-from ...assist import StrangerInfo, MessageSource
+from ...assist import StrangerInfo, MessageSource, SendMsg
 
 smart_at: type[Matcher] = on_message(rule=to_me(), priority=100, block=True)
 
 @smart_at.handle()
 async def handle_smart_at(bot: Bot, event: MessageEvent):
     stranger_info = StrangerInfo(bot, event)
+    sendmsg = SendMsg("Chat.Chat", smart_at, stranger_info)
 
     # message = await stranger_info.image_to_text(format="==== OCR Vision Begin ====\n{text}\n===== OCR Vision end =====", excluded_tags={"[动画表情]"})
     message = stranger_info.message
     
     if not stranger_info.message_str.strip():
         if stranger_info._mode == MessageSource.GROUP:
-            await smart_at.finish(
-                stranger_info.reply + '复读机在线哦~ ο(=•ω＜=)ρ⌒☆'
-            )
+            await sendmsg.send_text(sendmsg.hello_content)
         else:
             return
     
@@ -32,13 +31,13 @@ async def handle_smart_at(bot: Bot, event: MessageEvent):
         message = message.extract_plain_text().strip()
     )
     
-    send_msg = ChatSendMsg(
+    chat_send_msg = ChatSendMsg(
         "Chat.Smart_at",
         stranger_info,
         smart_at,
         response
     )
-    await send_msg.send()
+    await chat_send_msg.send()
 
 chat: type[Matcher] = on_command('chat', aliases={'c', 'Chat'}, rule=to_me(), block=True)
 

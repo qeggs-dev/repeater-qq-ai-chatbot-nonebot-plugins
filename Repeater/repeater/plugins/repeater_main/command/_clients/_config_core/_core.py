@@ -1,5 +1,5 @@
 import httpx
-from nonebot import logger
+from ....logger import logger
 from typing import (
     Optional,
     Union,

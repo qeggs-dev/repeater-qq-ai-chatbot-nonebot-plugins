@@ -5,7 +5,7 @@ from ....core_net_configs import MIN_RENDER_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE
 from ....assist import StrangerInfo, MessageSource, Response, TextRender, SendMsg as BaseSendMsg
 from ._response_body import ChatResponse
 from typing import NoReturn
-from nonebot import logger
+from ....logger import logger
 
 class Send_msg(BaseSendMsg):
     def __init__(
@@ -15,11 +15,9 @@ class Send_msg(BaseSendMsg):
             matcher: Matcher,
             response: Response[ChatResponse],
         ):
-        self.component: str = component
-        self.stranger_info: StrangerInfo = stranger_info
-        self.matcher: Matcher = matcher
+        super().__init__(f"Chat.{component}", matcher, stranger_info)
         self.response: Response[ChatResponse] = response
-        self._text_render = TextRender(namespace = self.stranger_info.namespace)
+        self._text_render = TextRender(namespace = self._stranger_info.namespace)
         self._chat_tts_api = ChatTTSAPI()
 
     async def send(self):
@@ -27,13 +25,12 @@ class Send_msg(BaseSendMsg):
             await self.send_debug_mode()
         else:
             if self.response.code == 200:
-                message = Message()
                 lines = self.response.data.content.splitlines()
                 max_line_length = max([len(line) for line in lines]) if lines else 0
-                logger.debug(f"Response content has {len(lines)} lines, max line length is {max_line_length}.")
+                logger.warning(f"Response content has {len(lines)} lines, max line length is {max_line_length}.")
                 if (
                         (
-                        self.stranger_info.mode == MessageSource.GROUP
+                        self._stranger_info.mode == MessageSource.GROUP
                         and
                         (
                             len(lines) > MIN_RENDER_IMAGE_TEXT_LINES
@@ -59,23 +56,20 @@ class Send_msg(BaseSendMsg):
                     render_response = await self.text_render(self.response.data.reasoning_content)
                     message.append(render_response)
                     if not send_picture_first:
-                        await self.matcher.send(self.stranger_info.reply + message)
+                        await self._matcher.send(self._stranger_info.reply + message)
                 
                 if self.response.data.content:
                     if send_picture_first:
                         message.append(
                             await self.text_render(self.response.data.content)
                         )
-                        message.append(self.stranger_info.reply)
-                        await self.matcher.send(self.stranger_info.reply + message)
+                        message.append(self._stranger_info.reply)
+                        await self._matcher.send(self._stranger_info.reply + message)
                     response = await self._chat_tts_api.text_to_speech(self.response.data.content)
                     if response.code == 200:
-                        await self.matcher.finish(MessageSegment.record(response.data.audio_files[0].url))
+                        await self.send_any(MessageSegment.record(response.data.audio_files[0].url), reply=False)
                     else:
                         await self.send_response(response, message = "TTS Error.")
-    
-    async def send_debug_mode(self):
-        await self.matcher.finish(self.stranger_info.reply + f'[{self.component}|{self.stranger_info.namespace}|{self.stranger_info.nickname}]: {self.stranger_info.message}')
     
     async def send_text(self, text: str | None = None) -> NoReturn:
         if self.is_debug_mode:
@@ -83,7 +77,7 @@ class Send_msg(BaseSendMsg):
         else:
             if self.response.code == 200:
                 message = Message()
-                message.append(self.stranger_info.reply)
+                message.append(self._stranger_info.reply)
                 # 推理内容必须渲染为图片
                 if self.response.data.reasoning_content:
                     message.append(
@@ -93,7 +87,7 @@ class Send_msg(BaseSendMsg):
                     message.append(text or self.response.data.content)
                 else:
                     message.append("Message is empty.")
-                await self.matcher.finish(message)
+                await self._matcher.finish(message)
             else:
                 await self.send_error(self.response, text)
     
@@ -103,7 +97,7 @@ class Send_msg(BaseSendMsg):
         else:
             if self.response.code == 200:
                 message = Message()
-                message.append(self.stranger_info.reply)
+                message.append(self._stranger_info.reply)
                 if self.response.data.reasoning_content:
                     message.append(
                         await self.text_render(self.response.data.reasoning_content)
@@ -114,7 +108,7 @@ class Send_msg(BaseSendMsg):
                     )
                 else:
                     message.append("[Message is empty.]")
-                await self.matcher.finish(message)
+                await self._matcher.finish(message)
             else:
                 await self.send_error(self.response, text)
 

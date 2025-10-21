@@ -1,6 +1,5 @@
 import json
 import httpx
-from nonebot import logger
 from typing import (
     Optional,
     Union

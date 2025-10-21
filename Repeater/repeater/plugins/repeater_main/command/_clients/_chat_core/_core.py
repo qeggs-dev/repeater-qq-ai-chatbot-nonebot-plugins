@@ -4,8 +4,6 @@ from typing import (
     Literal,
     AsyncIterator
 )
-
-from nonebot import logger
 import httpx
 from ._response_body import ChatResponse, StreamChatChunkResponse
 from ....exit_register import ExitRegister
