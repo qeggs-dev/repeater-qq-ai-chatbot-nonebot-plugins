@@ -54,6 +54,7 @@ BALANCE_ROUTE = f"{BACKEND_HOST}:{BACKEND_PORT}/balance_query"
 VARIABLE_EXPANSION = f"{BACKEND_HOST}:{BACKEND_PORT}/userdata/variable/expand"
 
 # ==== CONFIG ==== #
+HELLO_CONTENT = storage_config.hello_content
 MAX_LENGTH = storage_config.max_text_length
 MIN_RENDER_SINGLE_LINE_LENGTH = storage_config.max_single_line_length
 MIN_RENDER_IMAGE_TEXT_LINES = storage_config.max_text_lines
