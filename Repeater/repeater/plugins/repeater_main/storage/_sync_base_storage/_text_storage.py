@@ -14,7 +14,7 @@ class TextStorage(Storage[str]):
             logger.error(f"Load {path} failed: {e}")
             raise
     
-    def load_line_stream(self, path: Path | str, encoding: str = "utf-8") -> Generator[str, None]:
+    def load_line_stream(self, path: Path | str, encoding: str = "utf-8") -> Generator[str, None, None]:
         try:
             path = self._path(path)
             logger.info(f"Use line-by-line chunk streaming to load the file \"{path}\"")
@@ -25,7 +25,7 @@ class TextStorage(Storage[str]):
             logger.error(f"Load {path} failed: {e}")
             raise
     
-    def load_stream(self, path: Path | str, encoding: str = "utf-8", chunk_size: int = 1024) -> Generator[str, None]:
+    def load_stream(self, path: Path | str, encoding: str = "utf-8", chunk_size: int = 1024) -> Generator[str, None, None]:
         try:
             path = self._path(path)
             logger.info(f"Stream load the file \"{path}\" in {chunk_size}-byte chunks")

@@ -36,7 +36,7 @@ class OrjsonStorage(BinaryStorage):
             logger.error(f"Error saving json to {path}: {e}")
             raise
     
-    def load_jsonl(self, path: Path | str, default: T = None) -> Generator[Any | T, None]:
+    def load_jsonl(self, path: Path | str, default: T = None) -> Generator[Any | T, None, None]:
         try:
             logger.info(f"Loading jsonl from {path}")
             for line in self.load_line_stream(path):

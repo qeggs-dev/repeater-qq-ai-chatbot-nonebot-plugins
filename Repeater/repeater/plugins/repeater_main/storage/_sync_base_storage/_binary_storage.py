@@ -16,7 +16,7 @@ class BinaryStorage(Storage[bytes]):
             logger.error(f"Error loading binary from {path}: {e}")
             raise
     
-    def load_line_stream(self, path: Path | str) -> Generator[bytes, None]:
+    def load_line_stream(self, path: Path | str) -> Generator[bytes, None, None]:
         try:
             path = self._path(path)
             logger.info(f"Use line-by-line chunk streaming to load the file \"{path}\"")
@@ -27,7 +27,7 @@ class BinaryStorage(Storage[bytes]):
             logger.error(f"Error loading binary line stream from {path}: {e}")
             raise
     
-    def load_stream(self, path: Path | str, chunk_size: int = 1024) -> Generator[bytes, None]:
+    def load_stream(self, path: Path | str, chunk_size: int = 1024) -> Generator[bytes, None, None]:
         try:
             path = self._path(path)
             logger.info(f"Stream load the file \"{path}\" in {chunk_size}-byte chunks")
