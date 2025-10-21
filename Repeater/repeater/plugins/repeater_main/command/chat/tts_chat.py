@@ -1,10 +1,12 @@
-from ...assist import StrangerInfo
-from ...chattts import ChatTTSAPI
-from .._clients import ChatCore, ChatSendMsg
 from nonebot import on_command
 from nonebot.rule import to_me
 from nonebot.adapters.onebot.v11 import Bot, MessageEvent, Message
 from nonebot.params import CommandArg
+
+from ...assist import StrangerInfo
+from ...chattts import ChatTTSAPI
+from .._clients import ChatCore, ChatSendMsg
+from ...logger import logger
 
 api = ChatTTSAPI()
 
@@ -13,6 +15,8 @@ tts_chat = on_command('tts_chat', aliases={'ttsc', 'tts_Chat', 'TTS_Chat'}, rule
 @tts_chat.handle()
 async def handle_tts_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()) -> None:
     stranger_info = StrangerInfo(bot, event, args)
+
+    logger.info("Received a message {message} from {namespace}", message=stranger_info.message_str, namespace=stranger_info.namespace_str, module="Chat.TTS_Chat")
 
     core = ChatCore(stranger_info)
 

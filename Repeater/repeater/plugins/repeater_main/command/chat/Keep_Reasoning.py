@@ -7,12 +7,15 @@ from nonebot.adapters import Bot
 
 from .._clients import ChatCore, ChatSendMsg
 from ...assist import StrangerInfo
+from ...logger import logger
 
 keepReasoning = on_command("keepReasoning", aliases={"kr", "keep_reasoning", "Keep_Reasoning", "KeepReasoning"}, rule=to_me(), block=True)
 
 @keepReasoning.handle()
 async def handle_keep_reasoning(bot: Bot, event: MessageEvent):
     stranger_info = StrangerInfo(bot, event)
+
+    logger.info("Received a message from {namespace}", namespace=stranger_info.namespace_str, module="Chat.Keep_Reasoning")
 
     chat_core = ChatCore(stranger_info.namespace_str)
 
