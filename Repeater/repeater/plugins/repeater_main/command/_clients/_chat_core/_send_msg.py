@@ -29,7 +29,6 @@ class Send_msg(BaseSendMsg):
             if self.response.code == 200:
                 lines = self.response.data.content.splitlines()
                 max_line_length = max([len(line) for line in lines]) if lines else 0
-                logger.warning(f"Response content has {len(lines)} lines, max line length is {max_line_length}.")
                 if (
                         (
                         self._stranger_info.mode == MessageSource.GROUP
@@ -42,6 +41,8 @@ class Send_msg(BaseSendMsg):
                         or
                         len(self.response.data.content) > MAX_LENGTH
                     ):
+                    logger.warning(f"Response content has {len(lines)} lines, max line length is {max_line_length}.")
+                    logger.warning("The text will be rendered as an image output.")
                     await self.send_image()
                 else:
                     await self.send_text()
