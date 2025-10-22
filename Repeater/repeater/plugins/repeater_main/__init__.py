@@ -10,6 +10,9 @@ from .command.prompt import *
 # === Config === #
 from .command.config import *
 
+# === Mixed === #
+from .command.mixed import *
+
 # === More Interesting Tools === #
 from .command.more_interesting_tools import *
 
@@ -26,6 +29,3 @@ from .command.send_readme_file import handle_send_readme_file
 
 # === Var Expand === #
 from .command.variableExpansion import handle_var_expand
-
-# === Balance === #
-from .command.balance import handle_get_balance
