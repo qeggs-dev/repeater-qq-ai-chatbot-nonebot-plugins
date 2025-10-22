@@ -32,6 +32,6 @@ base_logger.add(
 
 base_logger.configure(
     extra={
-        "module": "[Unknown Module]"
+        "module": "[System]"
     }
 )
