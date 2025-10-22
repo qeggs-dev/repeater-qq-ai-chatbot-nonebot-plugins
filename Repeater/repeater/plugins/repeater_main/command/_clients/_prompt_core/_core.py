@@ -7,6 +7,9 @@ from typing import (
 
 from ....core_net_configs import *
 from ....assist import Response, StrangerInfo
+from ....logger import logger as base_logger
+
+logger = base_logger.bind(module = "Prompt.Core")
 
 class PromptCore:
     _httpx_client = httpx.AsyncClient()
@@ -16,6 +19,7 @@ class PromptCore:
     
     # region set prompt  
     async def set_prompt(self, prompt: str) -> Response[None]:
+        logger.info("Setting prompt")
         response = await self._httpx_client.put(
             f'{SET_PROMPT_ROUTE}/{self._info.namespace_str}',
             data={
@@ -31,6 +35,7 @@ class PromptCore:
     
     # region delete
     async def delete_prompt(self) -> Response[None]:
+        logger.info("Deleting prompt")
         response = await self._httpx_client.delete(
             f'{DELETE_PROMPT_ROUTE}/{self._info.namespace_str}'
         )
@@ -41,6 +46,7 @@ class PromptCore:
         )
     
     async def delete_subprompt(self) -> Response[None]:
+        logger.info("Deleting subprompt")
         response = await self._httpx_client.delete(
             f'{DELETE_SUBSESSION_PROMPT_ROUTE}',
             params={'session_id': self._info.namespace_str}
@@ -54,6 +60,7 @@ class PromptCore:
 
     # region change subsession
     async def change_prompt_branch(self, new_branch_id: str) -> Response[None]:
+        logger.info("Changing prompt branch")
         response = await self._httpx_client.put(
             f'{CHANGE_PROMPT_BRANCH_ROUTE}/{self._info.namespace_str}',
             params={
