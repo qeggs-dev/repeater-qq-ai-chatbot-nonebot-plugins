@@ -13,7 +13,7 @@ set_presence_penalty = on_command('setPresencePenalty', aliases={'spp', 'set_pre
 @set_presence_penalty.handle()
 async def handle_set_presence_penalty(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
-    sendmsg = SendMsg("Chat.Set_Presence_Penalty", set_presence_penalty, stranger_info)
+    sendmsg = SendMsg("Config.Set_Presence_Penalty", set_presence_penalty, stranger_info)
 
     msg = stranger_info.message_str.strip()
 
@@ -29,9 +29,9 @@ async def handle_set_presence_penalty(bot: Bot, event: MessageEvent, args: Messa
         await sendmsg.send_error("Presence_Penalty is set incorrectly. Please enter a floating-point number or percentage between -2 and 2!")
 
 
-    chat_core = ConfigCore(stranger_info)
+    config_core = ConfigCore(stranger_info)
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:
-        response = await chat_core.set_config('presence_penalty', presence_penalty)
+        response = await config_core.set_config('presence_penalty', presence_penalty)
         await sendmsg.send_response(response, f"Set Presence_Penalty to {presence_penalty}")

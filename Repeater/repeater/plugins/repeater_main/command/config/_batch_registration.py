@@ -23,7 +23,7 @@ class CommandHandler:
     names: list[str] = dataclass_field(default_factory=list)
     type_converter: Callable[[str], Any] | None = None
     config_key: str
-    base_namespace: str = "Chat"
+    base_namespace: str = "Config"
     rule: Rule = to_me()
     block: bool = True
 

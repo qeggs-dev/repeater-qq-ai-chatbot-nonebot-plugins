@@ -13,7 +13,7 @@ set_frequency_penalty = on_command('setFrequencyPenalty', aliases={'sfp', 'set_f
 @set_frequency_penalty.handle()
 async def handle_set_frequency_penalty(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot, event, args)
-    sendmsg = SendMsg("Chat.Set_Frequency_Penalty", set_frequency_penalty, stranger_info)
+    sendmsg = SendMsg("Config.Set_Frequency_Penalty", set_frequency_penalty, stranger_info)
 
     msg = stranger_info.message_str
 
@@ -29,10 +29,10 @@ async def handle_set_frequency_penalty(bot: Bot, event: MessageEvent, args: Mess
         await sendmsg.send_error("Frequency_Penalty setting is incorrect, please enter a floating-point number or percentage between -2 and 2!")
 
 
-    chat_core = ConfigCore(stranger_info)
+    config_core = ConfigCore(stranger_info)
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:
-        response = await chat_core.set_config("frequency_penalty", frequency_penalty)
+        response = await config_core.set_config("frequency_penalty", frequency_penalty)
         await sendmsg.send_response(response, f"Set Frequency_Penalty to {frequency_penalty}")
         

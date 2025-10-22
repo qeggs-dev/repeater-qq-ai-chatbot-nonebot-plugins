@@ -13,11 +13,11 @@ change_config_branch = on_command('changeConfigBranch', aliases={'ccfgb', 'chang
 @change_config_branch.handle()
 async def handle_change_config_branch(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
-    send_msg = SendMsg("Chat.Change_Config_Branch", change_config_branch, stranger_info)
+    send_msg = SendMsg("Config.Change_Config_Branch", change_config_branch, stranger_info)
 
-    chat_core = ConfigCore(stranger_info)
+    config_core = ConfigCore(stranger_info)
     if send_msg.is_debug_mode:
         await send_msg.send_debug_mode()
     else:
-        response = await chat_core.set_config("new_branch_id", stranger_info.message_str)
+        response = await config_core.set_config("new_branch_id", stranger_info.message_str)
         await send_msg.send_response(response, f"Config branch changed to {stranger_info.message_str}")

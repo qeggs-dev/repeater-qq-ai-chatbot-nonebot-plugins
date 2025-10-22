@@ -13,7 +13,7 @@ set_max_tokens = on_command('setMaxTokens', aliases={'smt', 'set_max_tokens', 'S
 @set_max_tokens.handle()
 async def handle_set_max_tokens(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
-    sendmsg = SendMsg("Chat.Set_Max_Tokens", stranger_info, set_max_tokens, None)
+    sendmsg = SendMsg("Config.Set_Max_Tokens", stranger_info, set_max_tokens, None)
 
     msg = stranger_info.message_str.strip()
 
@@ -26,9 +26,9 @@ async def handle_set_max_tokens(bot: Bot, event: MessageEvent, args: Message = C
         await sendmsg.send_error("Max_Tokens setting is incorrect, please enter an integer between 1 and 8192!")
 
 
-    chat_core = ConfigCore(stranger_info)
+    config_core = ConfigCore(stranger_info)
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:
-        response = await chat_core.set_config("max_tokens", max_tokens)
+        response = await config_core.set_config("max_tokens", max_tokens)
         await sendmsg.send_response(response, f"Set Max_Tokens to {max_tokens}")

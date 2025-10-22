@@ -13,11 +13,11 @@ set_default_model_type = on_command('setDefaultModel', aliases={'sdm', 'set_defa
 @set_default_model_type.handle()
 async def handle_set_default_model_type(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
-    sendmsg = SendMsg("Chat.Set_Default_Model", set_default_model_type, stranger_info)
+    sendmsg = SendMsg("Config.Set_Default_Model", set_default_model_type, stranger_info)
 
-    chat_core = ConfigCore(stranger_info)
+    config_core = ConfigCore(stranger_info)
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:
-        response = await chat_core.set_config("model_uid", stranger_info.message_str)
+        response = await config_core.set_config("model_uid", stranger_info.message_str)
         await sendmsg.send_text(response, f"Set Default Model to {stranger_info.message_str}")
