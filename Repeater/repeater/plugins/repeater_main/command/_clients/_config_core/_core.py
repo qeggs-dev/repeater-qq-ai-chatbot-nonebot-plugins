@@ -21,7 +21,7 @@ class ConfigCore:
         self._info = info
     
     # region set config
-    async def set_config(self, config_key: str, value: Any, item_type: str = "auto"):
+    async def set_config(self, config_key: str, value: Any, item_type: str = "auto") -> Response[Any]:
         TYPES = {
             int: "int",
             float: "float",
@@ -38,6 +38,7 @@ class ConfigCore:
         else:
             if item_type not in TYPES:
                 raise TypeError(f"Unsupported type: {item_type}")
+        logger.info("Set config: {config_key} = {value}({item_type})", config_key=config_key, value=value, item_type=item_type)
         response = await self._httpx_client.put(
             f'{SET_CONFIG_ROUTE}/{self._info.namespace_str}/{item_type}',
             data={
@@ -58,7 +59,8 @@ class ConfigCore:
     # endregion
 
     # region cache config
-    async def cache_config(self, branch_id: str):
+    async def cache_config(self, branch_id: str) -> Response[None]:
+        logger.info("Cache config: {branch_id}", branch_id=branch_id)
         response = await self._httpx_client.put(
             url = f"{CHANGE_CONFIG_BRANCH_ROUTE}/{self._info.namespace_str}",
             data = {
@@ -73,7 +75,8 @@ class ConfigCore:
 
 
     # region get config
-    async def get_config(self, config_key: str):
+    async def get_config(self, config_key: str) -> Response[Any]:
+        logger.info("Get config: {config_key}", config_key=config_key)
         response = await self._httpx_client.get(
             f'{GET_CONFIG_ROUTE}/{self._info.namespace_str}'
         )
@@ -90,7 +93,8 @@ class ConfigCore:
     # endregion
 
     # region remove config key
-    async def remove_config_key(self, config_key: str):
+    async def remove_config_key(self, config_key: str) -> Response[None]:
+        logger.info("Remove config key: {config_key}", config_key=config_key)
         response = await self._httpx_client.delete(
             f'{REMOVE_CONFIG_KEY_ROUTE}/{self._info.namespace_str}/{config_key}'
         )
@@ -101,7 +105,8 @@ class ConfigCore:
         )
 
     # region delete
-    async def delete_config(self):
+    async def delete_config(self) -> Response[None]:
+        logger.info("Delete config")
         response = await self._httpx_client.delete(
             f'{DELETE_CONFIG_ROUTE}/{self._info.namespace_str}'
         )
