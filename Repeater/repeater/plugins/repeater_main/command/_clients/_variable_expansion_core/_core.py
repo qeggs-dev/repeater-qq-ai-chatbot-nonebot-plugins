@@ -7,6 +7,7 @@ from typing import (
 
 from ....core_net_configs import *
 from ....assist import StrangerInfo, Response
+from ....logger import logger
 
 class VariableExpansionCore:
     _httpx_client = httpx.AsyncClient()
@@ -16,6 +17,7 @@ class VariableExpansionCore:
     
     # region set note  
     async def expand_variable(self, text: str) -> Response[None]:
+        logger.info("Expanding variable", module = "variable_expansion.core")
         response = await self._httpx_client.post(
             f'{VARIABLE_EXPANSION}/{self._info.namespace_str}',
             json={
