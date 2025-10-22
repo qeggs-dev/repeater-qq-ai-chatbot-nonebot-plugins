@@ -2,7 +2,9 @@ from ._sync_base_storage import TextStorage
 from pathlib import Path
 from typing import Any
 import yaml
-from nonebot import logger
+from ..logger import logger as base_logger
+
+logger = base_logger.bind(module = "Storage.Sync.Yaml")
 
 class YamlStorage(TextStorage):
     """

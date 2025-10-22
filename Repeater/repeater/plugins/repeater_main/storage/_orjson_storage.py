@@ -2,7 +2,9 @@ from ._sync_base_storage import BinaryStorage
 from pathlib import Path
 from typing import Any, Generator, Iterable, TypeVar
 import orjson
-from nonebot import logger
+from ..logger import logger as base_logger
+
+logger = base_logger.bind(module = "Storage.Sync.Json")
 
 T = TypeVar("T")
 

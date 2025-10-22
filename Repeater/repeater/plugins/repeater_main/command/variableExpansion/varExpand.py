@@ -17,11 +17,11 @@ async def handle_var_expand(bot: Bot, event: MessageEvent, args: Message = Comma
 
     msg = args.extract_plain_text().strip()
 
-    chat_core = VariableExpansionCore(stranger_info)
+    variable_expansion_core = VariableExpansionCore(stranger_info)
     if sendmsg.is_debug_mode:
         sendmsg.send_debug_mode()
     else:
-        response = await chat_core.expand_variable(text=msg)
+        response = await variable_expansion_core.expand_variable(text=msg)
         if response.code == 200:
             await sendmsg.send_text(response.text)
         else:

@@ -2,7 +2,9 @@ from ._async_base_storage import BinaryStorage
 from pathlib import Path
 from typing import Any, AsyncGenerator, AsyncIterable, Iterable, TypeVar
 import orjson
-from nonebot import logger
+from ..logger import logger as base_logger
+
+logger = base_logger.bind(module = "Storage.Async.Json")
 
 T = TypeVar("T")
 

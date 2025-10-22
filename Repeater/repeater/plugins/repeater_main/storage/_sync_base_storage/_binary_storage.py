@@ -1,7 +1,9 @@
 from pathlib import Path
 from typing import Generator, Iterable
 from ._storage import Storage
-from nonebot import logger
+from ...logger import logger as base_logger
+
+logger = base_logger.bind(module = "Storage.Sync.Binary")
 
 class BinaryStorage(Storage[bytes]):
     def load(self, path: Path | str) -> bytes:

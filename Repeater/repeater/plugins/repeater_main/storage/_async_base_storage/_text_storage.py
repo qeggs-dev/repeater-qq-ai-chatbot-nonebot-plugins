@@ -2,7 +2,9 @@ import aiofiles
 from pathlib import Path
 from typing import AsyncGenerator, AsyncIterable, Iterable
 from ._storage import Storage
-from nonebot import logger
+from ...logger import logger as base_logger
+
+logger = base_logger.bind(module = "Storage.Async.Text")
 
 class TextStorage(Storage[str]):
     async def load(self, path: Path | str, encoding: str = "utf-8") -> str:
