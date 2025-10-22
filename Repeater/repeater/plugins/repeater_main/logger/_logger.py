@@ -1,48 +1,33 @@
-from loguru import logger as golbal_logger
-from ..configs import Loader, Mode
+from nonebot import logger
+from nonebot import get_plugin_config
 from pydantic import BaseModel, Field
-from ._console_output_stream import get_console_output_stream, ConsoleOutputStream
+from typing import Optional
 from ._level import Level
 
 class LoggerConfig(BaseModel):
-    name: str = Field("repeater")
-    level: Level = Field(Level.INFO)
-    stream: ConsoleOutputStream = Field(ConsoleOutputStream.STDOUT)
-    format: str = Field("{time:YYYY-MM-DD HH:mm:ss.SSS} | {level} | {extra[module]} - {message}")
-    console_format: str = Field("<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | <cyan>{extra[module]}</cyan> - <level>{message}</level>")
-    path: str = Field("logs/repeater.log")
-    enable_queue: bool = Field(True)
-    delay: bool = Field(True)
-    rotation: str = Field("1 week")
-    retention: str = Field("1 month")
-    compression: str = Field("zip")
+    repeater_logger_level: Optional[Level] = Field(Level.INFO)
+    repeater_logger_format: Optional[str] = Field("{time:YYYY-MM-DD HH:mm:ss.SSS} | {level} | {extra[module]} - {message}")
+    repeater_logger_path: Optional[str] = Field("logs/repeater-log-{time:YYYY-MM-DD-HH-mm-ss}.log")
+    repeater_logger_enable_queue: Optional[bool] = Field(True)
+    repeater_logger_delay: Optional[bool] = Field(True)
+    repeater_logger_rotation: Optional[str] = Field("1 week")
+    repeater_logger_retention: Optional[str] = Field("1 month")
+    repeater_logger_compression: Optional[str] = Field("zip")
 
-loader = Loader(LoggerConfig, "configs/logger.json", Mode.JSON)
-logger_config = loader.load(write_on_failure=True)
+logger_config = get_plugin_config(LoggerConfig)
 
-base_logger = golbal_logger.bind(
-    name=logger_config.name
-)
-
-base_logger.remove()
-
-base_logger.add(
-    get_console_output_stream(logger_config.stream),
-    level = logger_config.level,
-    format = logger_config.console_format,
-    enqueue = logger_config.enable_queue,
-)
+base_logger = logger
 
 # file
 base_logger.add(
-    logger_config.path,
-    level = logger_config.level,
-    format = logger_config.format,
-    enqueue = logger_config.enable_queue,
-    delay = logger_config.delay,
-    rotation = logger_config.rotation,
-    retention = logger_config.retention,
-    compression = logger_config.compression,
+    logger_config.repeater_logger_path,
+    level = logger_config.repeater_logger_level.value,
+    format = logger_config.repeater_logger_format,
+    enqueue = logger_config.repeater_logger_enable_queue,
+    delay = logger_config.repeater_logger_delay,
+    rotation = logger_config.repeater_logger_rotation,
+    retention = logger_config.repeater_logger_retention,
+    compression = logger_config.repeater_logger_compression,
 )
 
 base_logger.configure(
