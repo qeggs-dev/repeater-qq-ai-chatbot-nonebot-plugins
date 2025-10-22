@@ -58,6 +58,7 @@ class SendMsg:
         用于调试模式的信息打印
 
         :param reply: 是否携带引用
+        :param continue_handler: 是否继续运行当前处理流程
         """
         await self._send(
             self._stranger_info.reply + (
@@ -82,6 +83,7 @@ class SendMsg:
         :param component: 组件名称
         :param message_handler: 自定义消息文本解析处理函数
         :param reply: 是否携带引用
+        :param continue_handler: 是否继续运行当前处理流程
         """
         if callable(message):
             message = message(response)
@@ -98,6 +100,54 @@ class SendMsg:
             continue_handler = continue_handler
         )
     
+    async def send_multiple_responses(
+            self,
+            *responses: Response[T_RESPONSE],
+            reply: bool = True,
+            continue_handler: bool = False,
+        ):
+        """
+        发送多个响应对象中的内容，主要用于HTTP错误提示
+
+        :param responses: 响应对象
+        :param reply: 是否携带引用
+        :param continue_handler: 是否继续运行当前处理流程
+        """
+        text_buffer: list[str] = []
+        failed: int = 0
+        for index, response in enumerate(responses, start=1):
+            text_buffer.append(f"[{index}] HTTP Code: {response.code}({HTTP_Code(response.code)})")
+            if response.code != 200:
+                failed += 1
+        
+        if failed == 0:
+            text_buffer.append("All requests are successful.")
+        else:
+            text_buffer.append(f"{failed} requests failed.")
+        
+        await self.send_prompt(
+            "\n".join(text_buffer),
+            reply = reply,
+            continue_handler = continue_handler
+        )
+    
+    async def send_hello(
+            self,
+            reply: bool = True,
+            continue_handler: bool = False,
+        ):
+        """
+        发送欢迎信息
+
+        :param reply: 是否携带引用
+        :param continue_handler: 是否继续运行当前处理流程
+        """
+        await self.send_text(
+            self.hello_content,
+            reply = reply,
+            continue_handler = continue_handler
+        )
+    
     async def send_prompt(
             self,
             prompt: str,
@@ -109,7 +159,7 @@ class SendMsg:
 
         :param prompt: 提示信息
         :param reply: 是否携带引用
-        :param continue_handler: 是否继续处理
+        :param continue_handler: 是否继续运行当前处理流程
         """
         await self._send(
             (
@@ -132,7 +182,7 @@ class SendMsg:
 
         :param error: 错误信息
         :param reply: 是否携带引用
-        :param continue_handler: 是否继续处理
+        :param continue_handler: 是否继续运行当前处理流程
         """
         if isinstance(error, Exception):
             await self.send_prompt(
@@ -162,7 +212,7 @@ class SendMsg:
 
         :param warning: 警告信息
         :param reply: 是否携带引用
-        :param continue_handler: 是否继续处理
+        :param continue_handler: 是否继续运行当前处理流程
         """
         await self.send_prompt(
             (
@@ -183,6 +233,7 @@ class SendMsg:
 
         :param text: 文本内容
         :param reply: 是否携带引用
+        :param continue_handler: 是否继续运行当前处理流程
         """
         await self._send(
             Message(text),
