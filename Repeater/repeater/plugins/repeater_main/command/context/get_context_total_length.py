@@ -13,13 +13,13 @@ get_context_total_length = on_command('getContextTotalLength', aliases={'gctl', 
 @get_context_total_length.handle()
 async def handle_total_context_length(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
-    sendmsg = SendMsg("Chat.Get_Context_Total_Length", get_context_total_length, stranger_info)
+    sendmsg = SendMsg("Context.Get_Context_Total_Length", get_context_total_length, stranger_info)
     
-    chat_core = ContextCore(stranger_info.namespace_str)
+    context_core = ContextCore(stranger_info.namespace_str)
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:
-        response = await chat_core.get_context_total_length()
+        response = await context_core.get_context_total_length()
 
         if response.code == 200:
             await sendmsg.send_prompt(

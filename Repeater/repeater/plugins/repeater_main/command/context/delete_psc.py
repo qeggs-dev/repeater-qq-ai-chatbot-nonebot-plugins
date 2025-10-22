@@ -13,11 +13,11 @@ delete_public_space_context = on_command('deletePublicSpaceContext', aliases={'d
 @delete_public_space_context.handle()
 async def handle_delete_public_space_context(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
-    sendmsg = SendMsg("Chat.Delete_Public_Space_Context", delete_public_space_context, stranger_info)
+    sendmsg = SendMsg("Context.Delete_Public_Space_Context", delete_public_space_context, stranger_info)
 
-    chat_core = ContextCore(stranger_info.namespace_str)
+    context_core = ContextCore(stranger_info.namespace_str)
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:
-        response = await chat_core.delete_context()
+        response = await context_core.delete_context()
         await sendmsg.send_response(response, f"Delete Public Space Context from {stranger_info.namespace_str}")

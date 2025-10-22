@@ -13,13 +13,13 @@ withdraw = on_command('withdraw', aliases={'w', 'Withdraw'}, rule=to_me(), block
 @withdraw.handle()
 async def handle_withdraw(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
-    sendmsg = SendMsg("Chat.Withdraw", withdraw, stranger_info)
+    sendmsg = SendMsg("Context.Withdraw", withdraw, stranger_info)
 
-    chat_core = ContextCore(stranger_info.namespace_str)
+    context_core = ContextCore(stranger_info.namespace_str)
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:
-        response = await chat_core.withdraw()
+        response = await context_core.withdraw()
 
         if response.code == 200:
             await sendmsg.send_prompt(
