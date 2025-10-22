@@ -3,7 +3,9 @@ from ._mode import Mode
 from pydantic import BaseModel
 from typing import Type, Any, TypeVar, Generic
 from pathlib import Path
-from nonebot import logger
+from ..logger import logger as base_logger
+
+logger = base_logger.bind(module = "Configs.Core")
 
 T_MODEL = TypeVar("T_MODEL", bound=BaseModel)
 
