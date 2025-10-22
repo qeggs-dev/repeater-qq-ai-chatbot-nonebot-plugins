@@ -15,7 +15,11 @@ keepAnswering = on_command("keepAnswering", aliases={"ka", "keep_answering", "Ke
 async def handle_keep_answering(bot: Bot, event: MessageEvent):
     stranger_info = StrangerInfo(bot, event)
 
-    logger.info("Received a message from {namespace}", namespace=stranger_info.namespace_str, module="Chat.Keep_Answering")
+    logger.info(
+        "Received a message from {namespace}",
+        namespace=stranger_info.namespace_str,
+        module = "Chat.Keep_Answering"
+    )
 
     chat_core = ChatCore(stranger_info.namespace_str)
 

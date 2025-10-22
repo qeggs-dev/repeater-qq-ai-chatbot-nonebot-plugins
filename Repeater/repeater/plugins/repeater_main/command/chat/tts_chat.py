@@ -16,7 +16,12 @@ tts_chat = on_command('tts_chat', aliases={'ttsc', 'tts_Chat', 'TTS_Chat'}, rule
 async def handle_tts_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()) -> None:
     stranger_info = StrangerInfo(bot, event, args)
 
-    logger.info("Received a message {message} from {namespace}", message=stranger_info.message_str, namespace=stranger_info.namespace_str, module="Chat.TTS_Chat")
+    logger.info(
+        "Received a message {message} from {namespace}",
+        message = stranger_info.message_str,
+        namespace = stranger_info.namespace_str,
+        module = "Chat.TTS_Chat"
+    )
 
     core = ChatCore(stranger_info)
 

@@ -17,7 +17,12 @@ async def handle_smart_at(bot: Bot, event: MessageEvent):
     stranger_info = StrangerInfo(bot, event)
     sendmsg = SendMsg("Chat.Smart_at", smart_at, stranger_info)
 
-    logger.info("Received a message {message} from {namespace}", message=stranger_info.message_str, namespace=stranger_info.namespace_str, module="Chat.Smart_at")
+    logger.info(
+        "Received a message {message} from {namespace}",
+        message = stranger_info.message_str,
+        namespace = stranger_info.namespace_str,
+        module = "Chat.Smart_at"
+    )
 
     # message = await stranger_info.image_to_text(format="==== OCR Vision Begin ====\n{text}\n===== OCR Vision end =====", excluded_tags={"[动画表情]"})
     message = stranger_info.message
@@ -48,7 +53,12 @@ chat: type[Matcher] = on_command('chat', aliases={'c', 'Chat'}, rule=to_me(), bl
 async def handle_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot, event, args)
 
-    logger.info("Received a message {message} from {namespace}", message=stranger_info.message_str, namespace=stranger_info.namespace_str, module="Chat.Chat")
+    logger.info(
+        "Received a message {message} from {namespace}",
+        message = stranger_info.message_str,
+        namespace = stranger_info.namespace_str,
+        module = "Chat.Chat"
+    )
 
     # message = await stranger_info.image_to_text(format="==== OCR Vision Begin ====\n{text}\n===== OCR Vision end =====", excluded_tags={"[动画表情]"})
     message = stranger_info.message

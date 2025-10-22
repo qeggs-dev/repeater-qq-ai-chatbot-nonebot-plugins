@@ -15,7 +15,12 @@ npchat = on_command('npChat', aliases={'np', 'no_prompt_chat', 'No_Prompt_Chat',
 async def handle_npchat(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot, event, args)
 
-    logger.info("Received a message {message} from {namespace}", message=stranger_info.message_str, namespace=stranger_info.namespace_str, module="Chat.NPChat")
+    logger.info(
+        "Received a message {message} from {namespace}",
+        message = stranger_info.message_str,
+        namespace = stranger_info.namespace_str,
+        module = "Chat.NPChat"
+    )
 
     # message = await stranger_info.image_to_text(format="==== OCR Vision Begin ====\n{text}\n===== OCR Vision end =====", excluded_tags={"[动画表情]"})
     message = stranger_info.message

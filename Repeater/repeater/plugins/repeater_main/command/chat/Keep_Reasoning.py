@@ -15,7 +15,11 @@ keepReasoning = on_command("keepReasoning", aliases={"kr", "keep_reasoning", "Ke
 async def handle_keep_reasoning(bot: Bot, event: MessageEvent):
     stranger_info = StrangerInfo(bot, event)
 
-    logger.info("Received a message from {namespace}", namespace=stranger_info.namespace_str, module="Chat.Keep_Reasoning")
+    logger.info(
+        "Received a message from {namespace}",
+        namespace = stranger_info.namespace_str,
+        module = "Chat.Keep_Reasoning"
+    )
 
     chat_core = ChatCore(stranger_info.namespace_str)
 

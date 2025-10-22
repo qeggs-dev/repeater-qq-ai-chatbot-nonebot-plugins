@@ -15,7 +15,12 @@ renderChat = on_command('renderChat', aliases={'rc', 'render_chat', 'Render_Chat
 async def handle_render_Chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot, event, args)
 
-    logger.info("Received a message {message} from {namespace}", message=stranger_info.message_str, namespace=stranger_info.namespace_str, module="Chat.Render_Chat")
+    logger.info(
+        "Received a message {message} from {namespace}",
+        message = stranger_info.message_str,
+        namespace = stranger_info.namespace_str,
+        module = "Chat.Render_Chat"
+    )
 
     # message = await stranger_info.image_to_text(format="==== OCR Vision Begin ====\n{text}\n===== OCR Vision end =====", excluded_tags={"[动画表情]"})
     message = stranger_info.message
