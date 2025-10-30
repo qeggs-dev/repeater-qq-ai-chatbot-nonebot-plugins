@@ -17,7 +17,7 @@ async def handle_set_render_style(bot: Bot, event: MessageEvent, args: Message =
 
     msg = stranger_info.message_str.strip()
 
-    config_core = ConfigCore(stranger_info.namespace_str)
+    config_core = ConfigCore(stranger_info)
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:

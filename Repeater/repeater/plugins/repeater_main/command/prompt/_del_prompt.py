@@ -15,7 +15,7 @@ async def handle_delete_prompt(bot: Bot, event: MessageEvent, args: Message = Co
     stranger_info = StrangerInfo(bot, event, args)
     sendmsg = SendMsg("Prompt.Delete_Prompt", delprompt, stranger_info)
     
-    prompt_core = PromptCore(stranger_info.namespace_str)
+    prompt_core = PromptCore(stranger_info)
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:

@@ -15,7 +15,7 @@ async def handle_withdraw(bot: Bot, event: MessageEvent, args: Message = Command
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
     sendmsg = SendMsg("Context.Withdraw", withdraw, stranger_info)
 
-    context_core = ContextCore(stranger_info.namespace_str)
+    context_core = ContextCore(stranger_info)
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:

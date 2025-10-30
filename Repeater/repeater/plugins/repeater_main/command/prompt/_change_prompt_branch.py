@@ -17,7 +17,7 @@ async def handle_change_prompt_branch(bot: Bot, event: MessageEvent, args: Messa
 
     msg = args.extract_plain_text().strip()
     
-    prompt_core = PromptCore(stranger_info.namespace_str)
+    prompt_core = PromptCore(stranger_info)
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:

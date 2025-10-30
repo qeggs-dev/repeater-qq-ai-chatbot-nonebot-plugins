@@ -15,7 +15,7 @@ async def handle_delete_public_space_context(bot: Bot, event: MessageEvent, args
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
     sendmsg = SendMsg("Context.Delete_Public_Space_Context", delete_public_space_context, stranger_info)
 
-    context_core = ContextCore(stranger_info.namespace_str)
+    context_core = ContextCore(stranger_info)
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:
