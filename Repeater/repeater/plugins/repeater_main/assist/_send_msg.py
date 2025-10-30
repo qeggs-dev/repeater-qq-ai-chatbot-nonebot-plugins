@@ -49,6 +49,8 @@ class SendMsg:
     @property
     def hello_content(self) -> str:
         now = datetime.now()
+        if len(storage_config.welcome_messages_by_weekday) == 0:
+            return storage_config.hello_content
         if (now.weekday()) in storage_config.welcome_messages_by_weekday:
             return storage_config.welcome_messages_by_weekday[now.weekday()]
         elif (now.strftime("%A")) in storage_config.welcome_messages_by_weekday:
