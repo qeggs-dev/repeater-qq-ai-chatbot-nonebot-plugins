@@ -1,12 +1,13 @@
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
 from nonebot.internal.matcher.matcher import Matcher
 from nonebot.exception import FinishedException
-from ..core_net_configs import RepeaterDebugMode, HELLO_CONTENT
+from ..core_net_configs import RepeaterDebugMode, storage_config
 from ._http_code import HTTP_Code
 from ._stranger_info import StrangerInfo
 from ._text_render import TextRender
 from ._response_body import Response
 from typing import Callable, Any, NoReturn, TypeVar, Type
+from datetime import datetime
 
 T_RESPONSE = TypeVar("T_RESPONSE")
 
@@ -47,7 +48,15 @@ class SendMsg:
     
     @property
     def hello_content(self) -> str:
-        return HELLO_CONTENT
+        now = datetime.now()
+        if (now.weekday()) in storage_config.welcome_messages_by_weekday:
+            return storage_config.welcome_messages_by_weekday[now.weekday()]
+        elif (now.strftime("%A")) in storage_config.welcome_messages_by_weekday:
+            return storage_config.welcome_messages_by_weekday[now.strftime("%A")]
+        elif (now.strftime("%a")) in storage_config.welcome_messages_by_weekday:
+            return storage_config.welcome_messages_by_weekday[now.strftime("%a")]
+        else:
+            return storage_config.hello_content
     
     async def send_debug_mode(
             self,
