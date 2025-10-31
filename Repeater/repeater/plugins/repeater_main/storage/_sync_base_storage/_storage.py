@@ -1,4 +1,4 @@
-import aiofiles
+import shutil
 from pathlib import Path
 from typing import AsyncGenerator, AsyncIterable, Iterable, Generic, TypeVar
 from abc import ABC, abstractmethod
@@ -42,3 +42,24 @@ class Storage(ABC, Generic[T_STORAGE_DATA]):
     @abstractmethod
     def save_stream(self, path: Path | str, data: Iterable[T_STORAGE_DATA]) -> None:
         pass
+
+    def move(self, src: Path | str, dst: Path | str) -> None:
+        src = self._path(src)
+        dst = self._path(dst)
+        src.rename(dst)
+    
+    def remove(self, path: Path | str) -> None:
+        path = self._path(path)
+        if path.exists():
+            if path.is_file():
+                path.unlink()
+            elif path.is_dir():
+                shutil.rmtree(path)
+    
+    def copy(self, src: Path | str, dst: Path | str) -> None:
+        src = self._path(src)
+        dst = self._path(dst)
+        if src.is_file():
+            shutil.copy(src, dst)
+        elif src.is_dir():
+            shutil.copytree(src, dst)
