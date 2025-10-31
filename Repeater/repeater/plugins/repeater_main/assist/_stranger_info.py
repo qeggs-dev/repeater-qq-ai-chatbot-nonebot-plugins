@@ -1,5 +1,4 @@
-from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
-from nonebot.adapters import Bot
+from nonebot.adapters.onebot.v11 import Bot, MessageEvent, MessageSegment, Message
 from nonebot import get_driver
 from typing import Literal, Container
 from ._assist_func import (

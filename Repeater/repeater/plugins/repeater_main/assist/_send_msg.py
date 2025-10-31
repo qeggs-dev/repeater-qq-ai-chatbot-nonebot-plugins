@@ -51,12 +51,17 @@ class SendMsg:
         now = datetime.now()
         if len(storage_config.welcome_messages_by_weekday) == 0:
             return storage_config.hello_content
-        if (now.weekday()) in storage_config.welcome_messages_by_weekday:
-            return storage_config.welcome_messages_by_weekday[now.weekday()]
-        elif (now.strftime("%A")) in storage_config.welcome_messages_by_weekday:
-            return storage_config.welcome_messages_by_weekday[now.strftime("%A")]
-        elif (now.strftime("%a")) in storage_config.welcome_messages_by_weekday:
-            return storage_config.welcome_messages_by_weekday[now.strftime("%a")]
+        weekday = now.weekday() + 1
+        weekday_str = now.strftime('%A')
+        weekday_abridge = now.strftime('%a')
+        if weekday in storage_config.welcome_messages_by_weekday:
+            return storage_config.welcome_messages_by_weekday[weekday]
+        elif str(weekday) in storage_config.welcome_messages_by_weekday:
+            return storage_config.welcome_messages_by_weekday[str(weekday)]
+        elif weekday_str in storage_config.welcome_messages_by_weekday:
+            return storage_config.welcome_messages_by_weekday[weekday_str]
+        elif weekday_abridge in storage_config.welcome_messages_by_weekday:
+            return storage_config.welcome_messages_by_weekday[weekday_abridge]
         else:
             return storage_config.hello_content
     
@@ -251,6 +256,34 @@ class SendMsg:
             reply=reply,
             continue_handler = continue_handler
         )
+    
+    async def send_mixed_render(
+            self,
+            text: str,
+            text_to_render: str,
+            reply: bool = False,
+            continue_handler: bool = False
+        ):
+        """
+        发送混合渲染文本
+
+        :param text: 普通文本内容
+        :param text_to_render: 需要渲染的文本内容
+        :param reply: 是否携带引用
+        :param continue_handler: 是否继续运行当前处理流程
+        """
+        image = await self.text_render(text)
+        await self._send(
+            Message(
+                [
+                    MessageSegment.text(text_to_render),
+                    image,
+                ]
+            ),
+            reply=reply,
+            continue_handler = continue_handler
+        )
+        
     
     async def send_render(
             self,
