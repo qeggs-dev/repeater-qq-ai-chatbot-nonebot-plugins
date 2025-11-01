@@ -15,7 +15,7 @@ async def handle_send_user_data_file(bot: Bot, event: MessageEvent):
     stranger_info = StrangerInfo(bot=bot, event=event)
     sendmsg = SendMsg("UserFile.Send_User_Data_File", send_user_data_file, stranger_info)
 
-    user_file_core = UserFileCore(stranger_info.namespace_str)
+    user_file_core = UserFileCore(stranger_info)
     sfurl = await user_file_core.get_user_data_file_url()
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
