@@ -5,6 +5,7 @@ class StorageConfigs(BaseModel):
     max_text_length: int = 400
     max_single_line_length: int = 64
     max_text_lines: int = 5
+    reason_model_uid: str = "reasoner"
     hello_content: str = "Repeater Is Ready!"
     welcome_messages_by_weekday: dict[int | str, str] = Field(default_factory=dict, max_length=7)
 
