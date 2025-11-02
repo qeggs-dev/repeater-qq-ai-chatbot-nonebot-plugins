@@ -88,7 +88,7 @@ PS: 由于OneBot客户端通常为入站服务，所以默认情况下所有服�
 ## Markdown图片渲染样式
 
 | 风格 | 译名 |
-| :---: | :---: |
+| --- | :---: |
 | **`light`** | 亮色 |
 | `dark` | 暗色 |
 | `red` | 红色 |
@@ -143,7 +143,6 @@ PS: 使用`sdm`命令带着模型ID设置你需要的模型。
 | `changeDefaultPersonality` | `cdp`  | `ChangeDefaultPersonality`| `CONFIG`    | 修改默认人格                   | [人格预设](#人格预设)                       | 4.0 Beta | 1.0             | 修改默认人格路由 |
 | `deletePrompt`             | `dp`   | `DeletePrompt`            | `PROMPT`    | 删除提示词                     | 无                                        | 4.0 Beta | 1.0             | 删除提示词 |
 | `deleteContext`            | `dc`   | `DeleteContext`           | `CONTEXT`   | 删除上下文                     | 无                                        | 4.0 Beta | 1.0             | 删除上下文 |
-| `deleteSession`            | `ds`   | `DeleteSession`           | `CONTEXT`   | 删除上下文(兼容的旧版命令)      | 无                                        | 4.0 Beta | 1.0             | 删除上下文(兼容旧版命令，与上条命令功能一致) |
 | `varExpand`                | `ve`   | `VarExpand`               | `VAREXPAND` | 变量展开                       | 文本模板(使用大括号作为[变量](#变量表)标记)  | 4.0 Beta | 1.0             | 变量展开 |
 | `setDefaultModel`          | `sdm`  | `SetDefaultModel`         | `CONFIG`    | 设置默认模型                   | [模型](#模型)                              | 4.0 Beta | 1.0             | 设置默认使用的模型 |
 | `setTopP`                  | `stp`  | `SetTopP`                 | `CONFIG`    | 设置Top_P参数                  | 0\~1的浮点数 或`0%`\~`100%`的百分比         | 4.0.1 Beta | 1.0           | 设置Top_P参数 |
@@ -160,3 +159,4 @@ PS: 使用`sdm`命令带着模型ID设置你需要的模型。
 | `withdraw`                 | `w`    | `Withdraw`                | `CONTEXT`   | 撤回消息                       | 无                                         | 4.2.3.0      | 1.0         | 删除复读机上下文中保存的最新一回合对话 |
 | `recentSpeakingRanking`    | `rsr`  | `RecentSpeakingRanking`   | `OTHER`     | 最近发言排行                   | 无                                         | 4.2.3.0      | 1.0         | 获取群组内最近发言的成员列表 |
 | `setAutoShrinkLength`      | `sasl` | `SetAutoShrinkLength`     | `CONFIG`    | 设置自动缩减长度上限            | 整数                                       | 4.2.4.0      | 1.0         | 设置之后如果你的聊天上下文超过该值，系统会尝试自动删除最旧的上下文直到满足该值 |
+| `deleteSession`            | `ds`   | `DeleteSession`           | `MIXED`     | 删除所有用户数据               | 无                                        | 4.2.5.0        | 1.0         | 删除所有用户数据 |
