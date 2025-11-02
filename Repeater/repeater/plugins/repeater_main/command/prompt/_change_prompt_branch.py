@@ -22,4 +22,4 @@ async def handle_change_prompt_branch(bot: Bot, event: MessageEvent, args: Messa
         await sendmsg.send_debug_mode()
     else:
         response = await prompt_core.change_prompt_branch(msg)
-        sendmsg.send_response(response, f"Change Prompt Branch to {msg}")
+        await sendmsg.send_response(response, f"Change Prompt Branch to {msg}")
