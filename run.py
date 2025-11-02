@@ -13,7 +13,7 @@ TITLE = "Repeater"
 CONSOLE_TITLE = f"{TITLE} Nonebot Plugin"
 
 def init_argparse():
-    parser = argparse.ArgumentParser(description="Repeater")
+    parser = argparse.ArgumentParser(description=TITLE)
     parser.add_argument("-d", "--debug", action="store_true", help="Enable debug mode")
     return parser
 
@@ -34,7 +34,7 @@ def create_cmd():
     else:
         cmd: list[list[str]] = [
             [".venv/bin/python3", "-c", "import sys; print(f\"Run script with Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro} for " + SYSTEM + "\")"],
-            [".venv/Scripts/nb", "run"]
+            [".venv/bin/nb", "run"]
         ]
     return cmd
 
@@ -190,4 +190,10 @@ async def main():
     await pause()
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except Exception as e:
+        with open("traceback.txt", "w", encoding="utf-8") as f:
+            import traceback
+            f.write(traceback.format_exc())
+            raise
