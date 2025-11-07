@@ -20,4 +20,4 @@ async def handle_set_default_model_type(bot: Bot, event: MessageEvent, args: Mes
         await sendmsg.send_debug_mode()
     else:
         response = await config_core.set_config("model_uid", stranger_info.message_str)
-        await sendmsg.send_text(response, f"Set Default Model to {stranger_info.message_str}")
+        await sendmsg.send_response(response, f"Set Default Model to {stranger_info.message_str}")
