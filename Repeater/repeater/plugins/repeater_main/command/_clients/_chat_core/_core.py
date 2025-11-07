@@ -151,11 +151,17 @@ class ChatCore:
         if stream:
             data['stream'] = stream
         if message:
-            MD_Rendering_Enables_Prompts = "\n> Markdown rendering is turned on!!"
-            MD_Rendering_Enables_Prompts = MD_Rendering_Enables_Prompts if enable_md_prompt else ''
-            Reference_Enables_Prompts = "\n> Guest mode(User: {user_name})，Citation context is turned on!!"
-            Reference_Enables_Prompts = Reference_Enables_Prompts if reference_context_id else ''
-            data['message'] = '> SystemInfo:\n> Message sending time:{time}' + (MD_Rendering_Enables_Prompts) + (Reference_Enables_Prompts) + '\n\n---\n\n' + message
+            message_buffer:list[str] = []
+            message_buffer.append("> MessageMetadata:")
+            message_buffer.append(f">     Message Type: {self._info.mode.value}")
+            message_buffer.append(">     Message Sending time:{time}")
+            if enable_md_prompt:
+                message_buffer.append(">     Markdown Rendering is turned on!!")
+            if reference_context_id:
+                message_buffer.append(">     Guest Mode(User: {user_name}), Citation context is turned on!!")
+            message_buffer.append("\n---\n")
+            message_buffer.append(message)
+            data['message'] = "\n".join(message_buffer)
         return data
     
     async def text_render(self, text: str) -> RendedImage:
