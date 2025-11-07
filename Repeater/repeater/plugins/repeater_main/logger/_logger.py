@@ -10,7 +10,7 @@ class LoggerConfig(BaseModel):
     repeater_logger_path: Optional[str] = Field("logs/repeater-log-{time:YYYY-MM-DD-HH-mm-ss}.log")
     repeater_logger_enable_queue: Optional[bool] = Field(True)
     repeater_logger_delay: Optional[bool] = Field(True)
-    repeater_logger_rotation: Optional[str] = Field("1 week")
+    repeater_logger_rotation: Optional[str] = Field("100 MB")
     repeater_logger_retention: Optional[str] = Field("1 month")
     repeater_logger_compression: Optional[str] = Field("zip")
 
