@@ -32,6 +32,7 @@ class ChatCore:
     async def send_message(
         self,
         message: str | None = None,
+        add_metadata: bool = True,
         role_name: str | None = None,
         model_uid: str | None = None,
         load_prompt: bool = True,
@@ -49,6 +50,7 @@ class ChatCore:
         url = f"{CHAT_ROUTE}/{self.namespace}"
         data = self._prepare_request_body(
             message = message,
+            add_metadata = add_metadata,
             role_name = role_name,
             model_uid = model_uid,
             load_prompt = load_prompt,
@@ -84,6 +86,7 @@ class ChatCore:
     async def send_stream_message(
         self,
         message: str,
+        add_metadata: bool = True,
         role_name: str | None = None,
         model_uid: str | None = None,
         load_prompt: bool = True,
@@ -102,6 +105,7 @@ class ChatCore:
         url = f"{CHAT_ROUTE}/{self.namespace}"
         data = self._prepare_request_body(
             message = message,
+            add_metadata = add_metadata,
             role_name = role_name,
             model_uid = model_uid,
             load_prompt = load_prompt,
