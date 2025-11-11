@@ -22,7 +22,6 @@ async def handle_reference(bot: Bot, event: MessageEvent, args: Message = Comman
         module = "Chat.Reference"
     )
 
-    # message = await stranger_info.image_to_text(format="==== OCR Vision Begin ====\n{text}\n===== OCR Vision end =====", excluded_tags={"[动画表情]"})
     message = stranger_info.message
 
     chat_core = ChatCore(stranger_info)

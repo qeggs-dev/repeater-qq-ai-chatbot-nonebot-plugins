@@ -1,39 +1,41 @@
 from nonebot import on_command
+from nonebot.internal.matcher.matcher import Matcher
 from nonebot.rule import to_me
 from nonebot.params import CommandArg
 from nonebot.adapters import Message
-from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
+from nonebot.adapters.onebot.v11 import MessageEvent
 from nonebot.adapters import Bot
+from ...logger import logger
 
 from .._clients import ChatCore, ChatSendMsg
 from ...assist import StrangerInfo
-from ...logger import logger
 
-renderChat = on_command("renderChat", aliases={"rc", "render_chat", "Render_Chat", "RenderChat"}, rule=to_me(), block=True)
+chat: type[Matcher] = on_command("raw", aliases={"raw", "rawchat", "raw_chat", "Raw_Chat", "RawChat"}, rule=to_me(), block=True)
 
-@renderChat.handle()
-async def handle_render_Chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
+@chat.handle()
+async def handle_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot, event, args)
 
     logger.info(
         "Received a message {message} from {namespace}",
         message = stranger_info.message_str,
         namespace = stranger_info.namespace_str,
-        module = "Chat.Render_Chat"
+        module = "Chat.Raw_Chat"
     )
-    
+
     message = stranger_info.message
-    
-    core = ChatCore(stranger_info)
+
+    core = ChatCore(stranger_info.namespace_str)
 
     response = await core.send_message(
-        message = message.extract_plain_text().strip()
+        message = message.extract_plain_text().strip(),
+        add_metadata = False
     )
 
     send_msg = ChatSendMsg(
-        "Render_Chat",
+        "Chat.Chat",
         stranger_info,
-        renderChat,
+        chat,
         response
     )
-    await send_msg.send_image()
+    await send_msg.send()

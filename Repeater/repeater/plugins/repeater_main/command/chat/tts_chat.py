@@ -10,7 +10,7 @@ from ...logger import logger
 
 api = ChatTTSAPI()
 
-tts_chat = on_command('tts_chat', aliases={'ttsc', 'tts_Chat', 'TTS_Chat'}, rule=to_me(), block=True)
+tts_chat = on_command("tts_chat", aliases={"ttsc", "tts_Chat", "TTS_Chat"}, rule=to_me(), block=True)
 
 @tts_chat.handle()
 async def handle_tts_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()) -> None:

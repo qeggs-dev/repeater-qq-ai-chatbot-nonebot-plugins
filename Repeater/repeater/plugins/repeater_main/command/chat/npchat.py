@@ -9,7 +9,7 @@ from .._clients import ChatCore, ChatSendMsg
 from ...assist import StrangerInfo
 from ...logger import logger
 
-npchat = on_command('npChat', aliases={'np', 'no_prompt_chat', 'No_Prompt_Chat', 'NoPromptChat'}, rule=to_me(), block=True)
+npchat = on_command("npChat", aliases={"np", "no_prompt_chat", "No_Prompt_Chat", "NoPromptChat"}, rule=to_me(), block=True)
 
 @npchat.handle()
 async def handle_npchat(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
@@ -22,7 +22,6 @@ async def handle_npchat(bot: Bot, event: MessageEvent, args: Message = CommandAr
         module = "Chat.NPChat"
     )
 
-    # message = await stranger_info.image_to_text(format="==== OCR Vision Begin ====\n{text}\n===== OCR Vision end =====", excluded_tags={"[动画表情]"})
     message = stranger_info.message
 
     chat_core = ChatCore(stranger_info.namespace_str)

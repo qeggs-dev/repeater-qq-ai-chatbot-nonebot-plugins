@@ -22,7 +22,6 @@ async def handle_recomplete(bot: Bot, event: MessageEvent, args: Message = Comma
         module = "Chat.Recomplete"
     )
 
-    # message = await stranger_info.image_to_text(format="==== OCR Vision Begin ====\n{text}\n===== OCR Vision end =====", excluded_tags={"[动画表情]"})
     message = stranger_info.message
 
     chat_core = ChatCore(stranger_info)
