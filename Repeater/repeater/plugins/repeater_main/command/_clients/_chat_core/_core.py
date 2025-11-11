@@ -125,6 +125,7 @@ class ChatCore:
     def _prepare_request_body(
         self,
         message: str | None = None,
+        add_metadata: bool = True,
         role_name: str | None = None,
         model_uid: str | None = None,
         load_prompt: bool = True,
@@ -152,14 +153,15 @@ class ChatCore:
             data['stream'] = stream
         if message:
             message_buffer:list[str] = []
-            message_buffer.append("> MessageMetadata:")
-            message_buffer.append(f">     Message Type: {self._info.mode.value}")
-            message_buffer.append(">     Message Sending time:{time}")
-            if enable_md_prompt:
-                message_buffer.append(">     Markdown Rendering is turned on!!")
-            if reference_context_id:
-                message_buffer.append(">     Guest Mode(User: {user_name}), Citation context is turned on!!")
-            message_buffer.append("\n---\n")
+            if add_metadata:
+                message_buffer.append("> MessageMetadata:")
+                message_buffer.append(f">     Message Type: {self._info.mode.value}")
+                message_buffer.append(">     Message Sending time:{time}")
+                if enable_md_prompt:
+                    message_buffer.append(">     Markdown Rendering is turned on!!")
+                if reference_context_id:
+                    message_buffer.append(">     Guest Mode(User: {user_name}), Citation context is turned on!!")
+                message_buffer.append("\n---\n")
             message_buffer.append(message)
             data['message'] = "\n".join(message_buffer)
         return data
