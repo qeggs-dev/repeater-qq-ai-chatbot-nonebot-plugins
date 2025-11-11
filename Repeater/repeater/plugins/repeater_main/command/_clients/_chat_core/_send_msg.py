@@ -47,7 +47,7 @@ class Send_msg(BaseSendMsg):
                 else:
                     await self.send_text()
             else:
-                await self.send_error(self.response)
+                await self.send_error(self.response.data.content)
     
     async def send_tts(self, send_picture_first: bool = False):
         if self.is_debug_mode:
@@ -92,7 +92,7 @@ class Send_msg(BaseSendMsg):
                     message.append("Message is empty.")
                 await self._matcher.finish(message)
             else:
-                await self.send_error(self.response, text)
+                await self.send_response(self.response)
     
     async def send_image(self, text: str | None = None) -> NoReturn:
         if self.is_debug_mode:
@@ -113,7 +113,7 @@ class Send_msg(BaseSendMsg):
                     message.append("[Message is empty.]")
                 await self._matcher.finish(message)
             else:
-                await self.send_error(self.response, text)
+                await self.send_response(self.response)
 
     async def text_render(self, text: str | None = None) -> MessageSegment:
         if text:
@@ -121,5 +121,5 @@ class Send_msg(BaseSendMsg):
             if render_response.code == 200:
                 message = MessageSegment.image(render_response.data.image_url)
             else:
-                await self.send_error(render_response, text)
+                await self.send_response(self.response)
         return message
