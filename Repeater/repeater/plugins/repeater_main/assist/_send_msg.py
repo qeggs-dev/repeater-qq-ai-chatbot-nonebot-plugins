@@ -118,7 +118,7 @@ class SendMsg:
     
     async def send_multiple_responses(
             self,
-            *responses: Response[T_RESPONSE],
+            *responses: Response[T_RESPONSE] | tuple[Response[T_RESPONSE], str],
             reply: bool = True,
             continue_handler: bool = False,
         ):
@@ -132,9 +132,16 @@ class SendMsg:
         text_buffer: list[str] = []
         failed: int = 0
         for index, response in enumerate(responses, start=1):
-            text_buffer.append(f"[{index}] HTTP Code: {response.code}({HTTP_Code(response.code)})")
-            if response.code != 200:
-                failed += 1
+            if isinstance(response, tuple):
+                text_buffer.append(f"[{response[1]}] HTTP Code: {response[0].code}({HTTP_Code(response[0].code)})")
+                if response[0].code != 200:
+                    failed += 1
+            elif isinstance(response, Response):
+                text_buffer.append(f"[{index}] HTTP Code: {response.code}({HTTP_Code(response.code)})")
+                if response.code != 200:
+                    failed += 1
+            else:
+                raise TypeError(f"Unsupported type: {type(response)}")
         
         if failed == 0:
             text_buffer.append("All requests are successful.")
