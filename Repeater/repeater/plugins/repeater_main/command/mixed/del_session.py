@@ -24,4 +24,8 @@ async def handle_delete_session(bot: Bot, event: MessageEvent, args: Message = C
         response_context = await context_core.delete_context()
         response_prompt = await prompt_core.delete_prompt()
         response_config = await config_core.delete_config()
-        await sendmsg.send_multiple_responses(response_context, response_prompt, response_config)
+        await sendmsg.send_multiple_responses(
+            (response_context, "Context"),
+            (response_prompt, "Prompt"),
+            (response_config, "Config")
+        )
