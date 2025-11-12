@@ -55,8 +55,5 @@ VARIABLE_EXPANSION = f"{BACKEND_HOST}:{BACKEND_PORT}/userdata/variable/expand"
 
 # ==== CONFIG ==== #
 HELLO_CONTENT = storage_config.hello_content
-MAX_LENGTH = storage_config.max_text_length
-MIN_RENDER_SINGLE_LINE_LENGTH = storage_config.max_single_line_length
-MIN_RENDER_IMAGE_TEXT_LINES = storage_config.max_text_lines
 RepeaterDebugMode = net_config.repeater_debug_mode # 是否开启调试模式，调试模式下，将直接返回消息内容，而不进行后端访问操作
 
