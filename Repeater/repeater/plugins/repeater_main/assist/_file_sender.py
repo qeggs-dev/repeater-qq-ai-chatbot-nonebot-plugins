@@ -5,7 +5,7 @@ class FileSender:
         self.stranger_info = stranger_info
 
     async def send_file(self, url: str, file_name: str):
-        if self.stranger_info._mode == "group":
+        if self.stranger_info.source == "group":
             data = {
                 "group_id": self.stranger_info._group_id,
                 "file": url,
@@ -13,7 +13,7 @@ class FileSender:
                 "folder_id": None
             }
             await self.stranger_info.bot.upload_group_file(**data)
-        elif self.stranger_info._mode == "private":
+        elif self.stranger_info.source == "private":
             data = {
                 "user_id": self.stranger_info.user_id,
                 "file": url,

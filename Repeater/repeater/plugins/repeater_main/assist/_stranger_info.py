@@ -13,11 +13,11 @@ class StrangerInfo:
         self._message_event: MessageEvent = event
         self._args: Message = args
         self._group_id: str | None = None
-        self._mode: MessageSource = MessageSource.GROUP
+        self._source: MessageSource = MessageSource.GROUP
         
-        self._mode = MessageSource(event.message_type.strip().lower())
+        self._source = MessageSource(event.message_type.strip().lower())
 
-        if self._mode == MessageSource.GROUP:
+        if self._source == MessageSource.GROUP:
             try:
                 self._group_id = event.model_dump()["group_id"]
                 if self._group_id is None:
@@ -77,7 +77,7 @@ class StrangerInfo:
 
     @property
     def namespace(self):
-        if self._mode == MessageSource.GROUP:
+        if self._source == MessageSource.GROUP:
             return Namespace(
                 mode=MessageSource.GROUP,
                 group_id=self._group_id,
@@ -117,8 +117,8 @@ class StrangerInfo:
         return MessageSegment.reply(self.message_id)
     
     @property
-    def mode(self) -> MessageSource:
-        return self._mode
+    def source(self) -> MessageSource:
+        return self._source
     
     @property
     def noself_at_list(self):
