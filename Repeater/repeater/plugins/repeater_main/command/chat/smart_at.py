@@ -25,7 +25,7 @@ async def handle_smart_at(bot: Bot, event: MessageEvent):
     message = stranger_info.message
     
     if not stranger_info.message_str.strip():
-        if stranger_info._mode == MessageSource.GROUP:
+        if stranger_info.source == MessageSource.GROUP:
             await sendmsg.send_hello()
         else:
             return

@@ -13,7 +13,7 @@ from ...assist import StrangerInfo
 chat: type[Matcher] = on_command("raw", aliases={"raw", "rawchat", "raw_chat", "Raw_Chat", "RawChat"}, rule=to_me(), block=True)
 
 @chat.handle()
-async def handle_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
+async def handle_raw_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot, event, args)
 
     logger.info(
