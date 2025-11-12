@@ -159,7 +159,7 @@ class ChatCore:
             message_buffer:list[str] = []
             if add_metadata:
                 message_buffer.append("> MessageMetadata:")
-                message_buffer.append(f">     Message Type: {self._info.mode.value}")
+                message_buffer.append(f">     Message Type: {self._info.source.value}")
                 message_buffer.append(">     Message Sending time:{time}")
                 if enable_md_prompt:
                     message_buffer.append(">     Markdown Rendering is turned on!!")
