@@ -1,7 +1,7 @@
 from nonebot.adapters.onebot.v11 import MessageSegment, Message
 from nonebot.internal.matcher.matcher import Matcher
 from ....chattts import ChatTTSAPI
-from ....core_net_configs import MIN_RENDER_SINGLE_LINE_LENGTH, MIN_RENDER_IMAGE_TEXT_LINES, MAX_LENGTH
+from ....core_net_configs import storage_config
 from ....assist import StrangerInfo, MessageSource, Response, TextRender, SendMsg as BaseSendMsg
 from ._response_body import ChatResponse
 from typing import NoReturn
@@ -21,27 +21,37 @@ class Send_msg(BaseSendMsg):
         self.response: Response[ChatResponse] = response
         self._text_render = TextRender(namespace = self._stranger_info.namespace)
         self._chat_tts_api = ChatTTSAPI()
+    
+    @staticmethod
+    def text_length_score(text:str) -> float:
+        lines = text.splitlines()
+        max_line_length = max([len(line) for line in lines]) if lines else 0
+        lines_score = len(lines) / storage_config.text_length_score_configs.lines
+        single_line_score = max_line_length / storage_config.text_length_score_configs.single_line
+        total_length_score = len(text) / storage_config.text_length_score_configs.total_length
+
+        return (
+            lines_score +
+            single_line_score +
+            total_length_score
+        ) / 3
+    
+    def text_reaches_threshold(self, text: str) -> bool:
+        return self.text_length_score(text) >= storage_config.text_length_score_configs.threshold
+
 
     async def send(self):
         if self.is_debug_mode:
             await self.send_debug_mode()
         else:
             if self.response.code == 200:
-                lines = self.response.data.content.splitlines()
-                max_line_length = max([len(line) for line in lines]) if lines else 0
-                if (
-                        (
-                        self._stranger_info.mode == MessageSource.GROUP
-                        and
-                        (
-                            len(lines) > MIN_RENDER_IMAGE_TEXT_LINES
-                            or
-                            max_line_length > MIN_RENDER_SINGLE_LINE_LENGTH)
-                        )
-                        or
-                        len(self.response.data.content) > MAX_LENGTH
-                    ):
-                    logger.warning(f"Response content has {len(lines)} lines, max line length is {max_line_length}.")
+                score = self.text_length_score(self.response.data.content)
+                if self._stranger_info.source == MessageSource.GROUP:
+                    threshold = storage_config.text_length_score_configs.threshold.group
+                else:
+                    threshold = storage_config.text_length_score_configs.threshold.private
+                if score >= threshold:
+                    logger.warning(f"Response content socre to high: {score}, Expected to be below {threshold} ")
                     logger.warning("The text will be rendered as an image output.")
                     await self.send_image()
                 else:
