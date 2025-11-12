@@ -17,7 +17,7 @@ async def choose_group_member_handle(bot: Bot, event: MessageEvent, args: Messag
     stranger_info = StrangerInfo(bot, event, args)
     sendmsg = SendMsg("More.Choose_Group_Member", choose_group_member, stranger_info)
     
-    if stranger_info.mode == MessageSource.PRIVATE:
+    if stranger_info.source == MessageSource.PRIVATE:
         await sendmsg.send_error("The current feature cannot be used in private chat.")
     
     group_id = stranger_info.group_id

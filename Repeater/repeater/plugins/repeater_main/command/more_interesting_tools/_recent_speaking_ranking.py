@@ -20,7 +20,7 @@ async def recent_speaking_ranking_handle(bot: Bot, event: MessageEvent, args: Me
     stranger_info = StrangerInfo(bot, event, args)
     sendmsg = SendMsg("More.ChooseGroupMember", recent_speaking_ranking, stranger_info)
     
-    if stranger_info.mode == MessageSource.PRIVATE:
+    if stranger_info.source == MessageSource.PRIVATE:
         await sendmsg.send_error("The current feature cannot be used in private chat.")
     
     group_id = stranger_info.group_id
