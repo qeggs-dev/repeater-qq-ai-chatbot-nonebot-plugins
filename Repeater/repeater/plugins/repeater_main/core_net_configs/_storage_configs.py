@@ -10,7 +10,8 @@ class TextLengthScoreThreshold(BaseModel):
 
 class TextLengthScoreConfigs(BaseModel):
     lines: int = 5
-    single_line: int = 64
+    single_line_max: int = 64
+    mean_line_max: int = 32
     total_length: int = 400
     threshold: TextLengthScoreThreshold = Field(default_factory = TextLengthScoreThreshold)
     

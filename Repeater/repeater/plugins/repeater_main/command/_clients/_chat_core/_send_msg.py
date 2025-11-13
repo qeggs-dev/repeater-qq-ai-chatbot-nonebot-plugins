@@ -6,6 +6,7 @@ from ....assist import StrangerInfo, MessageSource, Response, TextRender, SendMs
 from ._response_body import ChatResponse
 from typing import NoReturn
 from ....logger import logger as base_logger
+import numpy as np
 
 logger = base_logger.bind(module = "Chat.SendMsg")
 
@@ -25,16 +26,23 @@ class Send_msg(BaseSendMsg):
     @staticmethod
     def text_length_score(text:str) -> float:
         lines = text.splitlines()
-        max_line_length = max([len(line) for line in lines]) if lines else 0
+        line_lengths = np.array([len(line) for line in lines], dtype=np.int64)
         lines_score = len(lines) / storage_config.text_length_score_configs.lines
-        single_line_score = max_line_length / storage_config.text_length_score_configs.single_line
+        single_line_score = line_lengths.max() / storage_config.text_length_score_configs.single_line_max
+        mean_line_score = line_lengths.mean() / storage_config.text_length_score_configs.mean_line_max
         total_length_score = len(text) / storage_config.text_length_score_configs.total_length
 
         return (
+            # lines: 33.3%
             lines_score +
-            single_line_score +
+            # single_line_score + mean_line_score: 33.3%
+            (
+                single_line_score +
+                mean_line_score
+            ) / 2.0 +
+            # total_length: 33.3%
             total_length_score
-        ) / 3
+        ) / 3.0
     
     def text_reaches_threshold(self, text: str) -> bool:
         return self.text_length_score(text) >= storage_config.text_length_score_configs.threshold
@@ -55,6 +63,7 @@ class Send_msg(BaseSendMsg):
                     logger.warning("The text will be rendered as an image output.")
                     await self.send_image()
                 else:
+                    logger.info(f"Response content socre: {score}")
                     await self.send_text()
             else:
                 await self.send_error(self.response.data.content)
