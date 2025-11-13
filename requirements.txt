@@ -3,3 +3,4 @@ pydantic
 aiofiles
 pyyaml
 orjson
+numpy
