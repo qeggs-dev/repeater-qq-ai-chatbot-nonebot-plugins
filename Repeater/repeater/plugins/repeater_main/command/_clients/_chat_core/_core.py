@@ -38,7 +38,7 @@ class ChatCore:
         load_prompt: bool = True,
         enable_md_prompt: bool = True,
         reference_context_id: str | None = None,
-    ) -> Response[ChatResponse]:
+    ) -> Response[ChatResponse | None]:
         """
         发送消息到AI后端
         
@@ -68,14 +68,14 @@ class ChatCore:
                 return Response(
                     code = response.status_code,
                     text = response.text,
-                    data = ChatResponse()
+                    data = None
                 )
         try:
             response_body = ChatResponse(
                 **result
             )
         except Exception as e:
-            response_body = ChatResponse()
+            response_body = None
             
         return Response(
             code = response.status_code,
