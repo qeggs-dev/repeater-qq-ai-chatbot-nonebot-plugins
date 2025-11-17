@@ -75,7 +75,7 @@ class Send_msg(BaseSendMsg):
                     logger.info(f"Response content socre: {score}")
                     await self.send_text()
             else:
-                await self._send_error_message(self)
+                await self._send_error_message()
     
     async def send_tts(self, send_picture_first: bool = False):
         if self.is_debug_mode:
@@ -102,7 +102,7 @@ class Send_msg(BaseSendMsg):
                     else:
                         await self.send_response(response, message = "TTS Error.")
             else:
-                await self._send_error_message(self)
+                await self._send_error_message()
             
     
     async def send_text(self, text: str | None = None) -> NoReturn:
@@ -123,7 +123,7 @@ class Send_msg(BaseSendMsg):
                     message.append("Message is empty.")
                 await self._matcher.finish(message)
             else:
-                await self._send_error_message(self)
+                await self._send_error_message()
     
     async def send_image(self, text: str | None = None) -> NoReturn:
         if self.is_debug_mode:
@@ -144,7 +144,7 @@ class Send_msg(BaseSendMsg):
                     message.append("[Message is empty.]")
                 await self._matcher.finish(message)
             else:
-                await self._send_error_message(self)
+                await self._send_error_message()
 
     async def text_render(self, text: str | None = None) -> MessageSegment:
         if text:
