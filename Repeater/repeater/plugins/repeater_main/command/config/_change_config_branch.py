@@ -19,5 +19,5 @@ async def handle_change_config_branch(bot: Bot, event: MessageEvent, args: Messa
     if send_msg.is_debug_mode:
         await send_msg.send_debug_mode()
     else:
-        response = await config_core.set_config("new_branch_id", stranger_info.message_str)
+        response = await config_core.change_config_branch(stranger_info.message_str)
         await send_msg.send_response(response, f"Config branch changed to {stranger_info.message_str}")
