@@ -1,7 +1,7 @@
 # @复读机Repeater
 **- Only Chat, Focus Chat. -**
 
-*注：本仓库仅为NoneBot插件，需要配合[后端项目](https://github.com/qeggs-dev/repeater-qq-ai-chatbot-backend)使用*
+*注：本仓库仅为NoneBot插件，需要配合[后端项目](#相关仓库)使用*
 
 一个基于[`NoneBot`](https://nonebot.dev/)和[`OpenAI SDK`](https://pypi.org/project/openai/)开发的**实验性**QQ聊天机器人
 **此仓库仅为后端实现，NoneBot插件部分请查看[`Repater-Nonebot-Plugin`](https://github.com/qeggs-dev/repeater-qq-ai-chatbot-nonebot-plugins)**
@@ -158,39 +158,42 @@ PS: 由于OneBot客户端通常为入站服务，所以默认情况下所有服�
 
 ## 命令表
 
-| 命令                       | 别名    | 全名                      | 类型        | 功能描述                       | 参数描述                                   | 加入版本 | 命令版本          | 备注 |
-| :---                       | :---   | :---                      | :---:       | :---:                         | :---:                                     | :---:    | :---:            | :---: |
-| `chat`                     | `c`    | `Chat`                    | `CHAT`      | 与机器人对话                   | 自然语言输入                               | 4.0 Beta | 1.0              | 默认命令，可被`to_me`消息调起 |
-| `keepAnswering`            | `ka`   | `KeepAnswering`           | `CHAT`      | 持续对话(常规)                 | 无                                        | 4.0 Beta | 1.0              | 无须输入，AI再次回复 |
-| `keepReasoning`            | `kr`   | `KeepReasoning`           | `CHAT`      | 持续对话(推理)                 | 无                                        | 4.0 Beta | 1.0              | 无须输入，AI再次使用推理回复 |
-| `renderChat`               | `rc`   | `RenderChat`              | `CHAT`      | 渲染Markdown回复               | 自然语言输入                               | 4.0 Beta | 1.0              | 强制渲染图片输出 |
-| `setRenderStyle`           | `srs`  | `SetRenderStyle`          | `CONFIG`    | 设置渲染样式                   | [渲染样式](#Markdown图片渲染样式)           | 4.0 Beta | 1.0              | 设置Markdown图片渲染样式 |
-| `npChat`                   | `np`   | `NoPromptChat`            | `CHAT`      | 不加载提示词进行对话            | 自然语言输入                               | 4.0 Beta | 1.0              | 使用常规模型 |
-| `reason`                   | `r`    | `Reason`                  | `CHAT`      | 使用Reasoner模型进行推理        | 自然语言输入                               | 4.0 Beta | 1.0             | 使用`Reasoner`模型 |
-| `recomplete`               | `rcm`  | `Recomplete`              | `CHAT`      | 重新进行对话补全                | 无                                        | 4.0 Beta | 1.0             | 重新生成 |
-| `setFrequencyPenalty`      | `sfp`  | `SetFrequencyPenalty`     | `CONFIG`    | 设置频率惩罚                   | `-2`\~`2`的浮点数 或`-200%`\~`200%`的百分比 | 4.0 Beta | 1.0             | 控制着模型输出重复相同内容的可能性 |
-| `setPresencePenalty`       | `spp`  | `SetPresencePenalty`      | `CONFIG`    | 设置存在惩罚                   | `-2`\~`2`的浮点数 或`-200%`\~`200%`的百分比 | 4.0 Beta | 1.0             | 控制着模型谈论新主题的可能性 |
-| `setTemperature`           | `st`   | `SetTemperature`          | `CONFIG`    | 设置温度                       | `0`\~`2`的浮点数 或`-100%`\~`100%`的百分比 | 4.0 Beta | 1.0             | 控制着模型生成内容的不确定性 |
-| `setPrompt`                | `sp`   | `SetPrompt`               | `PROMPT`    | 设置提示词                     | 自然语言输入                               | 4.0 Beta | 1.0             | 设置提示词 |
-| `changeDefaultPersonality` | `cdp`  | `ChangeDefaultPersonality`| `CONFIG`    | 修改默认人格                   | [人格预设](#人格预设)                       | 4.0 Beta | 1.0             | 修改默认人格路由 |
-| `deletePrompt`             | `dp`   | `DeletePrompt`            | `PROMPT`    | 删除提示词                     | 无                                        | 4.0 Beta | 1.0             | 删除提示词 |
-| `deleteContext`            | `dc`   | `DeleteContext`           | `CONTEXT`   | 删除上下文                     | 无                                        | 4.0 Beta | 1.0             | 删除上下文 |
-| `varExpand`                | `ve`   | `VarExpand`               | `VAREXPAND` | 变量展开                       | 文本模板(使用大括号作为[变量](#变量表)标记)  | 4.0 Beta | 1.0             | 变量展开 |
-| `setDefaultModel`          | `sdm`  | `SetDefaultModel`         | `CONFIG`    | 设置默认模型                   | [模型](#模型)                              | 4.0 Beta | 1.0             | 设置默认使用的模型 |
-| `setTopP`                  | `stp`  | `SetTopP`                 | `CONFIG`    | 设置Top_P参数                  | 0\~1的浮点数 或`0%`\~`100%`的百分比         | 4.0.1 Beta | 1.0           | 设置Top_P参数 |
-| `setMaxTokens`             | `stm`  | `SetMaxTokens`            | `CONFIG`    | 设置最大生成tokens数           | 0\~4096的整数                               | 4.0.1 Beta | 1.0           | 设置最大生成tokens数 |
-| `getContextTotalLength`    | `gctl` | `GetContextTotalLength`   | `CONTEXT`   | 获取上下文总长度               | 无                                         | 4.0.1 Beta | 1.0           | 获取上下文总长度 |
-| `publicSpaceChat`          | `psc`  | `PublicSpaceChat`         | `CHAT`      | 公共空间聊天                   | 自然语言输入                                | 4.0.2.1 Beta | 1.0         | 公共空间聊天 |
-| `deletePublicSpaceContext` | `dpsc` | `DeletePublicSpaceContext`| `CONTEXT`   | 删除公共空间上下文             | 无                                         | 4.0.2.1 Beta | 1.0         | 删除公共空间上下文 | 
-| `sendUserDataFile`         | `sudf` | `SendUserDataFile`        | `USERFILE`  | 发送用户数据文件               | 无                                         | 4.0.2.1 Beta | 1.0         | 发送用户数据文件 |
-| `changeContextBranch`      | `ccb`  | `ChangeContextBranch`     | `CONTEXT`   | 切换上下文分支                 | 分支名称                                    | 4.1.2.0      | 1.0         | 切换上下文分支 |
-| `changePromptBranch`       | `cppb` | `ChangePromptBranch`      | `PROMPT`    | 切换提示词分支                 | 分支名称                                    | 4.1.2.0      | 1.0         | 切换提示词分支 |
-| `changeConfigBranch`       | `ccfgb`| `ChangeConfigBranch`      | `CONFIG`    | 切换配置分支                   | 分支名称                                    | 4.1.2.0      | 1.0         | 切换配置分支 |
-| `reference`                | `ref`  | `Reference`               | `CHAT`      | 引用上下文                     | 用户ID                                     | 4.1.2.0      | 1.0         | 引用其他用户的上下文并追加到当前上下文 |
-| `chooseGroupMember`        | `cgm`  | `ChooseGroupMember`       | `OTHER`     | 抽取群组成员                   | 抽取数量                                    | 4.1.2.0      | 1.0         | 抽取群组成员 |
-| `withdraw`                 | `w`    | `Withdraw`                | `CONTEXT`   | 撤回消息                       | 无                                         | 4.2.3.0      | 1.0         | 删除复读机上下文中保存的最新一回合对话 |
-| `recentSpeakingRanking`    | `rsr`  | `RecentSpeakingRanking`   | `OTHER`     | 最近发言排行                   | 无                                         | 4.2.3.0      | 1.0         | 获取群组内最近发言的成员列表 |
-| `setAutoShrinkLength`      | `sasl` | `SetAutoShrinkLength`     | `CONFIG`    | 设置自动缩减长度上限            | 整数                                       | 4.2.4.0      | 1.0         | 设置之后如果你的聊天上下文超过该值，系统会尝试自动删除最旧的上下文直到满足该值 |
-| `deleteSession`            | `ds`   | `DeleteSession`           | `MIXED`     | 删除所有用户数据               | 无                                         | 4.2.5.0        | 1.0         | 删除所有用户数据 |
-| `raw`                      | `raw`  | `Raw`                     | `CHAT`      | 发送消息且不包含任何元数据      | 自然语言输入                                | 4.2.5.1       | 1.0         | 发送消息且不包含任何元数据 |
+| Command                    | Abridge | Full Name                 | Type        | Joined Version | Description                   | Parameter Description                     | Remarks |
+| :---                       | :---    | :---                      | :---:       | :---:          | :---:                         | :---:                                     | :---:   |
+| `chat`                     | `c`     | `Chat`                    | `CHAT`      | 4.0 Beta       | 与机器人对话                   | 自然语言输入                               | 默认命令，可被`to_me`消息调起 |
+| `keepAnswering`            | `ka`    | `KeepAnswering`           | `CHAT`      | 4.0 Beta       | 持续对话(常规)                 | 无                                        | 无须输入，AI再次回复 |
+| `keepReasoning`            | `kr`    | `KeepReasoning`           | `CHAT`      | 4.0 Beta       | 持续对话(推理)                 | 无                                        | 无须输入，AI再次使用推理回复 |
+| `renderChat`               | `rc`    | `RenderChat`              | `CHAT`      | 4.0 Beta       | 渲染Markdown回复               | 自然语言输入                               | 强制渲染图片输出 |
+| `setRenderStyle`           | `srs`   | `SetRenderStyle`          | `CONFIG`    | 4.0 Beta       | 设置渲染样式                   | [渲染样式](#Markdown图片渲染样式)           | 设置Markdown图片渲染样式 |
+| `npChat`                   | `np`    | `NoPromptChat`            | `CHAT`      | 4.0 Beta       | 不加载提示词进行对话            | 自然语言输入                               | 使用常规模型 |
+| `reason`                   | `r`     | `Reason`                  | `CHAT`      | 4.0 Beta       | 使用Reasoner模型进行推理        | 自然语言输入                               | 使用`Reasoner`模型 |
+| `recomplete`               | `rcm`   | `Recomplete`              | `CHAT`      | 4.0 Beta       | 重新进行对话补全                | 无                                        | 重新生成 |
+| `setFrequencyPenalty`      | `sfp`   | `SetFrequencyPenalty`     | `CONFIG`    | 4.0 Beta       | 设置频率惩罚                   | `-2`\~`2`的浮点数 或`-200%`\~`200%`的百分比 | 控制着模型输出重复相同内容的可能性 |
+| `setPresencePenalty`       | `spp`   | `SetPresencePenalty`      | `CONFIG`    | 4.0 Beta       | 设置存在惩罚                   | `-2`\~`2`的浮点数 或`-200%`\~`200%`的百分比 | 控制着模型谈论新主题的可能性 |
+| `setTemperature`           | `st`    | `SetTemperature`          | `CONFIG`    | 4.0 Beta       | 设置温度                       | `0`\~`2`的浮点数 或`-100%`\~`100%`的百分比  | 控制着模型生成内容的不确定性 |
+| `setPrompt`                | `sp`    | `SetPrompt`               | `PROMPT`    | 4.0 Beta       | 设置提示词                     | 自然语言输入                               | 设置提示词 |
+| `changeDefaultPersonality` | `cdp`   | `ChangeDefaultPersonality`| `CONFIG`    | 4.0 Beta       | 修改默认人格                   | [人格预设](#人格预设)                       | 修改默认人格路由 |
+| `deletePrompt`             | `dp`    | `DeletePrompt`            | `PROMPT`    | 4.0 Beta       | 删除提示词                     | 无                                        | 删除提示词 |
+| `deleteContext`            | `dc`    | `DeleteContext`           | `CONTEXT`   | 4.0 Beta       | 删除上下文                     | 无                                        | 删除上下文 |
+| `varExpand`                | `ve`    | `VarExpand`               | `VAREXPAND` | 4.0 Beta       | 变量展开                       | 文本模板(使用大括号作为[变量](#变量表)标记)  | 变量展开 |
+| `setDefaultModel`          | `sdm`   | `SetDefaultModel`         | `CONFIG`    | 4.0 Beta       | 设置默认模型                   | [模型](#模型)                              | 设置默认使用的模型 |
+| `setTopP`                  | `stp`   | `SetTopP`                 | `CONFIG`    | 4.0.1 Beta     | 设置Top_P参数                  | 0\~1的浮点数 或`0%`\~`100%`的百分比         | 设置Top_P参数 |
+| `setMaxTokens`             | `stm`   | `SetMaxTokens`            | `CONFIG`    | 4.0.1 Beta     | 设置最大生成tokens数           | 0\~4096的整数                              | 设置最大生成tokens数 |
+| `getContextTotalLength`    | `gctl`  | `GetContextTotalLength`   | `CONTEXT`   | 4.0.1 Beta     | 获取上下文总长度               | 无                                         | 获取上下文总长度 |
+| `publicSpaceChat`          | `psc`   | `PublicSpaceChat`         | `CHAT`      | 4.0.2.1 Beta   | 公共空间聊天                   | 自然语言输入                                | 公共空间聊天 |
+| `deletePublicSpaceContext` | `dpsc`  | `DeletePublicSpaceContext`| `CONTEXT`   | 4.0.2.1 Beta   | 删除公共空间上下文             | 无                                         | 删除公共空间上下文 | 
+| `sendUserDataFile`         | `sudf`  | `SendUserDataFile`        | `USERFILE`  | 4.0.2.1 Beta   | 发送用户数据文件               | 无                                         | 发送用户数据文件 |
+| `changeContextBranch`      | `ccb`   | `ChangeContextBranch`     | `CONTEXT`   | 4.1.2.0        | 切换上下文分支                 | 分支名称                                   | 切换上下文分支 |
+| `changePromptBranch`       | `cppb`  | `ChangePromptBranch`      | `PROMPT`    | 4.1.2.0        | 切换提示词分支                 | 分支名称                                   | 切换提示词分支 |
+| `changeConfigBranch`       | `ccfgb` | `ChangeConfigBranch`      | `CONFIG`    | 4.1.2.0        | 切换配置分支                   | 分支名称                                   | 切换配置分支 |
+| `reference`                | `ref`   | `Reference`               | `CHAT`      | 4.1.2.0        | 引用上下文                     | 用户ID                                    | 引用其他用户的上下文并追加到当前上下文 |
+| `chooseGroupMember`        | `cgm`   | `ChooseGroupMember`       | `OTHER`     | 4.1.2.0        | 抽取群组成员                   | 抽取数量                                   | 抽取群组成员 |
+| `withdraw`                 | `w`     | `Withdraw`                | `CONTEXT`   | 4.2.3.0        | 撤回消息                       | 无                                        | 删除复读机上下文中保存的最新一回合对话 |
+| `recentSpeakingRanking`    | `rsr`   | `RecentSpeakingRanking`   | `OTHER`     | 4.2.3.0        | 最近发言排行                   | 无                                        | 获取群组内最近发言的成员列表 |
+| `setAutoShrinkLength`      | `sasl`  | `SetAutoShrinkLength`     | `CONFIG`    | 4.2.4.0        | 设置自动缩减长度上限            | 整数                                      | 如果你的聊天条数超过该值，系统会尝试自动删除最旧的部分 ||
+| `deleteSession`            | `ds`    | `DeleteSession`           | `MIXED`     | 4.2.5.0        | 删除所有用户数据               | 无                                        | 删除所有用户数据 |
+| `raw`                      | `raw`   | `Raw`                     | `CHAT`      | 4.2.5.1        | 发送消息且不包含任何元数据      | 自然语言输入                               | 发送消息且不包含任何元数据 |
+| `change_session`           | `cs`    | `ChangeSession`           | `MIXED`     | 4.2.5.1        | 让所有的数据同时切换到一个分支   | 分支名称                                  | 让`Context`、`Prompt`、`Config`同时切换到一个分支 |
 
+## 相关仓库
+- [Repeater Backend](https://github.com/qeggs-dev/repeater-ai-chatbot-backend)
