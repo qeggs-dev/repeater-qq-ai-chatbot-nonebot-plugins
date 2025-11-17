@@ -58,9 +58,9 @@ class ConfigCore:
         )
     # endregion
 
-    # region cache config
-    async def cache_config(self, branch_id: str) -> Response[None]:
-        logger.info("Cache config: {branch_id}", branch_id=branch_id)
+    # region change config
+    async def change_config_branch(self, branch_id: str) -> Response[None]:
+        logger.info("Change config: {branch_id}", branch_id=branch_id)
         response = await self._httpx_client.put(
             url = f"{CHANGE_CONFIG_BRANCH_ROUTE}/{self._info.namespace_str}",
             data = {
