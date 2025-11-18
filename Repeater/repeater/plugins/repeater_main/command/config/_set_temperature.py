@@ -20,7 +20,7 @@ async def handle_set_temperature(bot: Bot, event: MessageEvent, args: Message = 
     try:
         if msg.endswith("%"):
             msg = msg[:-1]
-            temperature = (float(msg) / 100) + 1
+            temperature = (float(msg) / 100)
         else:
             temperature = float(msg)
     except ValueError:
