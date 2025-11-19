@@ -11,7 +11,7 @@ class StrangerInfo:
     def __init__(self, bot: Bot, event: MessageEvent, args: Message | None = None):
         self._bot: Bot = bot
         self._message_event: MessageEvent = event
-        self._args: Message = args
+        self._args: Message | None = args
         self._group_id: str | None = None
         self._source: MessageSource = MessageSource.GROUP
         
@@ -109,8 +109,19 @@ class StrangerInfo:
             return self._message_event.message.copy()
     
     @property
+    def args(self) -> Message:
+        if self._args is not None:
+            return self._args.copy()
+        else:
+            return Message()
+    
+    @property
     def message_str(self) -> str:
         return self.message.extract_plain_text()
+    
+    @property
+    def args_str(self) -> str:
+        return self.args.extract_plain_text()
     
     @property
     def reply(self):
