@@ -19,7 +19,18 @@ async def handle_withdraw(bot: Bot, event: MessageEvent, args: Message = Command
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:
-        response = await context_core.withdraw()
+        if stranger_info.args_str:
+            try:
+                num = int(stranger_info.args_str)
+            except ValueError:
+                await sendmsg.send_error("Please input a valid number")
+            
+            if num < 1:
+                await sendmsg.send_error("Please input a number greater than 0")
+        else:
+            num = 1
+
+        response = await context_core.withdraw(num)
 
         if response.code == 200:
             await sendmsg.send_prompt(
