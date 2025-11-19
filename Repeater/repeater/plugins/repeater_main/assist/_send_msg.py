@@ -6,7 +6,15 @@ from ._http_code import HTTP_Code
 from ._stranger_info import StrangerInfo
 from ._text_render import TextRender
 from ._response_body import Response
-from typing import Callable, Any, NoReturn, TypeVar, Type
+from typing import (
+    Callable,
+    Any,
+    NoReturn,
+    TypeVar,
+    Type,
+    overload,
+    Literal,
+)
 from datetime import datetime
 
 T_RESPONSE = TypeVar("T_RESPONSE")
@@ -65,6 +73,20 @@ class SendMsg:
         else:
             return storage_config.hello_content
     
+    @overload
+    async def send_debug_mode(
+            self,
+            reply: bool = True,
+            continue_handler: Literal[False] = False,
+        ) -> NoReturn: ...
+
+    @overload
+    async def send_debug_mode(
+            self,
+            reply: bool = True,
+            continue_handler: Literal[True] = True,
+        ) -> None: ...
+    
     async def send_debug_mode(
             self,
             reply: bool = True,
@@ -83,7 +105,24 @@ class SendMsg:
             reply = reply,
             continue_handler = continue_handler,
         )
+    
+    @overload
+    async def send_response(
+            self,
+            response: Response[T_RESPONSE],
+            message: Callable[[Response[T_RESPONSE]], str] | str | None = None,
+            reply: bool = True,
+            continue_handler: Literal[False] = False,
+        ) -> NoReturn: ...
 
+    @overload
+    async def send_response(
+            self,
+            response: Response[T_RESPONSE],
+            message: Callable[[Response[T_RESPONSE]], str] | str | None = None,
+            reply: bool = True,
+            continue_handler: Literal[True] = True,
+        ) -> None: ...
     
     async def send_response(
             self,
@@ -115,6 +154,22 @@ class SendMsg:
             reply = reply,
             continue_handler = continue_handler
         )
+    
+    @overload
+    async def send_multiple_responses(
+            self,
+            *responses: Response[T_RESPONSE] | tuple[Response[T_RESPONSE], str],
+            reply: bool = True,
+            continue_handler: Literal[False] = False
+        ) -> NoReturn: ...
+    
+    @overload
+    async def send_multiple_responses(
+            self,
+            *responses: Response[T_RESPONSE] | tuple[Response[T_RESPONSE], str],
+            reply: bool = True,
+            continue_handler: Literal[True] = True
+        ) -> None: ...
     
     async def send_multiple_responses(
             self,
@@ -154,6 +209,20 @@ class SendMsg:
             continue_handler = continue_handler
         )
     
+    @overload
+    async def send_hello(
+            self,
+            reply: bool = True,
+            continue_handler: Literal[False] = False,
+        ) -> NoReturn: ...
+    
+    @overload
+    async def send_hello(
+            self,
+            reply: bool = True,
+            continue_handler: Literal[True] = True,
+        ) -> None: ...
+    
     async def send_hello(
             self,
             reply: bool = True,
@@ -170,6 +239,22 @@ class SendMsg:
             reply = reply,
             continue_handler = continue_handler
         )
+    
+    @overload
+    async def send_prompt(
+            self,
+            prompt: str,
+            reply: bool = True,
+            continue_handler: Literal[False] = False,
+        ) -> NoReturn: ...
+
+    @overload
+    async def send_prompt(
+            self,
+            prompt: str,
+            reply: bool = True,
+            continue_handler: Literal[True] = True,
+        ) -> None: ...
     
     async def send_prompt(
             self,
@@ -193,6 +278,22 @@ class SendMsg:
             reply = reply,
             continue_handler = continue_handler
         )
+    
+    @overload
+    async def send_error(
+            self,
+            error: str,
+            reply: bool = True,
+            continue_handler: Literal[False] = False,
+        ) -> NoReturn: ...
+
+    @overload
+    async def send_error(
+            self,
+            error: str,
+            reply: bool = True,
+            continue_handler: Literal[True] = True,
+        ) -> None: ...
     
     async def send_error(
             self,
@@ -224,6 +325,22 @@ class SendMsg:
                 continue_handler = continue_handler
             )
     
+    @overload
+    async def send_warning(
+            self,
+            warning: str,
+            reply: Message = None,
+            continue_handler: Literal[True] = True
+        ) -> None: ...
+
+    @overload
+    async def send_warning(
+            self,
+            warning: str,
+            reply: Message = None,
+            continue_handler: Literal[False] = False
+        ) -> NoReturn: ...
+    
     async def send_warning(
             self,
             warning: str,
@@ -244,6 +361,20 @@ class SendMsg:
             reply = reply,
             continue_handler = continue_handler
         )
+    @overload
+    async def send_text(
+            self,
+            text: str | None = None,
+            reply: bool = True,
+            continue_handler: Literal[False] = False
+        ) -> NoReturn: ...
+    
+    async def send_text(
+            self,
+            text: str | None = None,
+            reply: bool = True,
+            continue_handler: Literal[True] = True
+        ) -> None: ...
     
     async def send_text(
             self,
@@ -263,6 +394,25 @@ class SendMsg:
             reply=reply,
             continue_handler = continue_handler
         )
+    
+    @overload
+    
+    async def send_mixed_render(
+            self,
+            text: str,
+            text_to_render: str,
+            reply: bool = False,
+            continue_handler: Literal[False] = False
+        ) -> NoReturn: ...
+    
+    @overload
+    async def send_mixed_render(
+            self,
+            text: str,
+            text_to_render: str,
+            reply: bool = False,
+            continue_handler: Literal[True] = True
+        ) -> None: ...
     
     async def send_mixed_render(
             self,
@@ -290,7 +440,22 @@ class SendMsg:
             reply=reply,
             continue_handler = continue_handler
         )
-        
+
+    @overload
+    async def send_render(
+            self,
+            text: str | None = None,
+            reply: bool = True,
+            continue_handler: Literal[False] = False
+        ) -> NoReturn: ...
+    
+    @overload
+    async def send_render(
+            self,
+            text: str | None = None,
+            reply: bool = True,
+            continue_handler: Literal[True] = True
+        ) -> None: ...
     
     async def send_render(
             self,
@@ -311,6 +476,22 @@ class SendMsg:
             reply=reply,
             continue_handler = continue_handler
         )
+    
+    @overload
+    async def send_any(
+            self,
+            message: Message,
+            reply: bool = False,
+            continue_handler: Literal[False] = False
+        ) -> NoReturn: ...
+
+    @overload
+    async def send_any(
+            self,
+            message: MessageSegment,
+            reply: bool = False,
+            continue_handler: Literal[True] = True
+        ) -> None: ...
     
     async def send_any(
             self,
@@ -350,6 +531,22 @@ class SendMsg:
             else:
                 await self.send_response(render_response, text)
         return message
+    
+    @overload
+    async def _send(
+            self,
+            message: Message,
+            reply: bool = True,
+            continue_handler: Literal[False] = False
+        ) -> NoReturn: ...
+    
+    @overload
+    async def _send(
+            self,
+            message: Message,
+            reply: bool = True,
+            continue_handler: Literal[True] = True
+        ) -> None: ...
     
     async def _send(
             self,
