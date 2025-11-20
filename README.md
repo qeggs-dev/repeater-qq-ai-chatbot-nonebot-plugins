@@ -21,8 +21,6 @@
 
 ## 注意事项:
  - 本服务由一位 `16岁自学开发者`(现在17了) 使用AI协作开发，公益项目，如果你愿意捐赠，可以在机器人的**QQ空间**中找到赞赏码以支持项目运营(或是支持开发者)。
- - 初始服务仅作为实验项目运行，不保证服务稳定性（存在维修断电以及临时消息丢失的可能，但这与项目本身无关，~~只是我不懂运维罢了~~），有需要可自行部署。
- - 项目随时可能会因为开发者个人原因，或API额度耗尽等因素而被迫中止。
  - 使用者需确认生成内容的合法性，并自行承担使用本服务可能产生的风险。
  - 如果你觉得这个Bot非常好用，请去看一下[`Deepseek`](https://www.deepseek.com/)的官网吧，这个Bot最初就是基于他们的模型API开发的。
 
@@ -30,7 +28,7 @@
 
 ## Length Score
 长度评分系统，用于判断回复是否过长，过长则自动发送图片
-长度评分系统由`main_api.json/text_length_score_config`定义，其包含以下参数：
+长度评分的参数由`main_api.json/text_length_score_config`定义，其包含以下参数：
  - `lines`：回复的最大行数
  - `single_line_max`：单行的最大长度
  - `mean_line_max`：平均行的最大长度
@@ -39,11 +37,12 @@
 
 长度评分系统通过以下公式计算：
 ```python
+lines = text.splitlines()
 length_score = (
     len(text) / lines +
     (
-        max(len(line) for line in text.splitlines()) / single_line_max +
-        sum(len(line) for line in text.splitlines()) / len(text.splitlines()) / mean_line_max
+        max(len(line) for line in lines) / single_line_max +
+        sum(len(line) for line in lines) / len(lines) / mean_line_max
     ) / 2 +
     len(text) / total_length
 ) / 3
@@ -54,24 +53,24 @@ length_score = (
 
 ## ENV配置
 
-| Name                         | Default                                                                  | Description |
-|------------------------------|--------------------------------------------------------------------------|-------------|
-| REPEATER_LOGGER_LEVEL        | "INFO"                                                                   | 日志等级，可选值：`TRACE`, `DEBUG`、`INFO`、`WARNING`、`ERROR`、`CRITICAL` |
-| REPEATER_LOGGER_FORMAT       | "{time:YYYY-MM-DD HH:mm:ss.SSS} | {level} | {extra[module]} - {message}" | 到文件的日志格式，与控制台无关 |
-| REPEATER_LOGGER_PATH         | "logs/repeater-log-{time:YYYY-MM-DD-HH-mm-ss}.log"                       | 日志文件的路径 |
-| REPEATER_LOGGER_ENABLE_QUEUE | true                                                                     | 是否启用队列模式 |
-| REPEATER_LOGGER_DELAY        | true                                                                     | 是否在第一条日志输出时才创建日志文件 |
-| REPEATER_LOGGER_ROTATION     | "100 MB"                                                                 | 日志文件的轮换条件，可填时长、大小等数据 |
-| REPEATER_LOGGER_RETENTION    | "1 month"                                                                | 日志文件的保留条件，可填时长、大小等数据 |
-| REPEATER_LOGGER_COMPRESSION  | "zip"                                                                    | 日志文件的处理方式 |
-| STORAGE_BASE_PATH            | "./storage"                                                              | 存储文件的基础路径 |
-| ENVIRONMENT                  | "dev"                                                                    | 该值的内容将决定了程序会进一步读取哪个环境变量文件，如`prod`就是读取`.env.prod`，`dev`就是读取`.env.dev` |
-| HOST                         | "0.0.0.0"                                                                | 主机地址 |
-| PORT                         | 8080                                                                     | 端口号 |
-| COMMAND_START                | ["/"]                                                                    | 用于触发命令的开始字符 |
-| COMMAND_SEP                  | ["."]                                                                    | 用于触发命令的分隔符 |
-| ONEBOT_ACCESS_TOKEN          | ""                                                                       | OneBot的访问令牌 |
-| SUPERUSERS                   | [""]                                                                     | 超级用户列表 |
+| Name                         | Default                                                                    | Description |
+|------------------------------|----------------------------------------------------------------------------|-------------|
+| REPEATER_LOGGER_LEVEL        | "INFO"                                                                     | 日志等级，可选值：`TRACE`, `DEBUG`、`INFO`、`WARNING`、`ERROR`、`CRITICAL` |
+| REPEATER_LOGGER_FORMAT       | "{time:YYYY-MM-DD HH:mm:ss.SSS} \| {level} \| {extra[module]} - {message}" | 到文件的日志格式，与控制台无关 |
+| REPEATER_LOGGER_PATH         | "logs/repeater-log-{time:YYYY-MM-DD-HH-mm-ss}.log"                         | 日志文件的路径 |
+| REPEATER_LOGGER_ENABLE_QUEUE | true                                                                       | 是否启用队列模式 |
+| REPEATER_LOGGER_DELAY        | true                                                                       | 是否在第一条日志输出时才创建日志文件 |
+| REPEATER_LOGGER_ROTATION     | "100 MB"                                                                   | 日志文件的轮换条件，可填时长、大小等数据 |
+| REPEATER_LOGGER_RETENTION    | "1 month"                                                                  | 日志文件的保留条件，可填时长、大小等数据 |
+| REPEATER_LOGGER_COMPRESSION  | "zip"                                                                      | 日志文件的处理方式 |
+| STORAGE_BASE_PATH            | "./storage"                                                                | 存储文件的基础路径 |
+| ENVIRONMENT                  | "dev"                                                                      | 该值的内容将决定了程序会进一步读取哪个环境变量文件，如`prod`就是读取`.env.prod`，`dev`就是读取`.env.dev` |
+| HOST                         | "0.0.0.0"                                                                  | 主机地址 |
+| PORT                         | 8080                                                                       | 端口号 |
+| COMMAND_START                | ["/"]                                                                      | 用于触发命令的开始字符 |
+| COMMAND_SEP                  | ["."]                                                                      | 用于触发命令的分隔符 |
+| ONEBOT_ACCESS_TOKEN          | ""                                                                         | OneBot的访问令牌 |
+| SUPERUSERS                   | [""]                                                                       | 超级用户列表 |
 
 ---
 
@@ -104,12 +103,12 @@ length_score = (
 > 4. **至少必须选择OneBot V11适配器**
 > 5. 输入Yes安装默认依赖
 > 6. 输入Yes安装虚拟环境
-> 7. 如果需要，可以选择内置插件，如echo
+> 7. 如果需要，可以选择内置插件，如echo，*但如果没记错的话我们好像有一个echo了*
 > 8. 在项目目录下，找到`.env`文件
 > 9. 填写 `PORT`(数字), `ONEBOT_ACCESS_TOKEN`(字符串) 等字段配置项
 > 10. 将复读机的NoneBot插件放入项目目录下（通常是`plugins`文件夹下）
 执行`{项目名称}/.venv/pip install httpx`安装唯一依赖（此处这个大括号要去掉）
-运行`run.bat`或`bash run.sh`启动程序`
+运行`run.py`启动程序
 
 ---
 
