@@ -63,7 +63,7 @@ class PromptCore:
         logger.info("Changing prompt branch")
         response = await self._httpx_client.put(
             f'{CHANGE_PROMPT_BRANCH_ROUTE}/{self._info.namespace_str}',
-            params={
+            data={
                 'new_branch_id': new_branch_id
             }
         )
