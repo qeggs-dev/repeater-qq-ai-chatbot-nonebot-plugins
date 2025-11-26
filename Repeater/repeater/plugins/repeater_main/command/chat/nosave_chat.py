@@ -10,10 +10,10 @@ from ...logger import logger
 from .._clients import ChatCore, ChatSendMsg
 from ...assist import StrangerInfo
 
-chat: type[Matcher] = on_command("noSaveChat", aliases={"nsc", "no_save_chat", "NoSaveChat", "No_Save_Chat"}, rule=to_me(), block=True)
+nosave_chat: type[Matcher] = on_command("noSaveChat", aliases={"nsc", "no_save_chat", "NoSaveChat", "No_Save_Chat"}, rule=to_me(), block=True)
 
-@chat.handle()
-async def handle_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
+@nosave_chat.handle()
+async def handle_nosave_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot, event, args)
 
     logger.info(
@@ -35,7 +35,7 @@ async def handle_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg(
     send_msg = ChatSendMsg(
         "Chat.No_Save_Chat",
         stranger_info,
-        chat,
+        nosave_chat,
         response
     )
     await send_msg.send()
