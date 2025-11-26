@@ -19,9 +19,9 @@ class ChatCore:
     
     def __init__(self, strangerinfo: StrangerInfo, public_space_chat: bool = False, namespace: str | None = None):
         self._info = strangerinfo
+        self._namespace = namespace
         self._public_space_chat: bool = public_space_chat
         self._text_render = TextRender(namespace = self.namespace)
-        self._namespace = namespace
     
     @property
     def namespace(self) -> str:
