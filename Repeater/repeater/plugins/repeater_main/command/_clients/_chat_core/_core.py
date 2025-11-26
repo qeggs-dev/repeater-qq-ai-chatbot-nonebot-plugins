@@ -17,14 +17,17 @@ class ChatCore:
     _chat_client = httpx.AsyncClient(timeout=600.0)
     _client = httpx.AsyncClient()
     
-    def __init__(self, strangerinfo: StrangerInfo, public_space_chat: bool = False):
+    def __init__(self, strangerinfo: StrangerInfo, public_space_chat: bool = False, namespace: str | None = None):
         self._info = strangerinfo
         self._public_space_chat: bool = public_space_chat
         self._text_render = TextRender(namespace = self.namespace)
+        self._namespace = namespace
     
     @property
     def namespace(self) -> str:
-        if self._public_space_chat:
+        if self._namespace:
+            return self._namespace
+        elif self._public_space_chat:
             return self._info.namespace.public_space_id
         else:
             return self._info.namespace_str
@@ -37,6 +40,7 @@ class ChatCore:
         model_uid: str | None = None,
         load_prompt: bool = True,
         enable_md_prompt: bool = True,
+        save_context: bool = True,
         reference_context_id: str | None = None,
     ) -> Response[ChatResponse | None]:
         """
@@ -55,6 +59,7 @@ class ChatCore:
             model_uid = model_uid,
             load_prompt = load_prompt,
             enable_md_prompt = enable_md_prompt,
+            save_context = save_context,
             reference_context_id = reference_context_id,
         )
         response = await self._chat_client.post(
@@ -91,6 +96,7 @@ class ChatCore:
         model_uid: str | None = None,
         load_prompt: bool = True,
         enable_md_prompt: bool = True,
+        save_context: bool = True,
         reference_context_id: str | None = None,
     ) -> AsyncIterator[Any]:
         """
@@ -110,6 +116,7 @@ class ChatCore:
             model_uid = model_uid,
             load_prompt = load_prompt,
             enable_md_prompt = enable_md_prompt,
+            save_context = save_context,
             reference_context_id = reference_context_id,
             stream = True,
         )
@@ -134,6 +141,7 @@ class ChatCore:
         model_uid: str | None = None,
         load_prompt: bool = True,
         enable_md_prompt: bool = True,
+        save_context: bool = True,
         reference_context_id: str | None = None,
         stream: bool = False,
     ):
@@ -146,6 +154,7 @@ class ChatCore:
                 "gender": self._info.gender,
             },
             "load_prompt": load_prompt,
+            "save_context": save_context,
         }
         if model_uid:
             data['model_uid'] = model_uid
