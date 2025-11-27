@@ -12,28 +12,30 @@ class StrangerInfo:
         self._bot: Bot = bot
         self._message_event: MessageEvent = event
         self._args: Message | None = args
-        self._group_id: str | None = None
+        self._group_id: int | None = None
         self._source: MessageSource = MessageSource.GROUP
         
         self._source = MessageSource(event.message_type.strip().lower())
 
         if self._source == MessageSource.GROUP:
             try:
-                self._group_id = event.model_dump()["group_id"]
+                self._group_id = int(event.model_extra["group_id"])
                 if self._group_id is None:
                     raise ValueError("Is Group, But Group ID is None")
             except KeyError:
                 raise ValueError("Is Group, But Group ID is Not Found")
+        
+        self._superusers: set[int] = set(int(user) for user in self._bot.config.superusers)
     
     @property
     def is_superuser(self) -> bool:
         if self._bot.config.superusers is None:
             return False
-        return self.user_id in self._bot.config.superusers
+        return self.user_id in self.superusers
     
     @property
-    def superusers(self) -> list[int]:
-        return self._bot.config.superusers.copy()
+    def superusers(self) -> set[int]:
+        return self._superusers.copy()
     
     @property
     def message_id(self) -> int:
@@ -43,10 +45,10 @@ class StrangerInfo:
     def group_id(self) -> int | None:
         if self._group_id is None:
             return None
-        return int(self._group_id)
+        return self._group_id
     
     @property
-    def user_id (self) -> str:
+    def user_id (self) -> int:
         return self._message_event.user_id
     @property
     def nickname(self) -> str | None:
