@@ -29,7 +29,7 @@
 ## Length Score
 长度评分系统，用于判断回复是否过长，过长则自动发送图片
 长度评分的参数由`main_api.json/text_length_score_config`定义，其包含以下参数：
- - `lines`：回复的最大行数
+ - `max_lines`：回复的最大行数
  - `single_line_max`：单行的最大长度
  - `mean_line_max`：平均行的最大长度
  - `total_length`：总长度
@@ -39,7 +39,7 @@
 ```python
 lines = text.splitlines()
 length_score = (
-    len(text) / lines +
+    len(lines) / max_lines +
     (
         max(len(line) for line in lines) / single_line_max +
         sum(len(line) for line in lines) / len(lines) / mean_line_max
@@ -79,7 +79,7 @@ length_score = (
 
 ---
 
-## 依赖
+## [依赖](LICENSES.md)
 | Name       | Version | License      | License Text Link                                                    | Where it is used              |
 |------------|---------|--------------|----------------------------------------------------------------------|-------------------------------|
 | httpx      | 0.28.1  | BSD License  | [BSD-3-Clause](https://github.com/encode/httpx/blob/master/LICENSE.md)         | *Entire Project*              |
@@ -94,19 +94,25 @@ length_score = (
 
 ---
 
-## 配置
+## 配置部署
+**推荐Python3.11以上版本安装**
+> PS: 复读机可能会兼容Python3.11以前的版本
+> 但我们并未对其进行过测试
+> 此处3.11为开发环境版本
+
 在目录下执行 `setup.bat` 或 `bash setup.sh`
-###### 使用脚手架(nb-cli)创建项目环境
-> 1. 选择simple模板
-> 2. 给项目起个名字（比如`Repeater`）
-> 3. 建议使用FastAPI驱动器
-> 4. **至少必须选择OneBot V11适配器**
-> 5. 输入Yes安装默认依赖
-> 6. 输入Yes安装虚拟环境
-> 7. 如果需要，可以选择内置插件，如echo，*但如果没记错的话我们好像有一个echo了*
-> 8. 在项目目录下，找到`.env`文件
-> 9. 填写 `PORT`(数字), `ONEBOT_ACCESS_TOKEN`(字符串) 等字段配置项
-> 10. 将复读机的NoneBot插件放入项目目录下（通常是`plugins`文件夹下）
+#### 使用脚手架(nb-cli)创建项目环境
+1. 选择simple模板
+2. 给项目起个名字（比如`Repeater`）
+3. 建议使用FastAPI驱动器
+4. **至少必须选择OneBot V11适配器**
+5. 输入Yes安装默认依赖
+6. 输入Yes安装虚拟环境
+7. 如果需要，可以选择内置插件，如echo，*但如果没记错的话我们好像有一个echo了*
+8. 在项目目录下，找到`.env`文件
+9. 填写 `PORT`(数字), `ONEBOT_ACCESS_TOKEN`(字符串) 等字段配置项
+10. 将复读机的NoneBot插件放入项目目录下（通常是`plugins`文件夹下）
+
 执行`{项目名称}/.venv/pip install httpx`安装唯一依赖（此处这个大括号要去掉）
 运行`run.py`启动程序
 
@@ -194,7 +200,7 @@ PS: 由于OneBot客户端通常为入站服务，所以默认情况下所有服�
 | `raw`                      | `raw`   | `Raw`                     | `CHAT`      | 4.2.5.1        | 发送消息且不包含任何元数据      | 自然语言输入                               | 发送消息且不包含任何元数据 |
 | `changeSession`            | `cs`    | `ChangeSession`           | `MIXED`     | 4.2.5.1        | 让所有的数据同时切换到一个分支   | 分支名称                                  | 让`Context`、`Prompt`、`Config`同时切换到一个分支 |
 | `noSaveChat`               | `nsc`   | `NoSaveChat`              | `CHAT`      | 4.2.6.6        | 不保存的聊天对话                | 无                                        | 聊天后不保存最新聊天记录 |
-| `summaryChatRecord`        | `scr`   | `SummaryChatRecord`       | `OTHER`     | 4.2.6.6        | 聊天记录总结                    | 整数，传入的消息数量                       | 获取聊天记录的摘要 |
+| `summaryChatRecord`        | `scr`   | `SummaryChatRecord`       | `OTHER`     | 4.2.6.6        | 聊天记录总结                    | 整数，传入的消息数量                       | 获取当前群聊内指定数量的聊天记录摘要 |
 
 ## 相关仓库
 - [Repeater Backend](https://github.com/qeggs-dev/repeater-ai-chatbot-backend)
