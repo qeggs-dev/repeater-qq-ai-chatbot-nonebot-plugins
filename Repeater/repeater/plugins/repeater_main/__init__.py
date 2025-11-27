@@ -16,6 +16,9 @@ from .command.mixed import *
 # === More Interesting Tools === #
 from .command.more_interesting_tools import *
 
+# === Var Expand === #
+from .command.variable_expansion import *
+
 # === UserDataFile === #
 from .command.user_file import (
     handle_send_user_data_file,
@@ -26,6 +29,3 @@ from .command.get_namespace import handle_get_namespace
 
 # === Readme === #
 from .command.send_readme_file import handle_send_readme_file
-
-# === Var Expand === #
-from .command.variable_expansion import handle_var_expand
