@@ -8,12 +8,12 @@ from nonebot.adapters import Bot
 from .._clients import VariableExpansionCore
 from ...assist import PersonaInfo, SendMsg
 
-render_var_expand = on_command("varExpandRender", aliases={"ver", "var_expand_render", "Var_Expand_Render", "VarExpandRender"}, rule=to_me(), block=True)
+var_expand_image = on_command("varExpandImage", aliases={"vei", "var_expand_image", "Var_Expand_Image", "VarExpandImage"}, rule=to_me(), block=True)
 
-@render_var_expand.handle()
-async def handle_render_var_expand(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
+@var_expand_image.handle()
+async def handle_var_expand_image(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     persona_info = PersonaInfo(bot=bot, event=event, args=args)
-    sendmsg = SendMsg("VarExpandRender", render_var_expand, persona_info)
+    sendmsg = SendMsg("VarExpandImage", var_expand_image, persona_info)
 
     msg = args.extract_plain_text().strip()
 

@@ -8,12 +8,12 @@ from nonebot.adapters import Bot
 from .._clients import VariableExpansionCore
 from ...assist import PersonaInfo, SendMsg
 
-var_Expand = on_command("varExpandText", aliases={"vet", "var_expand_text", "Var_Expand_Text", "VarExpandText"}, rule=to_me(), block=True)
+var_expand_text = on_command("varExpandText", aliases={"vet", "var_expand_text", "Var_Expand_Text", "VarExpandText"}, rule=to_me(), block=True)
 
-@var_Expand.handle()
-async def handle_var_expand(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
+@var_expand_text.handle()
+async def handle_var_expand_text(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     persona_info = PersonaInfo(bot=bot, event=event, args=args)
-    sendmsg = SendMsg("VarExpandText", var_Expand, persona_info)
+    sendmsg = SendMsg("VarExpandText", var_expand_text, persona_info)
 
     msg = args.extract_plain_text().strip()
 
