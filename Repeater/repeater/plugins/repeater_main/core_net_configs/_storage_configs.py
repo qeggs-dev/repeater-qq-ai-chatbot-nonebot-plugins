@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Generic, TypeVar
-from ..configs import Loader, Mode
+from ..config_loader import Loader, Mode
 
 T = TypeVar("T")
 
@@ -9,7 +9,7 @@ class TextLengthScoreThreshold(BaseModel):
     private: float = 2.48
 
 class TextLengthScoreConfigs(BaseModel):
-    lines: int = 5
+    max_lines: int = 5
     single_line_max: int = 64
     mean_line_max: int = 32
     total_length: int = 400
