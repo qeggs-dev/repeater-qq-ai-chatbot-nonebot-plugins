@@ -1,17 +1,17 @@
-from .chat import handle_chat
-from .smart_at import handle_smart_at
-from .raw import handle_raw_chat
-from .reason import reason_handle
-from .nosave_chat import handle_nosave_chat
-from .render_chat import handle_render_Chat
-from .npchat import handle_npchat
-from .Keep_Answering import handle_keep_answering
-from .Keep_Reasoning import handle_keep_reasoning
-from .recomplete import handle_recomplete
-from .reference import handle_reference
-from .render_chat import handle_render_Chat
-from .public_space_chat import handle_public_space_chat
-from .tts_chat import handle_tts_chat
+from ._chat import handle_chat
+from ._smart_at import handle_smart_at
+from ._raw import handle_raw_chat
+from ._reason import reason_handle
+from ._nosave_chat import handle_nosave_chat
+from ._render_chat import handle_render_Chat
+from ._npchat import handle_npchat
+from ._keep_answering import handle_keep_answering
+from ._keep_reasoning import handle_keep_reasoning
+from ._recomplete import handle_recomplete
+from ._reference import handle_reference
+from ._render_chat import handle_render_Chat
+from ._public_space_chat import handle_public_space_chat
+from ._tts_chat import handle_tts_chat
 
 __all__ = [
     "handle_chat",
