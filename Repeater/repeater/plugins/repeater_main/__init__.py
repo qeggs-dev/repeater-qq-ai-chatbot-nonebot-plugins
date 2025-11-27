@@ -28,4 +28,4 @@ from .command.get_namespace import handle_get_namespace
 from .command.send_readme_file import handle_send_readme_file
 
 # === Var Expand === #
-from .command.variableExpansion import handle_var_expand
+from .command.variable_expansion import handle_var_expand
