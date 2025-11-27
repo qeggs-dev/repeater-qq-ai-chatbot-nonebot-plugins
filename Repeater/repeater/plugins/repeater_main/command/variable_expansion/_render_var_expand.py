@@ -8,12 +8,12 @@ from nonebot.adapters import Bot
 from .._clients import VariableExpansionCore
 from ...assist import StrangerInfo, SendMsg
 
-render_var_expand = on_command("renderVarExpand", aliases={"rve", "render_var_expand", "Render_Var_Expand", "RenderVarExpand"}, rule=to_me(), block=True)
+render_var_expand = on_command("varExpandRender", aliases={"ver", "var_expand_render", "Var_Expand_Render", "VarExpandRender"}, rule=to_me(), block=True)
 
 @render_var_expand.handle()
 async def handle_render_var_expand(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
-    sendmsg = SendMsg("RenderVarExpand", render_var_expand, stranger_info)
+    sendmsg = SendMsg("VarExpandRender", render_var_expand, stranger_info)
 
     msg = args.extract_plain_text().strip()
 

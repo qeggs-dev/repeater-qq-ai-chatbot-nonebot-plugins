@@ -1,2 +1,3 @@
 from ._var_expand import handle_var_expand
+from ._text_var_expand import handle_var_expand
 from ._render_var_expand import handle_render_var_expand

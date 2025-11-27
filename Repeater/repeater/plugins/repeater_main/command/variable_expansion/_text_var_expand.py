@@ -8,12 +8,12 @@ from nonebot.adapters import Bot
 from .._clients import VariableExpansionCore
 from ...assist import StrangerInfo, SendMsg
 
-var_Expand = on_command("varExpand", aliases={"ve", "var_expand", "Var_Expand", "VarExpand"}, rule=to_me(), block=True)
+var_Expand = on_command("varExpandText", aliases={"vet", "var_expand_text", "Var_Expand_Text", "VarExpandText"}, rule=to_me(), block=True)
 
 @var_Expand.handle()
 async def handle_var_expand(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     stranger_info = StrangerInfo(bot=bot, event=event, args=args)
-    sendmsg = SendMsg("VarExpand", var_Expand, stranger_info)
+    sendmsg = SendMsg("VarExpandText", var_Expand, stranger_info)
 
     msg = args.extract_plain_text().strip()
 
@@ -23,6 +23,6 @@ async def handle_var_expand(bot: Bot, event: MessageEvent, args: Message = Comma
     else:
         response = await variable_expansion_core.expand_variable(text=msg)
         if response.code == 200:
-            await sendmsg.send_check_length(response.text)
+            await sendmsg.send_text(response.text)
         else:
             await sendmsg.send_response(response, "Error: VariableExpansion")
