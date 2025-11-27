@@ -551,13 +551,13 @@ class SendMsg:
         ):
         length_score = self.text_length_score(message)
         if length_score >= threshold:
-            self.send_render(
+            await self.send_render(
                 message,
                 reply = reply,
                 continue_handler = continue_handler
             )
         else:
-            self.send_text(
+            await self.send_text(
                 message,
                 reply = reply,
                 continue_handler = continue_handler
