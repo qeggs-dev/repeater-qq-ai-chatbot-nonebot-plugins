@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Literal
-from ..configs import Loader, Mode
+from ..config_loader import Loader, Mode
 
 class API_ARGS(BaseModel):
     voice: str = ""

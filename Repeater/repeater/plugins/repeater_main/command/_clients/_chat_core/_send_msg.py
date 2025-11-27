@@ -27,7 +27,7 @@ class Send_msg(BaseSendMsg):
     def text_length_score(text:str) -> float:
         lines = text.splitlines()
         line_lengths = np.array([len(line) for line in lines], dtype=np.int64)
-        lines_score = len(lines) / storage_config.text_length_score_configs.lines
+        lines_score = len(lines) / storage_config.text_length_score_configs.max_lines
         single_line_score = line_lengths.max() / storage_config.text_length_score_configs.single_line_max
         mean_line_score = line_lengths.mean() / storage_config.text_length_score_configs.mean_line_max
         total_length_score = len(text) / storage_config.text_length_score_configs.total_length
