@@ -1,1 +1,2 @@
-from .varExpand import handle_var_expand
+from ._var_expand import handle_var_expand
+from ._render_var_expand import handle_render_var_expand
