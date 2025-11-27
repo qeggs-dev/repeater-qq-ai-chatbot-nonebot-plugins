@@ -35,4 +35,4 @@ async def handle_tts_chat(bot: Bot, event: MessageEvent, args: Message = Command
         matcher = tts_chat,
         response = response
     )
-    await send_msg.send_tts(send_picture_first=True)
+    await send_msg.send_tts_mode()
