@@ -19,7 +19,7 @@ class PersonaInfo:
 
         if self._source == MessageSource.GROUP:
             try:
-                self._group_id = int(event.model_extra["group_id"])
+                self._group_id = int(event.model_dump()["group_id"])
                 if self._group_id is None:
                     raise ValueError("Is Group, But Group ID is None")
             except KeyError:
