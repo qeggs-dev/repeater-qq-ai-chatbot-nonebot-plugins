@@ -6,22 +6,22 @@ from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
 from .._clients import ContextCore
-from ...assist import StrangerInfo, SendMsg
+from ...assist import PersonaInfo, SendMsg
 
 withdraw = on_command('withdraw', aliases={'w', 'Withdraw'}, rule=to_me(), block=True)
 
 @withdraw.handle()
 async def handle_withdraw(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
-    stranger_info = StrangerInfo(bot=bot, event=event, args=args)
-    sendmsg = SendMsg("Context.Withdraw", withdraw, stranger_info)
+    persona_info = PersonaInfo(bot=bot, event=event, args=args)
+    sendmsg = SendMsg("Context.Withdraw", withdraw, persona_info)
 
-    context_core = ContextCore(stranger_info)
+    context_core = ContextCore(persona_info)
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:
-        if stranger_info.args_str:
+        if persona_info.args_str:
             try:
-                num = int(stranger_info.args_str)
+                num = int(persona_info.args_str)
             except ValueError:
                 await sendmsg.send_error("Please input a valid number")
             

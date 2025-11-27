@@ -6,28 +6,28 @@ from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
 from .._clients import ChatCore, ChatSendMsg
-from ...assist import StrangerInfo
+from ...assist import PersonaInfo
 from ...logger import logger
 
 keepAnswering = on_command("keepAnswering", aliases={"ka", "keep_answering", "Keep_Answering", "KeepAnswering"}, rule=to_me(), block=True)
 
 @keepAnswering.handle()
 async def handle_keep_answering(bot: Bot, event: MessageEvent):
-    stranger_info = StrangerInfo(bot, event)
+    persona_info = PersonaInfo(bot, event)
 
     logger.info(
         "Received a message from {namespace}",
-        namespace=stranger_info.namespace_str,
+        namespace=persona_info.namespace_str,
         module = "Chat.Keep_Answering"
     )
 
-    chat_core = ChatCore(stranger_info.namespace_str)
+    chat_core = ChatCore(persona_info.namespace_str)
 
     response = await chat_core.send_message()
     
     send_msg = ChatSendMsg(
         "Keep_Answering",
-        stranger_info,
+        persona_info,
         keepAnswering,
         response
     )

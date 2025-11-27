@@ -6,19 +6,19 @@ from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
 from .._clients import PromptCore
-from ...assist import StrangerInfo, SendMsg
+from ...assist import PersonaInfo, SendMsg
 
 setprompt = on_command('setPrompt', aliases={'sp', 'set_prompt', 'Set_Prompt', 'SetPrompt'}, rule=to_me(), block=True)
 
 
 @setprompt.handle()
 async def handle_setprompt(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
-    stranger_info = StrangerInfo(bot=bot, event=event, args=args)
-    sendmsg = SendMsg("Prompt.Set_Prompt", setprompt, stranger_info)
+    persona_info = PersonaInfo(bot=bot, event=event, args=args)
+    sendmsg = SendMsg("Prompt.Set_Prompt", setprompt, persona_info)
 
-    msg = stranger_info.message_str.strip()
+    msg = persona_info.message_str.strip()
     
-    prompt_core = PromptCore(stranger_info)
+    prompt_core = PromptCore(persona_info)
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:

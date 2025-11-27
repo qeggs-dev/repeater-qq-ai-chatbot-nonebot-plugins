@@ -3,7 +3,7 @@ from nonebot.internal.matcher.matcher import Matcher
 from nonebot.exception import FinishedException
 from ..core_net_configs import RepeaterDebugMode, storage_config
 from ._http_code import HTTP_Code
-from ._stranger_info import StrangerInfo
+from ._persona_info import PersonaInfo
 from ._namespace import MessageSource
 from ._text_render import TextRender
 from ._response_body import Response
@@ -28,12 +28,12 @@ class SendMsg:
             self,
             component: str,
             matcher: Type[Matcher],
-            stranger_info: StrangerInfo,
+            persona_info: PersonaInfo,
         ):
         self._component: str = component
-        self._stranger_info: StrangerInfo = stranger_info
+        self._persona_info: PersonaInfo = persona_info
         self._matcher: Type[Matcher] = matcher
-        self._text_render = TextRender(namespace = self._stranger_info.namespace)
+        self._text_render = TextRender(namespace = self._persona_info.namespace)
         self._prefix: Message = Message()
         self._chat_tts_api = ChatTTSAPI()
     
@@ -48,8 +48,8 @@ class SendMsg:
         return RepeaterDebugMode
     
     @property
-    def stranger_info(self) -> StrangerInfo:
-        return self._stranger_info
+    def persona_info(self) -> PersonaInfo:
+        return self._persona_info
     
     @property
     def matcher(self) -> Type[Matcher]:
@@ -104,8 +104,8 @@ class SendMsg:
         :param continue_handler: 是否继续运行当前处理流程
         """
         await self._send(
-            self._stranger_info.reply + (
-                f"[{self._component}|{self._stranger_info.namespace}|{self._stranger_info.nickname}]: {self._stranger_info.message}"
+            self._persona_info.reply + (
+                f"[{self._component}|{self._persona_info.namespace}|{self._persona_info.nickname}]: {self._persona_info.message}"
             ),
             reply = reply,
             continue_handler = continue_handler,
@@ -277,7 +277,7 @@ class SendMsg:
         await self._send(
             (
                 f"==== {self._component} ====\n"
-                f"> [{self._stranger_info.namespace}]\n"
+                f"> [{self._persona_info.namespace}]\n"
                 f"{prompt}"
             ),
             reply = reply,
@@ -649,7 +649,7 @@ class SendMsg:
         """
         send_msg = self._prefix + message
         if reply:
-            send_msg = self._stranger_info.reply + send_msg
+            send_msg = self._persona_info.reply + send_msg
         await self._matcher.send(send_msg)
         if not continue_handler:
             await self.break_handler()
@@ -677,7 +677,7 @@ class SendMsg:
     
     @property
     def text_length_score_threshold(self) -> float:
-        if self._stranger_info.source == MessageSource.GROUP:
+        if self._persona_info.source == MessageSource.GROUP:
             threshold = storage_config.text_length_score_configs.threshold.group
         else:
             threshold = storage_config.text_length_score_configs.threshold.private

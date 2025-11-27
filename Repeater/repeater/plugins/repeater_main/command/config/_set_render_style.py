@@ -6,18 +6,18 @@ from nonebot.adapters.onebot.v11 import MessageEvent
 from nonebot.adapters import Bot
 
 from .._clients import ConfigCore
-from ...assist import StrangerInfo, SendMsg
+from ...assist import PersonaInfo, SendMsg
 
 set_render_style = on_command('setRenderStyle', aliases={'srs', 'set_render_style', 'Set_Render_Style', 'SetRenderStyle'}, rule=to_me(), block=True)
 
 @set_render_style.handle()
 async def handle_set_render_style(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
-    stranger_info = StrangerInfo(bot=bot, event=event, args=args)
-    sendmsg = SendMsg("Config.Set_Render_Style", set_render_style, stranger_info)
+    persona_info = PersonaInfo(bot=bot, event=event, args=args)
+    sendmsg = SendMsg("Config.Set_Render_Style", set_render_style, persona_info)
 
-    msg = stranger_info.message_str.strip()
+    msg = persona_info.message_str.strip()
 
-    config_core = ConfigCore(stranger_info)
+    config_core = ConfigCore(persona_info)
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:

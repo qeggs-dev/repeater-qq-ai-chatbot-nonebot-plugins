@@ -4,20 +4,20 @@ from nonebot.adapters.onebot.v11 import Bot, Message, MessageEvent
 from nonebot.params import CommandArg
 from pydantic import ValidationError
 
-from ...assist import StrangerInfo, SendMsg, MessageSource
+from ...assist import PersonaInfo, SendMsg, MessageSource
 from .._clients import ChatCore, ChatSendMsg
 
 summary_chat_record = on_command("summaryChatRecord", aliases={"scr", "summary_chat_record", "Summary_Chat_Record", "SummaryChatRecord"}, rule=to_me(), block=True)
 
 @summary_chat_record.handle()
 async def handle_summary_chat_record(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
-    stranger_info = StrangerInfo(bot, event, args)
-    sendmsg = SendMsg("More.Summary_Chat_Record", summary_chat_record, stranger_info)
+    persona_info = PersonaInfo(bot, event, args)
+    sendmsg = SendMsg("More.Summary_Chat_Record", summary_chat_record, persona_info)
     
-    if stranger_info.source == MessageSource.PRIVATE:
+    if persona_info.source == MessageSource.PRIVATE:
         await sendmsg.send_error("The current feature cannot be used in private chat.")
     
-    group_id = stranger_info.group_id
+    group_id = persona_info.group_id
     
     try:
         n = int(args.extract_plain_text())
@@ -50,7 +50,7 @@ async def handle_summary_chat_record(bot: Bot, event: MessageEvent, args: Messag
             texts.append(f"Validation Failure: {validation_failure_counter}")
         texts.append("---")
         texts.append("Please summarize the above chat record.")
-        chat_core = ChatCore(stranger_info, namespace = "Summary_Chat_Record")
+        chat_core = ChatCore(persona_info, namespace = "Summary_Chat_Record")
         response = await chat_core.send_message(
             add_metadata = False,
             message = "\n\n".join(texts),
@@ -58,7 +58,7 @@ async def handle_summary_chat_record(bot: Bot, event: MessageEvent, args: Messag
         )
         chat_sendmsg = ChatSendMsg(
             "More.Summary_Chat_Record",
-            stranger_info,
+            persona_info,
             summary_chat_record,
             response
         )

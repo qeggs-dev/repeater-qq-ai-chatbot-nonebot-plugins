@@ -6,18 +6,18 @@ from nonebot.adapters.onebot.v11 import MessageEvent
 from nonebot.adapters import Bot
 
 from .._clients import ContextCore, PromptCore, ConfigCore
-from ...assist import StrangerInfo, SendMsg
+from ...assist import PersonaInfo, SendMsg
 
 delsession = on_command('delSession', aliases={'ds', 'delete_session', 'Delete_Session', 'DeleteSession'}, rule=to_me(), block=True)
 
 @delsession.handle()
 async def handle_delete_session(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
-    stranger_info = StrangerInfo(bot=bot, event=event, args=args)
-    sendmsg = SendMsg("Mixed.Delete_Session", delsession, stranger_info)
+    persona_info = PersonaInfo(bot=bot, event=event, args=args)
+    sendmsg = SendMsg("Mixed.Delete_Session", delsession, persona_info)
 
-    context_core = ContextCore(stranger_info)
-    prompt_core = PromptCore(stranger_info)
-    config_core = ConfigCore(stranger_info)
+    context_core = ContextCore(persona_info)
+    prompt_core = PromptCore(persona_info)
+    config_core = ConfigCore(persona_info)
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:

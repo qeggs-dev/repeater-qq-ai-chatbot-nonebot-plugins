@@ -3,7 +3,7 @@ from ._assist_func import (
     get_first_mentioned_user,
     image_to_text
 )
-from ._stranger_info import StrangerInfo
+from ._persona_info import PersonaInfo
 from ._file_sender import FileSender
 from ._namespace import MessageSource, Namespace
 from ._response_body import Response

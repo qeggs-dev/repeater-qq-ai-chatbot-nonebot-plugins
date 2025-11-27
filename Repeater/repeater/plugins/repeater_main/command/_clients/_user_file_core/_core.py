@@ -6,11 +6,11 @@ from typing import (
 )
 
 from ....core_net_configs import *
-from ....assist import StrangerInfo
+from ....assist import PersonaInfo
 from ....logger import logger
 
 class UserFileCore:
-    def __init__(self, info: StrangerInfo):
+    def __init__(self, info: PersonaInfo):
         self._info = info
     # region get_utl
     async def get_user_data_file_url(self):

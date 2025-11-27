@@ -6,7 +6,7 @@ from typing import (
     Any,
 )
 
-from ....assist import Response, StrangerInfo
+from ....assist import Response, PersonaInfo
 # 服务端配置
 from ....core_net_configs import *
 from ....exit_register import ExitRegister
@@ -17,7 +17,7 @@ logger = base_logger.bind(module = "Config.Core")
 class ConfigCore:
     _httpx_client = httpx.AsyncClient()
 
-    def __init__(self, info: StrangerInfo):
+    def __init__(self, info: PersonaInfo):
         self._info = info
     
     # region set config

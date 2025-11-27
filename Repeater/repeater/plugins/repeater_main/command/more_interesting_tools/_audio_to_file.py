@@ -6,7 +6,7 @@ from nonebot.params import (
     CommandArg,
     Arg
 )
-from ...assist import StrangerInfo, FileSender, FileUrl
+from ...assist import PersonaInfo, FileSender, FileUrl
 import time
 
 audio_to_file = on_command("audioToFile", aliases={"a2f", "audio_to_file", "Audio_To_File", "AudioToFile"}, rule=to_me(), block=True)
@@ -18,12 +18,12 @@ async def audio_to_file_handle(matcher: Matcher, args: Message = CommandArg()):
 
 @audio_to_file.got("record", prompt="Please send an audio message...")
 async def audio_to_file_got(bot: Bot, event: MessageEvent, message: Message = Arg("record")):
-    strangerinfo = StrangerInfo(bot = bot, event = event, args = message)
-    for message_segment in strangerinfo.message:
+    persona_info = PersonaInfo(bot = bot, event = event, args = message)
+    for message_segment in persona_info.message:
         if message_segment.type == "record":
-            file_sender = FileSender(stranger_info=strangerinfo)
+            file_sender = FileSender(persona_info=persona_info)
             fileurl = FileUrl(message_segment.data["url"])
             await file_sender.send_file(
                 url = str(fileurl),
-                file_name = f"{strangerinfo.nickname}_{time.strftime('%Y%m%d_%H%M%S', time.localtime())}{fileurl.path.suffix}"
+                file_name = f"{persona_info.nickname}_{time.strftime('%Y%m%d_%H%M%S', time.localtime())}{fileurl.path.suffix}"
             )

@@ -6,16 +6,16 @@ from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
 from .._clients import ContextCore
-from ...assist import StrangerInfo, SendMsg
+from ...assist import PersonaInfo, SendMsg
 
 get_context_total_length = on_command('getContextTotalLength', aliases={'gctl', 'get_context_total_length', 'Get_Context_Total_Length', 'GetContextTotalLength'}, rule=to_me(), block=True)
 
 @get_context_total_length.handle()
 async def handle_total_context_length(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
-    stranger_info = StrangerInfo(bot=bot, event=event, args=args)
-    sendmsg = SendMsg("Context.Get_Context_Total_Length", get_context_total_length, stranger_info)
+    persona_info = PersonaInfo(bot=bot, event=event, args=args)
+    sendmsg = SendMsg("Context.Get_Context_Total_Length", get_context_total_length, persona_info)
     
-    context_core = ContextCore(stranger_info)
+    context_core = ContextCore(persona_info)
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:

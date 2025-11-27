@@ -1,6 +1,6 @@
 from nonebot.adapters.onebot.v11 import MessageSegment, Message
 from nonebot.internal.matcher.matcher import Matcher
-from ....assist import StrangerInfo, MessageSource, Response, TextRender, SendMsg as BaseSendMsg
+from ....assist import PersonaInfo, MessageSource, Response, TextRender, SendMsg as BaseSendMsg
 from ._response_body import ChatResponse
 from ....chattts import ChatTTSAPI
 from typing import NoReturn
@@ -13,13 +13,13 @@ class Send_msg(BaseSendMsg):
     def __init__(
             self,
             component: str,
-            stranger_info: StrangerInfo,
+            persona_info: PersonaInfo,
             matcher: Matcher,
             response: Response[ChatResponse | None],
         ):
-        super().__init__(f"Chat.{component}", matcher, stranger_info)
+        super().__init__(f"Chat.{component}", matcher, persona_info)
         self.response: Response[ChatResponse] = response
-        self._text_render = TextRender(namespace = self._stranger_info.namespace)
+        self._text_render = TextRender(namespace = self._persona_info.namespace)
         self._chat_tts_api = ChatTTSAPI()
     
     async def _send_error_message(self):
@@ -74,7 +74,7 @@ class Send_msg(BaseSendMsg):
         else:
             if self.response.code == 200:
                 message = Message()
-                message.append(self._stranger_info.reply)
+                message.append(self._persona_info.reply)
                 # 推理内容必须渲染为图片
                 if self.response.data.reasoning_content:
                     message.append(
@@ -94,7 +94,7 @@ class Send_msg(BaseSendMsg):
         else:
             if self.response.code == 200:
                 message = Message()
-                message.append(self._stranger_info.reply)
+                message.append(self._persona_info.reply)
                 if self.response.data.reasoning_content:
                     message.append(
                         await self.text_render(self.response.data.reasoning_content)

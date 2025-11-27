@@ -8,19 +8,19 @@ from nonebot.params import (
     ArgPlainText,
     Arg
 )
-from ...assist import StrangerInfo, MessageSource, SendMsg, TextRender
+from ...assist import PersonaInfo, MessageSource, SendMsg, TextRender
 
 choose_group_member = on_command("chooseGroupMember", aliases={"cgm",'choose_group_member', 'Choose_Group_Member', 'ChooseGroupMember'}, rule=to_me(), block=True)
 
 @choose_group_member.handle()
 async def choose_group_member_handle(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
-    stranger_info = StrangerInfo(bot, event, args)
-    sendmsg = SendMsg("More.Choose_Group_Member", choose_group_member, stranger_info)
+    persona_info = PersonaInfo(bot, event, args)
+    sendmsg = SendMsg("More.Choose_Group_Member", choose_group_member, persona_info)
     
-    if stranger_info.source == MessageSource.PRIVATE:
+    if persona_info.source == MessageSource.PRIVATE:
         await sendmsg.send_error("The current feature cannot be used in private chat.")
     
-    group_id = stranger_info.group_id
+    group_id = persona_info.group_id
     
     try:
         n = int(args.extract_plain_text())

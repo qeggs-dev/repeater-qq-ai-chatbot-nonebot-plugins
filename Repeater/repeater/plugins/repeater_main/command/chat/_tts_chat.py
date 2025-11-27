@@ -3,7 +3,7 @@ from nonebot.rule import to_me
 from nonebot.adapters.onebot.v11 import Bot, MessageEvent, Message
 from nonebot.params import CommandArg
 
-from ...assist import StrangerInfo
+from ...assist import PersonaInfo
 from ...chattts import ChatTTSAPI
 from .._clients import ChatCore, ChatSendMsg
 from ...logger import logger
@@ -14,24 +14,24 @@ tts_chat = on_command("tts_chat", aliases={"ttsc", "tts_Chat", "TTS_Chat"}, rule
 
 @tts_chat.handle()
 async def handle_tts_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()) -> None:
-    stranger_info = StrangerInfo(bot, event, args)
+    persona_info = PersonaInfo(bot, event, args)
 
     logger.info(
         "Received a message {message} from {namespace}",
-        message = stranger_info.message_str,
-        namespace = stranger_info.namespace_str,
+        message = persona_info.message_str,
+        namespace = persona_info.namespace_str,
         module = "Chat.TTS_Chat"
     )
 
-    core = ChatCore(stranger_info)
+    core = ChatCore(persona_info)
 
     response = await core.send_message(
-        message = stranger_info.message_str
+        message = persona_info.message_str
     )
 
     send_msg = ChatSendMsg(
         "TTS_Chat",
-        stranger_info = stranger_info,
+        persona_info = persona_info,
         matcher = tts_chat,
         response = response
     )

@@ -8,24 +8,24 @@ from nonebot.adapters import Bot
 from ...logger import logger
 
 from .._clients import ChatCore, ChatSendMsg
-from ...assist import StrangerInfo
+from ...assist import PersonaInfo
 
 chat: type[Matcher] = on_command("chat", aliases={"c", "Chat"}, rule=to_me(), block=True)
 
 @chat.handle()
 async def handle_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
-    stranger_info = StrangerInfo(bot, event, args)
+    persona_info = PersonaInfo(bot, event, args)
 
     logger.info(
         "Received a message {message} from {namespace}",
-        message = stranger_info.message_str,
-        namespace = stranger_info.namespace_str,
+        message = persona_info.message_str,
+        namespace = persona_info.namespace_str,
         module = "Chat.Chat"
     )
 
-    message = stranger_info.message
+    message = persona_info.message
 
-    core = ChatCore(stranger_info.namespace_str)
+    core = ChatCore(persona_info.namespace_str)
 
     response = await core.send_message(
         message = message.extract_plain_text().strip()
@@ -33,7 +33,7 @@ async def handle_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg(
 
     send_msg = ChatSendMsg(
         "Chat.Chat",
-        stranger_info,
+        persona_info,
         chat,
         response
     )

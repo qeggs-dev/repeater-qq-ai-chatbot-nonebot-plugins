@@ -7,7 +7,7 @@ from typing import (
 import httpx
 from ._response_body import ChatResponse, StreamChatChunkResponse
 from ....exit_register import ExitRegister
-from ....assist import StrangerInfo, TextRender, RendedImage, Response
+from ....assist import PersonaInfo, TextRender, RendedImage, Response
 
 from ....core_net_configs import *
 
@@ -17,8 +17,8 @@ class ChatCore:
     _chat_client = httpx.AsyncClient(timeout=600.0)
     _client = httpx.AsyncClient()
     
-    def __init__(self, strangerinfo: StrangerInfo, public_space_chat: bool = False, namespace: str | None = None):
-        self._info = strangerinfo
+    def __init__(self, persona_info: PersonaInfo, public_space_chat: bool = False, namespace: str | None = None):
+        self._persona_info = persona_info
         self._namespace = namespace
         self._public_space_chat: bool = public_space_chat
         self._text_render = TextRender(namespace = self.namespace)
@@ -28,9 +28,9 @@ class ChatCore:
         if self._namespace:
             return self._namespace
         elif self._public_space_chat:
-            return self._info.namespace.public_space_id
+            return self._persona_info.namespace.public_space_id
         else:
-            return self._info.namespace_str
+            return self._persona_info.namespace_str
     
     async def send_message(
         self,
@@ -148,10 +148,10 @@ class ChatCore:
         # 表单数据格式 (Form Data)
         data = {
             "user_info": {
-                "username" : self._info.nickname,
-                "nickname" : self._info.display_name,
-                "age": self._info.age,
-                "gender": self._info.gender,
+                "username" : self._persona_info.nickname,
+                "nickname" : self._persona_info.display_name,
+                "age": self._persona_info.age,
+                "gender": self._persona_info.gender,
             },
             "load_prompt": load_prompt,
             "save_context": save_context,
@@ -168,7 +168,7 @@ class ChatCore:
             message_buffer:list[str] = []
             if add_metadata:
                 message_buffer.append("> MessageMetadata:")
-                message_buffer.append(f">     Message Type: {self._info.source.value}")
+                message_buffer.append(f">     Message Type: {self._persona_info.source.value}")
                 message_buffer.append(">     Message Sending time:{time}")
                 if enable_md_prompt:
                     message_buffer.append(">     Markdown Rendering is turned on!!")

@@ -8,24 +8,24 @@ from nonebot.adapters import Bot
 from ...logger import logger
 
 from .._clients import ChatCore, ChatSendMsg
-from ...assist import StrangerInfo
+from ...assist import PersonaInfo
 
 nosave_chat: type[Matcher] = on_command("noSaveChat", aliases={"nsc", "no_save_chat", "NoSaveChat", "No_Save_Chat"}, rule=to_me(), block=True)
 
 @nosave_chat.handle()
 async def handle_nosave_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
-    stranger_info = StrangerInfo(bot, event, args)
+    persona_info = PersonaInfo(bot, event, args)
 
     logger.info(
         "Received a message {message} from {namespace}",
-        message = stranger_info.message_str,
-        namespace = stranger_info.namespace_str,
+        message = persona_info.message_str,
+        namespace = persona_info.namespace_str,
         module = "Chat.No_Save_Chat"
     )
 
-    message = stranger_info.message
+    message = persona_info.message
 
-    core = ChatCore(stranger_info.namespace_str)
+    core = ChatCore(persona_info.namespace_str)
 
     response = await core.send_message(
         message = message.extract_plain_text().strip(),
@@ -34,7 +34,7 @@ async def handle_nosave_chat(bot: Bot, event: MessageEvent, args: Message = Comm
 
     send_msg = ChatSendMsg(
         "Chat.No_Save_Chat",
-        stranger_info,
+        persona_info,
         nosave_chat,
         response
     )

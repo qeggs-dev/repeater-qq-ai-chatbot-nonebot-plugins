@@ -11,19 +11,19 @@ from nonebot.params import (
     ArgPlainText,
     Arg
 )
-from ...assist import StrangerInfo, MessageSource, SendMsg
+from ...assist import PersonaInfo, MessageSource, SendMsg
 
 recent_speaking_ranking = on_command("recentSpeakingRanking", aliases={"rsr",'recent_speaking_ranking', 'Recent_Speaking_Ranking', 'RecentSpeakingRanking'}, rule=to_me(), block=True)
 
 @recent_speaking_ranking.handle()
 async def recent_speaking_ranking_handle(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
-    stranger_info = StrangerInfo(bot, event, args)
-    sendmsg = SendMsg("More.ChooseGroupMember", recent_speaking_ranking, stranger_info)
+    persona_info = PersonaInfo(bot, event, args)
+    sendmsg = SendMsg("More.ChooseGroupMember", recent_speaking_ranking, persona_info)
     
-    if stranger_info.source == MessageSource.PRIVATE:
+    if persona_info.source == MessageSource.PRIVATE:
         await sendmsg.send_error("The current feature cannot be used in private chat.")
     
-    group_id = stranger_info.group_id
+    group_id = persona_info.group_id
     
     try:
         n = int(args.extract_plain_text())

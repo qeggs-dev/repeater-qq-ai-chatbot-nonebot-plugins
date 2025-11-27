@@ -1,23 +1,23 @@
-from ._stranger_info import StrangerInfo, MessageSource
+from ._persona_info import PersonaInfo, MessageSource
 
 class FileSender:
-    def __init__(self, stranger_info: StrangerInfo):
-        self.stranger_info = stranger_info
+    def __init__(self, persona_info: PersonaInfo):
+        self.persona_info = persona_info
 
     async def send_file(self, url: str, file_name: str):
-        if self.stranger_info.source == MessageSource.GROUP:
+        if self.persona_info.source == MessageSource.GROUP:
             data = {
-                "group_id": self.stranger_info._group_id,
+                "group_id": self.persona_info._group_id,
                 "file": url,
                 "name": file_name,
                 "folder_id": None
             }
-            await self.stranger_info.bot.upload_group_file(**data)
-        elif self.stranger_info.source == MessageSource.PRIVATE:
+            await self.persona_info.bot.upload_group_file(**data)
+        elif self.persona_info.source == MessageSource.PRIVATE:
             data = {
-                "user_id": self.stranger_info.user_id,
+                "user_id": self.persona_info.user_id,
                 "file": url,
                 "name": file_name
             }
-            await self.stranger_info.bot.upload_private_file(**data)
+            await self.persona_info.bot.upload_private_file(**data)
         

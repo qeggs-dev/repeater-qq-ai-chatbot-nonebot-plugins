@@ -6,7 +6,7 @@ from typing import (
 )
 
 from ....core_net_configs import *
-from ....assist import Response, StrangerInfo
+from ....assist import Response, PersonaInfo
 from ....logger import logger as base_logger
 
 logger = base_logger.bind(module = "Prompt.Core")
@@ -14,7 +14,7 @@ logger = base_logger.bind(module = "Prompt.Core")
 class PromptCore:
     _httpx_client = httpx.AsyncClient()
 
-    def __init__(self, info: StrangerInfo):
+    def __init__(self, info: PersonaInfo):
         self._info = info
     
     # region set prompt  

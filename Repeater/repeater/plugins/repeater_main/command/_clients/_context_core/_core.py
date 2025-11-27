@@ -6,7 +6,7 @@ from typing import (
 )
 
 from ....core_net_configs import *
-from ....assist import StrangerInfo, Response
+from ....assist import PersonaInfo, Response
 from ....logger import logger as base_logger
 from ._response import (
     WithdrawResponse,
@@ -18,7 +18,7 @@ logger = base_logger.bind(module = "Context.Core")
 class ContextCore:
     _httpx_client = httpx.AsyncClient()
 
-    def __init__(self, info: StrangerInfo):
+    def __init__(self, info: PersonaInfo):
         self._info = info
     
     # region inject context

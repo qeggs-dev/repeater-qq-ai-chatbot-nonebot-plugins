@@ -6,16 +6,16 @@ from nonebot.adapters.onebot.v11 import MessageEvent
 from nonebot.adapters import Bot
 
 from .._clients import ConfigCore
-from ...assist import StrangerInfo, SendMsg
+from ...assist import PersonaInfo, SendMsg
 
 set_presence_penalty = on_command('setPresencePenalty', aliases={'spp', 'set_presence_penalty', 'Set_Presence_Penalty', 'SetPresencePpenalty'}, rule=to_me(), block=True)
 
 @set_presence_penalty.handle()
 async def handle_set_presence_penalty(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
-    stranger_info = StrangerInfo(bot=bot, event=event, args=args)
-    sendmsg = SendMsg("Config.Set_Presence_Penalty", set_presence_penalty, stranger_info)
+    persona_info = PersonaInfo(bot=bot, event=event, args=args)
+    sendmsg = SendMsg("Config.Set_Presence_Penalty", set_presence_penalty, persona_info)
 
-    msg = stranger_info.message_str.strip()
+    msg = persona_info.message_str.strip()
 
     try:
         if msg.endswith("%"):
@@ -29,7 +29,7 @@ async def handle_set_presence_penalty(bot: Bot, event: MessageEvent, args: Messa
         await sendmsg.send_error("Presence_Penalty is set incorrectly. Please enter a floating-point number or percentage between -2 and 2!")
 
 
-    config_core = ConfigCore(stranger_info)
+    config_core = ConfigCore(persona_info)
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:

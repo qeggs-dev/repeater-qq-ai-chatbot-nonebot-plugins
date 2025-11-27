@@ -6,16 +6,16 @@ from nonebot.adapters.onebot.v11 import MessageEvent
 from nonebot.adapters import Bot
 
 from .._clients import ConfigCore
-from ...assist import StrangerInfo, SendMsg
+from ...assist import PersonaInfo, SendMsg
 
 set_max_tokens = on_command('setMaxTokens', aliases={'smt', 'set_max_tokens', 'Set_Max_Tokens', 'SetMaxTokens'}, rule=to_me(), block=True)
 
 @set_max_tokens.handle()
 async def handle_set_max_tokens(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
-    stranger_info = StrangerInfo(bot=bot, event=event, args=args)
-    sendmsg = SendMsg("Config.Set_Max_Tokens", stranger_info, set_max_tokens, None)
+    persona_info = PersonaInfo(bot=bot, event=event, args=args)
+    sendmsg = SendMsg("Config.Set_Max_Tokens", persona_info, set_max_tokens, None)
 
-    msg = stranger_info.message_str.strip()
+    msg = persona_info.message_str.strip()
 
     try:
         max_tokens = int(msg)
@@ -26,7 +26,7 @@ async def handle_set_max_tokens(bot: Bot, event: MessageEvent, args: Message = C
         await sendmsg.send_error("Max_Tokens setting is incorrect, please enter an integer between 1 and 8192!")
 
 
-    config_core = ConfigCore(stranger_info)
+    config_core = ConfigCore(persona_info)
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:

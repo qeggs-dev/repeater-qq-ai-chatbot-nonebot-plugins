@@ -10,7 +10,7 @@ from dataclasses import dataclass, field as dataclass_field
 from typing import Callable, Type, Any
 
 from .._clients import ConfigCore
-from ...assist import StrangerInfo, SendMsg
+from ...assist import PersonaInfo, SendMsg
 
 @dataclass
 class CommandHandler:
@@ -19,7 +19,7 @@ class CommandHandler:
     """
     command: Callable[..., Type[Matcher]]
     component: str
-    prompt: Callable[[StrangerInfo], str] | str | None = None
+    prompt: Callable[[PersonaInfo], str] | str | None = None
     names: list[str] = dataclass_field(default_factory=list)
     type_converter: Callable[[str], Any] | None = None
     config_key: str
@@ -55,20 +55,20 @@ class BatchRegistration:
         
         @matcher.handle()
         async def handle(bot: Bot, event: MessageEvent, matcher: Matcher, args: Message = CommandArg()):
-            stranger_info = StrangerInfo(bot=bot, event=event, args=args)
-            sendmsg = SendMsg(component, matcher, stranger_info)
+            persona_info = PersonaInfo(bot=bot, event=event, args=args)
+            sendmsg = SendMsg(component, matcher, persona_info)
             
-            chat_core = ConfigCore(stranger_info)
+            chat_core = ConfigCore(persona_info)
             if sendmsg.is_debug_mode:
                 await sendmsg.send_debug_mode()
             else:
                 if callable(command.type_converter):
-                    value = command.type_converter(stranger_info)
+                    value = command.type_converter(persona_info)
                 else:
-                    value = stranger_info.message_str
+                    value = persona_info.message_str
                 response = await chat_core.set_config(command.config_key, value)
                 if callable(command.prompt):
-                    prompt = command.prompt(stranger_info)
+                    prompt = command.prompt(persona_info)
                 else:
                     prompt = command.prompt
                 await sendmsg.send_response(response, prompt)

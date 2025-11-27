@@ -6,18 +6,18 @@ from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
 from .._clients import VariableExpansionCore
-from ...assist import StrangerInfo, SendMsg
+from ...assist import PersonaInfo, SendMsg
 
 render_var_expand = on_command("varExpandRender", aliases={"ver", "var_expand_render", "Var_Expand_Render", "VarExpandRender"}, rule=to_me(), block=True)
 
 @render_var_expand.handle()
 async def handle_render_var_expand(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
-    stranger_info = StrangerInfo(bot=bot, event=event, args=args)
-    sendmsg = SendMsg("VarExpandRender", render_var_expand, stranger_info)
+    persona_info = PersonaInfo(bot=bot, event=event, args=args)
+    sendmsg = SendMsg("VarExpandRender", render_var_expand, persona_info)
 
     msg = args.extract_plain_text().strip()
 
-    variable_expansion_core = VariableExpansionCore(stranger_info)
+    variable_expansion_core = VariableExpansionCore(persona_info)
     if sendmsg.is_debug_mode:
         sendmsg.send_debug_mode()
     else:

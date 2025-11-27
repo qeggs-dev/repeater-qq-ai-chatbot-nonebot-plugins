@@ -6,13 +6,13 @@ from typing import (
 )
 
 from ....core_net_configs import *
-from ....assist import StrangerInfo, Response
+from ....assist import PersonaInfo, Response
 from ....logger import logger
 
 class VariableExpansionCore:
     _httpx_client = httpx.AsyncClient()
 
-    def __init__(self, info: StrangerInfo):
+    def __init__(self, info: PersonaInfo):
         self._info = info
     
     # region set note  
