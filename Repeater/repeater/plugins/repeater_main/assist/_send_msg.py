@@ -4,8 +4,10 @@ from nonebot.exception import FinishedException
 from ..core_net_configs import RepeaterDebugMode, storage_config
 from ._http_code import HTTP_Code
 from ._stranger_info import StrangerInfo
+from ._namespace import MessageSource
 from ._text_render import TextRender
 from ._response_body import Response
+from ..chattts import ChatTTSAPI
 from typing import (
     Callable,
     Any,
@@ -16,6 +18,8 @@ from typing import (
     Literal,
 )
 from datetime import datetime
+from ..logger import logger
+import numpy as np
 
 T_RESPONSE = TypeVar("T_RESPONSE")
 
@@ -31,6 +35,7 @@ class SendMsg:
         self._matcher: Type[Matcher] = matcher
         self._text_render = TextRender(namespace = self._stranger_info.namespace)
         self._prefix: Message = Message()
+        self._chat_tts_api = ChatTTSAPI()
     
     def add_prefix(self, prefix: MessageSegment | str):
         self._prefix.append(prefix)
@@ -478,6 +483,87 @@ class SendMsg:
         )
     
     @overload
+    async def send_tts(
+            self,
+            text: str | None = None,
+            reply: bool = False,
+            continue_handler: Literal[False] = False
+        ) -> NoReturn: ...
+
+    @overload
+    async def send_tts(
+            self,
+            text: str | None = None,
+            reply: bool = False,
+            continue_handler: Literal[True] = True
+        ) -> None: ...
+    
+    async def send_tts(
+            self,
+            text: str | None = None,
+            send_error_message: bool = True,
+            reply: bool = False,
+            continue_handler: bool = False
+        ):
+        """
+        发送tts
+
+        :param text: 文本
+        :param reply: 是否回复
+        :param continue_handler: 是否继续处理流程
+        """
+        response = await self._chat_tts_api.text_to_speech(text)
+        if response.code == 200:
+            await self._send(
+                message = MessageSegment.record(response.data.audio_files[0].url),
+                reply = reply,
+                continue_handler = continue_handler
+            )
+        elif send_error_message:
+            await self.send_response(response, message = "TTS Error.")
+        else:
+            logger.error(f"Send TTS Error: {response.code} {response.text}")
+    
+    @overload
+    async def send_check_length(
+            self,
+            text: str | None = None,
+            threshold: float = 1.0,
+            reply: bool = True,
+            continue_handler: Literal[False] = False
+        ) -> NoReturn: ...
+    
+    @overload
+    async def send_check_length(
+            self,
+            message: Message,
+            threshold: float = 1.0,
+            reply: bool = True,
+            continue_handler: Literal[True] = True
+        ) -> None: ...
+    
+    async def send_check_length(
+            self,
+            message: Message | str | None = None,
+            threshold: float = 1.0,
+            reply: bool = True,
+            continue_handler: Literal[False] = False
+        ):
+        length_score = self.text_length_score(message)
+        if length_score >= threshold:
+            self.send_render(
+                message,
+                reply = reply,
+                continue_handler = continue_handler
+            )
+        else:
+            self.send_text(
+                message,
+                reply = reply,
+                continue_handler = continue_handler
+            )
+    
+    @overload
     async def send_any(
             self,
             message: Message,
@@ -567,3 +653,33 @@ class SendMsg:
         await self._matcher.send(send_msg)
         if not continue_handler:
             await self.break_handler()
+    
+    @staticmethod
+    def text_length_score(text:str) -> float:
+        lines = text.splitlines()
+        line_lengths = np.array([len(line) for line in lines], dtype=np.int64)
+        lines_score = len(lines) / storage_config.text_length_score_configs.max_lines
+        single_line_score = line_lengths.max() / storage_config.text_length_score_configs.single_line_max
+        mean_line_score = line_lengths.mean() / storage_config.text_length_score_configs.mean_line_max
+        total_length_score = len(text) / storage_config.text_length_score_configs.total_length
+
+        return (
+            # lines: 33.3%
+            lines_score +
+            # single_line_score + mean_line_score: 33.3%
+            (
+                single_line_score +
+                mean_line_score
+            ) / 2.0 +
+            # total_length: 33.3%
+            total_length_score
+        ) / 3.0
+    
+    @property
+    def text_length_score_threshold(self) -> float:
+        if self._stranger_info.source == MessageSource.GROUP:
+            threshold = storage_config.text_length_score_configs.threshold.group
+        else:
+            threshold = storage_config.text_length_score_configs.threshold.private
+
+        return threshold
