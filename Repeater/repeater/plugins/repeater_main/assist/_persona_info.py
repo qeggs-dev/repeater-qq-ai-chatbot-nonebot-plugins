@@ -7,7 +7,7 @@ from ._assist_func import (
 )
 from ._namespace import MessageSource, Namespace
 
-class StrangerInfo:
+class PersonaInfo:
     def __init__(self, bot: Bot, event: MessageEvent, args: Message | None = None):
         self._bot: Bot = bot
         self._message_event: MessageEvent = event
