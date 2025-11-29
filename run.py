@@ -1,26 +1,42 @@
 import platform
 import os
 import sys
+import json
 import time
 import shlex
 import asyncio
 import argparse
 from pathlib import Path
+import ctypes
 
 PROJECT_PATH = "./Repeater"
 SYSTEM = platform.system()
 TITLE = "Repeater"
 CONSOLE_TITLE = f"{TITLE} Nonebot Plugin"
 
-def init_argparse():
-    parser = argparse.ArgumentParser(description=TITLE)
-    parser.add_argument("-d", "--debug", action="store_true", help="Enable debug mode")
-    return parser
+def init_config(path: str | os.PathLike = "./run.json"):
+    global PROJECT_PATH, SYSTEM, TITLE, CONSOLE_TITLE
+    config_file_path = Path(path)
+    if config_file_path.exists():
+        with open(config_file_path, "r") as f:
+            config = json.load(f)
+        PROJECT_PATH = config.get("project_path", PROJECT_PATH)
+        SYSTEM = config.get("system", SYSTEM)
+        TITLE = config.get("title", TITLE)
+        CONSOLE_TITLE = config.get("console_title", CONSOLE_TITLE)
+    else:
+        with open(config_file_path, "w") as f:
+            json.dump({
+                "project_path": PROJECT_PATH,
+                "system": SYSTEM,
+                "title": TITLE,
+                "console_title": CONSOLE_TITLE
+            }, f)
 
 def set_title(text: str) -> None:
     if SYSTEM == "Windows":
-        from ctypes import windll
-        windll.kernel32.SetConsoleTitleW(text)
+        kernel32 = ctypes.windll.kernel32
+        kernel32.SetConsoleTitleW(text)
     else:
         sys.stdout.write(f"\x1b]2;{text}\x07")
         sys.stdout.flush()
@@ -186,14 +202,20 @@ async def main():
     print("=" * os.get_terminal_size().columns)
     print(f"Run With Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}")
     cmd = create_cmd()
-    await run_process(*cmd)
-    await pause()
+    while True:
+        await run_process(*cmd)
+        input_str = await asyncio.to_thread(input, "Run Again? [Y/n] ")
+        if input_str.lower() not in ["n", "no", "false", "0"]:
+            continue
+        else:
+            break
 
 if __name__ == "__main__":
     try:
+        init_config()
         asyncio.run(main())
     except Exception as e:
+        import traceback
         with open("traceback.txt", "w", encoding="utf-8") as f:
-            import traceback
             f.write(traceback.format_exc())
-            raise
+        raise
