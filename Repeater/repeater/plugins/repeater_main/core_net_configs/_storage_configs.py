@@ -21,6 +21,7 @@ class StorageConfigs(BaseModel):
     reason_model_uid: str = "reasoner"
     hello_content: str = "Repeater Is Ready!"
     welcome_messages_by_weekday: dict[int | str, str] = Field(default_factory=dict, max_length=7)
+    merge_group_id: bool = False
 
 loader: Loader[StorageConfigs] = Loader(
     model=StorageConfigs,
