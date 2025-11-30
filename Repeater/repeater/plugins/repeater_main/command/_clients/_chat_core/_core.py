@@ -172,8 +172,10 @@ class ChatCore:
                 message_buffer.append(">     Message Sending time:{time}")
                 if enable_md_prompt:
                     message_buffer.append(">     Markdown Rendering is turned on!!")
+                if storage_config.merge_group_id:
+                    message_buffer.append(">     Now User: {username}({nickname})")
                 if reference_context_id:
-                    message_buffer.append(">     Guest Mode(User: {user_name}), Citation context is turned on!!")
+                    message_buffer.append(">     Guest Mode(User: {username}), Citation context is turned on!!")
                 message_buffer.append("\n---\n")
             message_buffer.append(message)
             data['message'] = "\n".join(message_buffer)
