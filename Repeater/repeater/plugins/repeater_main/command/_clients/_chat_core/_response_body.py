@@ -7,6 +7,8 @@ class ChatResponse(BaseModel):
 
     reasoning_content: str = ""
     content: str = ""
+    user_raw_input: str = ""
+    user_input: str = ""
     model_name: str = ""
     model_type: str = ""
     model_uid: str = ""
