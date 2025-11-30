@@ -4,10 +4,11 @@ import sys
 import json
 import time
 import shlex
-import asyncio
-import argparse
 from pathlib import Path
 import ctypes
+import subprocess
+import threading
+from dataclasses import dataclass
 
 PROJECT_PATH = "./Repeater"
 SYSTEM = platform.system()
@@ -41,16 +42,34 @@ def set_title(text: str) -> None:
         sys.stdout.write(f"\x1b]2;{text}\x07")
         sys.stdout.flush()
 
+@dataclass
+class Process_Command:
+    cmd: list[str]
+    print_runtime: bool = True
+    print_return: bool = True
+
 def create_cmd():
     if SYSTEM == "Windows":
-        cmd: list[list[str]] = [
-            [".venv/Scripts/python.exe", "-c" "import sys; print(f\"Run script with Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro} for Windows\")"],
-            [".venv/Scripts/nb", "run"]
+        cmd: list[Process_Command] = [
+            Process_Command(
+                [".venv/Scripts/python.exe", "-c" "import sys; print(f\"Run script with Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro} for Windows\")"],
+                print_runtime=False,
+                print_return=False
+            ),
+            Process_Command(
+                [".venv/Scripts/nb", "run"]
+            )
         ]
     else:
-        cmd: list[list[str]] = [
-            [".venv/bin/python3", "-c", "import sys; print(f\"Run script with Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro} for " + SYSTEM + "\")"],
-            [".venv/bin/nb", "run"]
+        cmd: list[Process_Command] = [
+            Process_Command(
+                [".venv/bin/python3", "-c", "import sys; print(f\"Run script with Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro} for " + SYSTEM + "\")"],
+                print_runtime=False,
+                print_return=False
+            ),
+            Process_Command(
+                [".venv/bin/nb", "run"]
+            )
         ]
     return cmd
 
@@ -129,34 +148,27 @@ def format_time_duration(duration: int, start_with: int = 0, use_abbreviation: b
     return text
 
 class Process:
-    def __init__(self, cmd: list[str]) -> None:
-        self._cmd = cmd
+    def __init__(self, *cmds:str) -> None:
+        self._cmd = list(cmds)
         self._start: int = 0
         self._end: int = 0
-        self._process: asyncio.subprocess.Process | None = None
+        self._process: subprocess.CompletedProcess[bytes] | None = None
     
-    async def run_with(self, cwd: str | Path):
+    def run_with(self, cwd: str | Path):
         self._start = time.monotonic_ns()
-        result = await asyncio.create_subprocess_exec(*self._cmd, cwd = cwd)
-        await result.wait()
-        self._end = time.monotonic_ns()
+        try:
+            result: subprocess.CompletedProcess[bytes] = subprocess.run(
+                self._cmd,
+                cwd = cwd
+            )
+        finally:
+            self._end = time.monotonic_ns()
+        result.returncode
         self._process = result
         return result
 
-    async def run(self):
-        return await self.run_with(Path.cwd())
-    
-    async def kill(self):
-        if self._process is not None:
-            self._process.kill()
-
-    async def wait(self):
-        if self._process is not None:
-            await self._process.wait()
-
-    async def communicate(self):
-        if self._process is not None:
-            return await self._process.communicate()
+    def run(self):
+        return self.run_with(Path.cwd())
     
     @property
     def returncode(self) -> int:
@@ -176,27 +188,27 @@ class Process:
     def end(self) -> int:
         return self._end
 
-async def run_process(*cmds: list[str]):
-    processes: list[Process] = []
+def run_process(*cmds: Process_Command):
     for cmd in cmds:
-        process = Process(cmd)
-        processes.append(process)
-        await process.run_with(PROJECT_PATH)
-    for process in processes:
-        print(f"Process {process.cmd}:")
-        print(f"  - took {format_time_duration(process.end - process.start)}")
-        print(f"  - return code: {process.returncode}")
+        process = Process(*cmd.cmd)
+        process.run_with(PROJECT_PATH)
+        if cmd.print_runtime or cmd.print_return:
+            print(f"Process:\n{process.cmd}")
+        if cmd.print_runtime:
+            print(f"  - took {format_time_duration(process.end - process.start)}")
+        if cmd.print_return:
+            print(f"  - return code: {process.returncode}")
     
-    return processes
+    return process
 
-async def pause():
+def pause():
     try:
-        empty_event = asyncio.Event()
-        await empty_event.wait()
-    except (KeyboardInterrupt, asyncio.CancelledError):
+        empty_event = threading.Event()
+        empty_event.wait()
+    except Exception:
         pass
 
-async def main():
+def main():
     set_title(TITLE)
     print(CONSOLE_TITLE.center(os.get_terminal_size().columns))
     print("=" * os.get_terminal_size().columns)
@@ -204,10 +216,10 @@ async def main():
     cmd = create_cmd()
     while True:
         try:
-            await run_process(*cmd)
+            run_process(*cmd)
         except KeyboardInterrupt:
             print("User interrupted")
-        input_str = await asyncio.to_thread(input, "Run Again? [Y/n] ")
+        input_str = input("Run Again? [Y/n] ")
         if input_str.lower() not in ["n", "no", "false", "0"]:
             continue
         else:
@@ -216,7 +228,7 @@ async def main():
 if __name__ == "__main__":
     try:
         init_config()
-        asyncio.run(main())
+        main()
     except Exception as e:
         import traceback
         with open("traceback.txt", "w", encoding="utf-8") as f:
