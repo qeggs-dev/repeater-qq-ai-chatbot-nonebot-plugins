@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from ..core_net_configs import storage_config
 
 class MessageSource(Enum):
     """
@@ -22,7 +23,10 @@ class Namespace:
         if self.mode == MessageSource.GROUP:
             if self.group_id is None:
                 raise ValueError("group_id cannot be None when mode is GROUP")
-            return f"Group_{self.group_id}_{self.user_id}"
+            if storage_config.merge_group_id:
+                return f"Group_{self.group_id}"
+            else:
+                return f"Group_{self.group_id}_{self.user_id}"
         else:
             return f"Private_{self.user_id}"
     
