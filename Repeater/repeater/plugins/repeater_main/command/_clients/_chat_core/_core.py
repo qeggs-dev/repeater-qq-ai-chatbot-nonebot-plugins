@@ -160,6 +160,8 @@ class ChatCore:
             data['model_uid'] = model_uid
         if role_name:
             data['role_name'] = role_name
+        elif storage_config.merge_group_id:
+            data['role_name'] = self._persona_info.nickname
         if reference_context_id:
             data['reference_context_id'] = reference_context_id
         if stream:
