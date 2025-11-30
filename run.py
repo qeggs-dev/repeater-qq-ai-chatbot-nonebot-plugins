@@ -203,7 +203,10 @@ async def main():
     print(f"Run With Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}")
     cmd = create_cmd()
     while True:
-        await run_process(*cmd)
+        try:
+            await run_process(*cmd)
+        except KeyboardInterrupt:
+            print("User interrupted")
         input_str = await asyncio.to_thread(input, "Run Again? [Y/n] ")
         if input_str.lower() not in ["n", "no", "false", "0"]:
             continue
