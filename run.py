@@ -18,20 +18,20 @@ def init_config(path: str | os.PathLike = "./run.json"):
     global PROJECT_PATH, SYSTEM, TITLE, CONSOLE_TITLE
     config_file_path = Path(path)
     if config_file_path.exists():
-        with open(config_file_path, "r") as f:
+        with open(config_file_path, "r", encoding="utf-8") as f:
             config = json.load(f)
         PROJECT_PATH = config.get("project_path", PROJECT_PATH)
         SYSTEM = config.get("system", SYSTEM)
         TITLE = config.get("title", TITLE)
         CONSOLE_TITLE = config.get("console_title", CONSOLE_TITLE)
     else:
-        with open(config_file_path, "w") as f:
+        with open(config_file_path, "w", encoding="utf-8") as f:
             json.dump({
                 "project_path": PROJECT_PATH,
                 "system": SYSTEM,
                 "title": TITLE,
                 "console_title": CONSOLE_TITLE
-            }, f)
+            }, f, ensure_ascii=False, indent=4)
 
 def set_title(text: str) -> None:
     if SYSTEM == "Windows":
