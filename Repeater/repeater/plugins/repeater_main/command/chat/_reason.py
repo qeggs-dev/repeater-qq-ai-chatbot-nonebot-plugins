@@ -26,6 +26,7 @@ async def reason_handle(bot: Bot, event: MessageEvent, args: Message = CommandAr
     message = persona_info.message
 
     chat_core = ChatCore(persona_info)
+    
     response = await chat_core.send_message(
         message = message.extract_plain_text().strip(),
         model_uid=storage_config.reason_model_uid

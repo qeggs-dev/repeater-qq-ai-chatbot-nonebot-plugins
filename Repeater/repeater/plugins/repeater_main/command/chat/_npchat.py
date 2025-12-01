@@ -24,7 +24,7 @@ async def handle_npchat(bot: Bot, event: MessageEvent, args: Message = CommandAr
 
     message = persona_info.message
 
-    chat_core = ChatCore(persona_info.namespace_str)
+    chat_core = ChatCore(persona_info)
 
     response = await chat_core.send_message(message.extract_plain_text().strip())
 

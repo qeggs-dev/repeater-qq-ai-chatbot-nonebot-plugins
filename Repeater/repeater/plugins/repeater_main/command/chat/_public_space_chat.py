@@ -25,6 +25,7 @@ async def handle_public_space_chat(bot: Bot, event: MessageEvent, args: Message 
     message = persona_info.message
 
     chat_core = ChatCore(persona_info)
+    
     response = await chat_core.send_message(message.extract_plain_text().strip())
     send_msg = ChatSendMsg(
         "Public_Space_Chat",

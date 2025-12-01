@@ -21,7 +21,7 @@ async def handle_keep_answering(bot: Bot, event: MessageEvent):
         module = "Chat.Keep_Answering"
     )
 
-    chat_core = ChatCore(persona_info.namespace_str)
+    chat_core = ChatCore(persona_info)
 
     response = await chat_core.send_message()
     

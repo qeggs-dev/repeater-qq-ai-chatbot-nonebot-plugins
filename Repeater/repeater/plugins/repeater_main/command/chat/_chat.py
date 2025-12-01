@@ -25,7 +25,7 @@ async def handle_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg(
 
     message = persona_info.message
 
-    core = ChatCore(persona_info.namespace_str)
+    core = ChatCore(persona_info)
 
     response = await core.send_message(
         message = message.extract_plain_text().strip()
