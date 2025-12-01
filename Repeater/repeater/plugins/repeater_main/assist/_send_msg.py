@@ -615,7 +615,7 @@ class SendMsg:
             if render_response.code == 200:
                 message = MessageSegment.image(render_response.data.image_url)
             else:
-                await self.send_response(render_response, text)
+                await self.send_response(render_response, lambda response: f"Render Error: {response.text}")
         return message
     
     @overload

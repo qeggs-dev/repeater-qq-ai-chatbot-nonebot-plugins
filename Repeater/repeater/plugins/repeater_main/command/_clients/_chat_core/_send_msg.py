@@ -18,17 +18,17 @@ class Send_msg(BaseSendMsg):
             response: Response[ChatResponse | None],
         ):
         super().__init__(f"Chat.{component}", matcher, persona_info)
-        self.response: Response[ChatResponse] = response
+        self._response: Response[ChatResponse] = response
         self._text_render = TextRender(namespace = self._persona_info.namespace)
         self._chat_tts_api = ChatTTSAPI()
     
     async def _send_error_message(self):
-        if self.response.data is None:
-            await self.send_response(self.response)
+        if self._response.data is None:
+            await self.send_response(self._response)
         else:
             await self.send_response(
-                self.response,
-                message = self.response.data.content
+                self._response,
+                message = self._response.data.content
             )
 
 
@@ -36,8 +36,8 @@ class Send_msg(BaseSendMsg):
         if self.is_debug_mode:
             await self.send_debug_mode()
         else:
-            if self.response.code == 200:
-                score = self.text_length_score(self.response.data.content)
+            if self._response.code == 200:
+                score = self.text_length_score(self._response.data.content)
                 threshold = self.text_length_score_threshold
                 logger.info(f"Response content socre: {score}")
                 if score >= threshold:
@@ -53,14 +53,14 @@ class Send_msg(BaseSendMsg):
         if self.is_debug_mode:
             await self.send_debug_mode()
         else:
-            if self.response.code == 200:
+            if self._response.code == 200:
                 await self.send_render(
-                    self.response.data.reasoning_content,
+                    self._response.data.reasoning_content,
                     reply = True,
                     continue_handler = True
                 )
                 await self.send_tts(
-                    text or self.response.data.content,
+                    text or self._response.data.content,
                     reply = False,
                     continue_handler = False
                 )
@@ -72,16 +72,16 @@ class Send_msg(BaseSendMsg):
         if self.is_debug_mode:
             await self.send_debug_mode()
         else:
-            if self.response.code == 200:
+            if self._response.code == 200:
                 message = Message()
                 message.append(self._persona_info.reply)
                 # 推理内容必须渲染为图片
-                if self.response.data.reasoning_content:
+                if self._response.data.reasoning_content:
                     message.append(
-                        await self.text_render(self.response.data.reasoning_content)
+                        await self.text_render(self._response.data.reasoning_content)
                     )
-                if self.response.data.content:
-                    message.append(text or self.response.data.content)
+                if self._response.data.content:
+                    message.append(text or self._response.data.content)
                 else:
                     message.append("Message is empty.")
                 await self._matcher.finish(message)
@@ -92,16 +92,16 @@ class Send_msg(BaseSendMsg):
         if self.is_debug_mode:
             await self.send_debug_mode()
         else:
-            if self.response.code == 200:
+            if self._response.code == 200:
                 message = Message()
                 message.append(self._persona_info.reply)
-                if self.response.data.reasoning_content:
+                if self._response.data.reasoning_content:
                     message.append(
-                        await self.text_render(self.response.data.reasoning_content)
+                        await self.text_render(self._response.data.reasoning_content)
                     )
-                if self.response.data.content:
+                if self._response.data.content:
                     message.append(
-                        await self.text_render(self.response.data.content)
+                        await self.text_render(self._response.data.content)
                     )
                 else:
                     message.append("[Message is empty.]")
