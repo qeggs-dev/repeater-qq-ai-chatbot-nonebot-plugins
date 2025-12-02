@@ -36,4 +36,4 @@ async def handle_render_Chat(bot: Bot, event: MessageEvent, args: Message = Comm
         renderChat,
         response
     )
-    await send_msg.send_image()
+    await send_msg.send_image_mode()

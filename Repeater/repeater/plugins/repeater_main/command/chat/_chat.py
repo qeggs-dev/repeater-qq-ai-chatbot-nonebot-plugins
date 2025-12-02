@@ -37,4 +37,4 @@ async def handle_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg(
         chat,
         response
     )
-    await send_msg.send_text()
+    await send_msg.send_text_mode()
