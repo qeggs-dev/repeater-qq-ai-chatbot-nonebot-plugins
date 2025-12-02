@@ -23,12 +23,12 @@ class TextRender:
         elif isinstance(namespace, Namespace):
             self.namespce = namespace.namespace
         else:
-            raise TypeError(f'namespace must be str or Namespace, not {type(namespace)}')
+            raise TypeError(f"namespace must be str or Namespace, not {type(namespace)}")
 
     async def render(self, text: str) -> Response[RendedImage]:
         response = await self._client.post(
-            f'{TEXT_RENDER_ROUTE}/{self.namespce}',
-            json={'text': text}
+            f"{TEXT_RENDER_ROUTE}/{self.namespce}",
+            json={"text": text}
         )
         try:
             response_json:dict = response.json()

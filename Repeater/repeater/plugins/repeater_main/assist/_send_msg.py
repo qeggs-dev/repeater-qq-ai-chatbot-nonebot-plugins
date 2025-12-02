@@ -65,8 +65,8 @@ class SendMsg:
         if len(storage_config.welcome_messages_by_weekday) == 0:
             return storage_config.hello_content
         weekday = now.weekday() + 1
-        weekday_str = now.strftime('%A')
-        weekday_abridge = now.strftime('%a')
+        weekday_str = now.strftime("%A")
+        weekday_abridge = now.strftime("%a")
         if weekday in storage_config.welcome_messages_by_weekday:
             return storage_config.welcome_messages_by_weekday[weekday]
         elif str(weekday) in storage_config.welcome_messages_by_weekday:
