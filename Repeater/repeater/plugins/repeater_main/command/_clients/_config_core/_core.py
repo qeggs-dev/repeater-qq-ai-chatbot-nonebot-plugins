@@ -41,7 +41,7 @@ class ConfigCore:
         logger.info("Set config: {config_key} = {value}({item_type})", config_key=config_key, value=value, item_type=item_type)
         response = await self._httpx_client.put(
             f"{SET_CONFIG_ROUTE}/{self._info.namespace_str}/{item_type}",
-            data={
+            json={
                 "key": config_key,
                 "value": value
             }
