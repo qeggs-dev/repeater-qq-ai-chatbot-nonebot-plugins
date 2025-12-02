@@ -38,9 +38,9 @@ class ChatCore:
         add_metadata: bool = True,
         role_name: str | None = None,
         model_uid: str | None = None,
-        load_prompt: bool = True,
+        load_prompt: bool | None = None,
+        save_context: bool | None = None,
         enable_md_prompt: bool = True,
-        save_context: bool = True,
         reference_context_id: str | None = None,
     ) -> Response[ChatResponse | None]:
         """
@@ -94,9 +94,9 @@ class ChatCore:
         add_metadata: bool = True,
         role_name: str | None = None,
         model_uid: str | None = None,
-        load_prompt: bool = True,
+        load_prompt: bool | None = None,
+        save_context: bool | None = None,
         enable_md_prompt: bool = True,
-        save_context: bool = True,
         reference_context_id: str | None = None,
     ) -> AsyncIterator[Any]:
         """
@@ -139,9 +139,9 @@ class ChatCore:
         add_metadata: bool = True,
         role_name: str | None = None,
         model_uid: str | None = None,
-        load_prompt: bool = True,
+        load_prompt: bool | None = None,
+        save_context: bool | None = None,
         enable_md_prompt: bool = True,
-        save_context: bool = True,
         reference_context_id: str | None = None,
         stream: bool = False,
     ):
@@ -153,12 +153,14 @@ class ChatCore:
                 "age": self._persona_info.age,
                 "gender": self._persona_info.gender,
             },
-            "load_prompt": load_prompt,
-            "save_context": save_context,
         }
-        if model_uid:
+        if load_prompt is not None:
+            data["load_prompt"] = load_prompt
+        if save_context is not None:
+            data["save_context"] = save_context
+        if model_uid is not None:
             data["model_uid"] = model_uid
-        if role_name:
+        if role_name is not None:
             data["role_name"] = role_name
         elif storage_config.merge_group_id:
             data["role_name"] = self._persona_info.nickname
