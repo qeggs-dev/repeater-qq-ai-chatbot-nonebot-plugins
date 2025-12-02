@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import ConfigCore
 from ...assist import PersonaInfo, SendMsg
 
-set_presence_penalty = on_command('setPresencePenalty', aliases={'spp', 'set_presence_penalty', 'Set_Presence_Penalty', 'SetPresencePpenalty'}, rule=to_me(), block=True)
+set_presence_penalty = on_command("setPresencePenalty", aliases={"spp", "set_presence_penalty", "Set_Presence_Penalty", "SetPresencePpenalty"}, rule=to_me(), block=True)
 
 @set_presence_penalty.handle()
 async def handle_set_presence_penalty(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
@@ -33,5 +33,5 @@ async def handle_set_presence_penalty(bot: Bot, event: MessageEvent, args: Messa
     if sendmsg.is_debug_mode:
         await sendmsg.send_debug_mode()
     else:
-        response = await config_core.set_config('presence_penalty', presence_penalty)
+        response = await config_core.set_config("presence_penalty", presence_penalty)
         await sendmsg.send_response(response, f"Set Presence_Penalty to {presence_penalty}")

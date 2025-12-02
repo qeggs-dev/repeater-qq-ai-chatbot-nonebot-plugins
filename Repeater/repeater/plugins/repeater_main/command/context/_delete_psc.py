@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import ContextCore
 from ...assist import PersonaInfo, SendMsg
 
-delete_public_space_context = on_command('deletePublicSpaceContext', aliases={'dpsc', 'delete_public_space_context', 'Delete_Public_Space_Context', 'DeletePublicSpaceContext'}, rule=to_me(), block=True)
+delete_public_space_context = on_command("deletePublicSpaceContext", aliases={"dpsc", "delete_public_space_context", "Delete_Public_Space_Context", "DeletePublicSpaceContext"}, rule=to_me(), block=True)
 
 @delete_public_space_context.handle()
 async def handle_delete_public_space_context(bot: Bot, event: MessageEvent, args: Message = CommandArg()):

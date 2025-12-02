@@ -10,7 +10,7 @@ from nonebot.params import (
 )
 from ...assist import PersonaInfo, MessageSource, SendMsg, TextRender
 
-choose_group_member = on_command("chooseGroupMember", aliases={"cgm",'choose_group_member', 'Choose_Group_Member', 'ChooseGroupMember'}, rule=to_me(), block=True)
+choose_group_member = on_command("chooseGroupMember", aliases={"cgm","choose_group_member", "Choose_Group_Member", "ChooseGroupMember"}, rule=to_me(), block=True)
 
 @choose_group_member.handle()
 async def choose_group_member_handle(bot: Bot, event: MessageEvent, args: Message = CommandArg()):

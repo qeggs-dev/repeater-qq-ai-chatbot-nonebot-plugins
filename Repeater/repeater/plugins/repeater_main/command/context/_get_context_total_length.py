@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import ContextCore
 from ...assist import PersonaInfo, SendMsg
 
-get_context_total_length = on_command('getContextTotalLength', aliases={'gctl', 'get_context_total_length', 'Get_Context_Total_Length', 'GetContextTotalLength'}, rule=to_me(), block=True)
+get_context_total_length = on_command("getContextTotalLength", aliases={"gctl", "get_context_total_length", "Get_Context_Total_Length", "GetContextTotalLength"}, rule=to_me(), block=True)
 
 @get_context_total_length.handle()
 async def handle_total_context_length(bot: Bot, event: MessageEvent, args: Message = CommandArg()):

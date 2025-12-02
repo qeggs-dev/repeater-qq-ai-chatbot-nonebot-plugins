@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import PromptCore
 from ...assist import PersonaInfo, SendMsg
 
-change_prompt_branch = on_command('changePromptBranch', aliases={'cpb', 'change_prompt_branch', 'Change_Prompt_Branch', 'ChangePromptBranch'}, rule=to_me(), block=True)
+change_prompt_branch = on_command("changePromptBranch", aliases={"cpb", "change_prompt_branch", "Change_Prompt_Branch", "ChangePromptBranch"}, rule=to_me(), block=True)
 
 @change_prompt_branch.handle()
 async def handle_change_prompt_branch(bot: Bot, event: MessageEvent, args: Message = CommandArg()):

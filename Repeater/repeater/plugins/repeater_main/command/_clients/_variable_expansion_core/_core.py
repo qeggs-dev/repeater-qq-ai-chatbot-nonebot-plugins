@@ -19,15 +19,15 @@ class VariableExpansionCore:
     async def expand_variable(self, text: str) -> Response[None]:
         logger.info("Expanding variable", module = "variable_expansion.core")
         response = await self._httpx_client.post(
-            f'{VARIABLE_EXPANSION}/{self._info.namespace_str}',
+            f"{VARIABLE_EXPANSION}/{self._info.namespace_str}",
             json={
-                'user_info':{
-                    'username': self._info.nickname,
-                    'nickname': self._info.display_name,
-                    'gender': self._info.gender,
-                    'age': self._info.age,
+                "user_info":{
+                    "username": self._info.nickname,
+                    "nickname": self._info.display_name,
+                    "gender": self._info.gender,
+                    "age": self._info.age,
                 },
-                'text': text
+                "text": text
             }
         )
         return Response(

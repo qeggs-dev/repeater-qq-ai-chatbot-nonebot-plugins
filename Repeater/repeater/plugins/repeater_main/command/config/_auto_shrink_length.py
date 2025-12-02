@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import ConfigCore
 from ...assist import PersonaInfo, SendMsg
 
-set_auto_shrink_length = on_command('setAutoShrinkLength', aliases={'sasl', 'set_auto_shrink_length', 'Set_Auto_Shrink_Length', 'SetAutoShrinkLength'}, rule=to_me(), block=True)
+set_auto_shrink_length = on_command("setAutoShrinkLength", aliases={"sasl", "set_auto_shrink_length", "Set_Auto_Shrink_Length", "SetAutoShrinkLength"}, rule=to_me(), block=True)
 
 @set_auto_shrink_length.handle()
 async def handle_set_auto_shrink_length(bot: Bot, event: MessageEvent, args: Message = CommandArg()):

@@ -9,7 +9,7 @@ import asyncio
 
 from ..core_net_configs import RepeaterDebugMode
 
-get_namespace = on_command('getNamespace', aliases={'gs', 'get_namespace', 'Get_Namespace', 'GetNamespace'}, rule=to_me(), block=True)
+get_namespace = on_command("getNamespace", aliases={"gs", "get_namespace", "Get_Namespace", "GetNamespace"}, rule=to_me(), block=True)
 
 from ..assist import get_first_mentioned_user, PersonaInfo, Namespace
 
@@ -20,10 +20,10 @@ async def handle_get_namespace(bot: Bot, event: MessageEvent, args: Message = Co
     reply = persona_info.reply
 
     if RepeaterDebugMode:
-        await get_namespace.finish(reply + f'[Chat.Get_Namespace|{persona_info.namespace_str}]')
+        await get_namespace.finish(reply + f"[Chat.Get_Namespace|{persona_info.namespace_str}]")
     else:
         mentioned_id = get_first_mentioned_user(event)
         if mentioned_id is None:
-            await get_namespace.finish(reply + f'====Chat.Get_Namespace====\n> {persona_info.namespace_str}')
+            await get_namespace.finish(reply + f"====Chat.Get_Namespace====\n> {persona_info.namespace_str}")
         else:
-            await get_namespace.finish(reply + f'====Chat.Get_Namespace====\n> {Namespace(mentioned_id).namespace}')
+            await get_namespace.finish(reply + f"====Chat.Get_Namespace====\n> {Namespace(mentioned_id).namespace}")

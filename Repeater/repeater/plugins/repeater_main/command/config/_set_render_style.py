@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import ConfigCore
 from ...assist import PersonaInfo, SendMsg
 
-set_render_style = on_command('setRenderStyle', aliases={'srs', 'set_render_style', 'Set_Render_Style', 'SetRenderStyle'}, rule=to_me(), block=True)
+set_render_style = on_command("setRenderStyle", aliases={"srs", "set_render_style", "Set_Render_Style", "SetRenderStyle"}, rule=to_me(), block=True)
 
 @set_render_style.handle()
 async def handle_set_render_style(bot: Bot, event: MessageEvent, args: Message = CommandArg()):

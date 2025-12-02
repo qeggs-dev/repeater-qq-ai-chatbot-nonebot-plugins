@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import ConfigCore
 from ...assist import PersonaInfo, SendMsg
 
-set_default_model_type = on_command('setDefaultModel', aliases={'sdm', 'set_default_model', 'Set_Default_Model', 'SetDefaultModel'}, rule=to_me(), block=True)
+set_default_model_type = on_command("setDefaultModel", aliases={"sdm", "set_default_model", "Set_Default_Model", "SetDefaultModel"}, rule=to_me(), block=True)
 
 @set_default_model_type.handle()
 async def handle_set_default_model_type(bot: Bot, event: MessageEvent, args: Message = CommandArg()):

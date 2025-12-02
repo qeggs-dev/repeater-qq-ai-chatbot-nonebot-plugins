@@ -13,7 +13,7 @@ from nonebot.params import (
 )
 from ...assist import PersonaInfo, MessageSource, SendMsg
 
-recent_speaking_ranking = on_command("recentSpeakingRanking", aliases={"rsr",'recent_speaking_ranking', 'Recent_Speaking_Ranking', 'RecentSpeakingRanking'}, rule=to_me(), block=True)
+recent_speaking_ranking = on_command("recentSpeakingRanking", aliases={"rsr","recent_speaking_ranking", "Recent_Speaking_Ranking", "RecentSpeakingRanking"}, rule=to_me(), block=True)
 
 @recent_speaking_ranking.handle()
 async def recent_speaking_ranking_handle(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
@@ -63,7 +63,7 @@ async def recent_speaking_ranking_handle(bot: Bot, event: MessageEvent, args: Me
         sendmsg.add_prefix("====More.Recent_Speaking_Ranking====\n")
         if validation_failure_counter > 0:
             await sendmsg.send_warning(f"Warning: There are {validation_failure_counter} message verification failures.\n")
-        line_count = text.count('\n') + 1
+        line_count = text.count("\n") + 1
         
         if line_count > 10:
             await sendmsg.send_render(text)

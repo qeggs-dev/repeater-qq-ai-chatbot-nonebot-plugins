@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import PromptCore
 from ...assist import PersonaInfo, SendMsg
 
-delprompt = on_command('deletePrompt', aliases={'dp', 'delete_prompt', 'Delete_Prompt', 'DeletePrompt'}, rule=to_me(), block=True)
+delprompt = on_command("deletePrompt", aliases={"dp", "delete_prompt", "Delete_Prompt", "DeletePrompt"}, rule=to_me(), block=True)
 
 @delprompt.handle()
 async def handle_delete_prompt(bot: Bot, event: MessageEvent, args: Message = CommandArg()):

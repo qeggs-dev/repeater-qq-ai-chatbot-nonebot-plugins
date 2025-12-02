@@ -40,10 +40,10 @@ class ConfigCore:
                 raise TypeError(f"Unsupported type: {item_type}")
         logger.info("Set config: {config_key} = {value}({item_type})", config_key=config_key, value=value, item_type=item_type)
         response = await self._httpx_client.put(
-            f'{SET_CONFIG_ROUTE}/{self._info.namespace_str}/{item_type}',
+            f"{SET_CONFIG_ROUTE}/{self._info.namespace_str}/{item_type}",
             data={
-                'key': config_key,
-                'value': value
+                "key": config_key,
+                "value": value
             }
         )
         try:
@@ -64,7 +64,7 @@ class ConfigCore:
         response = await self._httpx_client.put(
             url = f"{CHANGE_CONFIG_BRANCH_ROUTE}/{self._info.namespace_str}",
             data = {
-                'new_branch_id': branch_id
+                "new_branch_id": branch_id
             }
         )
         return Response(
@@ -78,7 +78,7 @@ class ConfigCore:
     async def get_config(self, config_key: str) -> Response[Any]:
         logger.info("Get config: {config_key}", config_key=config_key)
         response = await self._httpx_client.get(
-            f'{GET_CONFIG_ROUTE}/{self._info.namespace_str}'
+            f"{GET_CONFIG_ROUTE}/{self._info.namespace_str}"
         )
         try:
             data = response.json()
@@ -96,7 +96,7 @@ class ConfigCore:
     async def remove_config_key(self, config_key: str) -> Response[None]:
         logger.info("Remove config key: {config_key}", config_key=config_key)
         response = await self._httpx_client.delete(
-            f'{REMOVE_CONFIG_KEY_ROUTE}/{self._info.namespace_str}/{config_key}'
+            f"{REMOVE_CONFIG_KEY_ROUTE}/{self._info.namespace_str}/{config_key}"
         )
         return Response(
             code = response.status_code,
@@ -108,7 +108,7 @@ class ConfigCore:
     async def delete_config(self) -> Response[None]:
         logger.info("Delete config")
         response = await self._httpx_client.delete(
-            f'{DELETE_CONFIG_ROUTE}/{self._info.namespace_str}'
+            f"{DELETE_CONFIG_ROUTE}/{self._info.namespace_str}"
         )
         return Response(
             code = response.status_code,

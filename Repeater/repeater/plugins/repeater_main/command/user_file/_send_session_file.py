@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import UserFileCore
 from ...assist import PersonaInfo, FileSender, SendMsg
 
-send_user_data_file = on_command('sendUserDataFile', aliases={'sudf', 'send_user_data_file', 'Send_User_Data_File', 'SendUserDataFile'}, rule=to_me(), block=True)
+send_user_data_file = on_command("sendUserDataFile", aliases={"sudf", "send_user_data_file", "Send_User_Data_File", "SendUserDataFile"}, rule=to_me(), block=True)
 
 @send_user_data_file.handle()
 async def handle_send_user_data_file(bot: Bot, event: MessageEvent):

@@ -157,15 +157,15 @@ class ChatCore:
             "save_context": save_context,
         }
         if model_uid:
-            data['model_uid'] = model_uid
+            data["model_uid"] = model_uid
         if role_name:
-            data['role_name'] = role_name
+            data["role_name"] = role_name
         elif storage_config.merge_group_id:
-            data['role_name'] = self._persona_info.nickname
+            data["role_name"] = self._persona_info.nickname
         if reference_context_id:
-            data['reference_context_id'] = reference_context_id
+            data["reference_context_id"] = reference_context_id
         if stream:
-            data['stream'] = stream
+            data["stream"] = stream
         if message:
             message_buffer:list[str] = []
             if add_metadata:
@@ -180,7 +180,7 @@ class ChatCore:
                     message_buffer.append(">     Guest Mode(User: {username}), Citation context is turned on!!")
                 message_buffer.append("\n---\n")
             message_buffer.append(message)
-            data['message'] = "\n".join(message_buffer)
+            data["message"] = "\n".join(message_buffer)
         return data
     
     async def text_render(self, text: str) -> RendedImage:
@@ -189,7 +189,7 @@ class ChatCore:
     async def content_render(self, content: str, reasoning_content: str = "") -> RendedImage:
         text = ""
         if reasoning_content:
-            text += ("> " + reasoning_content.replace('\n', '\n> ') + "\n\n---\n\n")
+            text += ("> " + reasoning_content.replace("\n", "\n> ") + "\n\n---\n\n")
         text += content
 
         return await self.text_render(text)

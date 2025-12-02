@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import ConfigCore
 from ...assist import PersonaInfo, SendMsg
 
-set_temperature = on_command('setTemperature', aliases={'st', 'set_temperature', 'Set_Temperature', 'SetTemperature'}, rule=to_me(), block=True)
+set_temperature = on_command("setTemperature", aliases={"st", "set_temperature", "Set_Temperature", "SetTemperature"}, rule=to_me(), block=True)
 
 @set_temperature.handle()
 async def handle_set_temperature(bot: Bot, event: MessageEvent, args: Message = CommandArg()):

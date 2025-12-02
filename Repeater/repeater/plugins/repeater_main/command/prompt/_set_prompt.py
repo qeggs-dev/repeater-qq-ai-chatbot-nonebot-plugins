@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import PromptCore
 from ...assist import PersonaInfo, SendMsg
 
-setprompt = on_command('setPrompt', aliases={'sp', 'set_prompt', 'Set_Prompt', 'SetPrompt'}, rule=to_me(), block=True)
+setprompt = on_command("setPrompt", aliases={"sp", "set_prompt", "Set_Prompt", "SetPrompt"}, rule=to_me(), block=True)
 
 
 @setprompt.handle()
@@ -23,4 +23,4 @@ async def handle_setprompt(bot: Bot, event: MessageEvent, args: Message = Comman
         await sendmsg.send_debug_mode()
     else:
         response = await prompt_core.set_prompt(msg)
-        await sendmsg.send_response(response, f"Set Prompt{'successfully' if response.code == 200 else 'failed'}")
+        await sendmsg.send_response(response, f"Set Prompt{"successfully" if response.code == 200 else "failed"}")

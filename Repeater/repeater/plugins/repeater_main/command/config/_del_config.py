@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import ConfigCore
 from ...assist import PersonaInfo, SendMsg
 
-del_config = on_command('delConfig', aliases={'dcfg', 'delete_config', 'Delete_Config', 'DeleteConfig'}, rule=to_me(), block=True)
+del_config = on_command("delConfig", aliases={"dcfg", "delete_config", "Delete_Config", "DeleteConfig"}, rule=to_me(), block=True)
 
 @del_config.handle()
 async def handle_del_config(bot: Bot, event: MessageEvent):

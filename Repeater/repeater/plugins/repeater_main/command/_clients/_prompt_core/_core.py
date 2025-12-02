@@ -21,9 +21,9 @@ class PromptCore:
     async def set_prompt(self, prompt: str) -> Response[None]:
         logger.info("Setting prompt")
         response = await self._httpx_client.put(
-            f'{SET_PROMPT_ROUTE}/{self._info.namespace_str}',
+            f"{SET_PROMPT_ROUTE}/{self._info.namespace_str}",
             data={
-                'prompt': prompt
+                "prompt": prompt
             }
         )
         return Response(
@@ -37,7 +37,7 @@ class PromptCore:
     async def delete_prompt(self) -> Response[None]:
         logger.info("Deleting prompt")
         response = await self._httpx_client.delete(
-            f'{DELETE_PROMPT_ROUTE}/{self._info.namespace_str}'
+            f"{DELETE_PROMPT_ROUTE}/{self._info.namespace_str}"
         )
         return Response(
             code = response.status_code,
@@ -48,8 +48,8 @@ class PromptCore:
     async def delete_subprompt(self) -> Response[None]:
         logger.info("Deleting subprompt")
         response = await self._httpx_client.delete(
-            f'{DELETE_SUBSESSION_PROMPT_ROUTE}',
-            params={'session_id': self._info.namespace_str}
+            f"{DELETE_SUBSESSION_PROMPT_ROUTE}",
+            params={"session_id": self._info.namespace_str}
         )
         return Response(
             code = response.status_code,
@@ -62,9 +62,9 @@ class PromptCore:
     async def change_prompt_branch(self, new_branch_id: str) -> Response[None]:
         logger.info("Changing prompt branch")
         response = await self._httpx_client.put(
-            f'{CHANGE_PROMPT_BRANCH_ROUTE}/{self._info.namespace_str}',
+            f"{CHANGE_PROMPT_BRANCH_ROUTE}/{self._info.namespace_str}",
             data={
-                'new_branch_id': new_branch_id
+                "new_branch_id": new_branch_id
             }
         )
         return Response(

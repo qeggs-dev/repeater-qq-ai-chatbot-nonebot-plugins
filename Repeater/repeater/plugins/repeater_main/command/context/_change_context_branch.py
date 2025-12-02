@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import ContextCore
 from ...assist import PersonaInfo, SendMsg
 
-change_context_branch = on_command('changeContextBranch', aliases={'ccb', 'change_context_branch', 'Change_Context_Branch', 'ChangeContextBranch'}, rule=to_me(), block=True)
+change_context_branch = on_command("changeContextBranch", aliases={"ccb", "change_context_branch", "Change_Context_Branch", "ChangeContextBranch"}, rule=to_me(), block=True)
 
 @change_context_branch.handle()
 async def handle_change_context_branch(bot: Bot, event: MessageEvent, args: Message = CommandArg()):

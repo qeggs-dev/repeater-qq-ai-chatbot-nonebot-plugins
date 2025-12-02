@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import ContextCore
 from ...assist import PersonaInfo, SendMsg
 
-delcontext = on_command('deleteContext', aliases={'dc', 'delete_context', 'Delete_Context', 'DeleteContext'}, rule=to_me(), block=True)
+delcontext = on_command("deleteContext", aliases={"dc", "delete_context", "Delete_Context", "DeleteContext"}, rule=to_me(), block=True)
 
 @delcontext.handle()
 async def handle_delete_context(bot: Bot, event: MessageEvent, args: Message = CommandArg()):

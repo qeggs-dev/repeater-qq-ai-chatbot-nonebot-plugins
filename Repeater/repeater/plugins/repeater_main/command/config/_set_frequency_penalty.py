@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import ConfigCore
 from ...assist import PersonaInfo, SendMsg
 
-set_frequency_penalty = on_command('setFrequencyPenalty', aliases={'sfp', 'set_frequency_penalty', 'Set_Frequency_Penalty', 'SetFrequencyPenalty'}, rule=to_me(), block=True)
+set_frequency_penalty = on_command("setFrequencyPenalty", aliases={"sfp", "set_frequency_penalty", "Set_Frequency_Penalty", "SetFrequencyPenalty"}, rule=to_me(), block=True)
 
 @set_frequency_penalty.handle()
 async def handle_set_frequency_penalty(bot: Bot, event: MessageEvent, args: Message = CommandArg()):

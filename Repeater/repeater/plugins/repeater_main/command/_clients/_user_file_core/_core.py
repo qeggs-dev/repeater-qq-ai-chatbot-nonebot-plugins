@@ -15,5 +15,5 @@ class UserFileCore:
     # region get_utl
     async def get_user_data_file_url(self):
         logger.info("Get user data file url", module = "user_file.core")
-        return f'{DOWNLOAD_USER_DATA_FILE_ROUTE}/{self._info.namespace_str}.zip'
+        return f"{DOWNLOAD_USER_DATA_FILE_ROUTE}/{self._info.namespace_str}.zip"
     # endregion

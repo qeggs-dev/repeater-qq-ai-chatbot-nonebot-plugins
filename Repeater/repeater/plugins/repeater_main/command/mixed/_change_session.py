@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import ContextCore, PromptCore, ConfigCore
 from ...assist import PersonaInfo, SendMsg
 
-change_session = on_command('changeSession', aliases={'cs', 'change_session', 'Change_Session', 'ChangeSession'}, rule=to_me(), block=True)
+change_session = on_command("changeSession", aliases={"cs", "change_session", "Change_Session", "ChangeSession"}, rule=to_me(), block=True)
 
 @change_session.handle()
 async def handle_change_session(bot: Bot, event: MessageEvent, args: Message = CommandArg()):

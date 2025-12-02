@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import ConfigCore
 from ...assist import PersonaInfo, SendMsg
 
-set_top_p = on_command('setTopP', aliases={'stp', 'set_top_p', 'Set_Top_P', 'SetTopP'}, rule=to_me(), block=True)
+set_top_p = on_command("setTopP", aliases={"stp", "set_top_p", "Set_Top_P", "SetTopP"}, rule=to_me(), block=True)
 
 @set_top_p.handle()
 async def handle_set_top_p(bot: Bot, event: MessageEvent, args: Message = CommandArg()):

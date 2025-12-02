@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import ConfigCore
 from ...assist import PersonaInfo, SendMsg
 
-set_max_tokens = on_command('setMaxTokens', aliases={'smt', 'set_max_tokens', 'Set_Max_Tokens', 'SetMaxTokens'}, rule=to_me(), block=True)
+set_max_tokens = on_command("setMaxTokens", aliases={"smt", "set_max_tokens", "Set_Max_Tokens", "SetMaxTokens"}, rule=to_me(), block=True)
 
 @set_max_tokens.handle()
 async def handle_set_max_tokens(bot: Bot, event: MessageEvent, args: Message = CommandArg()):

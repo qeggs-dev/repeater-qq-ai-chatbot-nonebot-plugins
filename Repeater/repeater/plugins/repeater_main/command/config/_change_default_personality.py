@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import ConfigCore
 from ...assist import PersonaInfo, SendMsg
 
-change_default_personality = on_command('changeDefaultPersonality', aliases={'cdp', 'change_default_personality', 'Change_Default_Personality', 'ChangeDefaultPersonality'}, rule=to_me(), block=True)
+change_default_personality = on_command("changeDefaultPersonality", aliases={"cdp", "change_default_personality", "Change_Default_Personality", "ChangeDefaultPersonality"}, rule=to_me(), block=True)
 
 @change_default_personality.handle()
 async def handle_change_default_personality(bot: Bot, event: MessageEvent, args: Message = CommandArg()):

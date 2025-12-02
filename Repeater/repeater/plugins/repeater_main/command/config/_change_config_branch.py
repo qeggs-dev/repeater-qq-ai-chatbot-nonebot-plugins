@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import ConfigCore
 from ...assist import PersonaInfo, SendMsg
 
-change_config_branch = on_command('changeConfigBranch', aliases={'ccfgb', 'change_config_branch', 'Change_Config_Branch', 'ChangeConfigBranch'}, rule=to_me(), block=True)
+change_config_branch = on_command("changeConfigBranch", aliases={"ccfgb", "change_config_branch", "Change_Config_Branch", "ChangeConfigBranch"}, rule=to_me(), block=True)
 
 @change_config_branch.handle()
 async def handle_change_config_branch(bot: Bot, event: MessageEvent, args: Message = CommandArg()):

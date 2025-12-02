@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import ContextCore, PromptCore, ConfigCore
 from ...assist import PersonaInfo, SendMsg
 
-delsession = on_command('delSession', aliases={'ds', 'delete_session', 'Delete_Session', 'DeleteSession'}, rule=to_me(), block=True)
+delsession = on_command("delSession", aliases={"ds", "delete_session", "Delete_Session", "DeleteSession"}, rule=to_me(), block=True)
 
 @delsession.handle()
 async def handle_delete_session(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
