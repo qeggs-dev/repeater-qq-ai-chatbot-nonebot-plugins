@@ -656,6 +656,9 @@ class SendMsg:
     
     @staticmethod
     def text_length_score(text:str) -> float:
+        if not text:
+            return 0.0
+        
         lines = text.splitlines()
         line_lengths = np.array([len(line) for line in lines], dtype=np.int64)
         lines_score = len(lines) / storage_config.text_length_score_configs.max_lines
