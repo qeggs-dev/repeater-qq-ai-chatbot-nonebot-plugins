@@ -15,6 +15,8 @@ class ChatTTSAPI:
             data={
                 **api_args,
                 "text": text,
+                "skip_refine": 1 if tts_config.api_args.skip_refine else 0,
+                "is_stream": 1 if tts_config.api_args.is_stream else 0,
             },
         )
 

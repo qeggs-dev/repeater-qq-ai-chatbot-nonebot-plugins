@@ -12,8 +12,8 @@ class API_ARGS(BaseModel):
     refine_max_new_token: int = 384
     infer_max_new_token: int = 2048
     text_seed: int = 42
-    skip_refine: Literal[1, 0] = 1
-    is_stream: Literal[1, 0] = 0
+    skip_refine: bool = True
+    is_stream: bool = False
     custom_voice: int = 0
     
 
