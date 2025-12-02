@@ -12,7 +12,7 @@ from nonebot.params import (
     Arg
 )
 
-reply_echo = on_command("replyEcho", aliases={'recho', 'reply_echo', 'Reply_Echo'}, rule=to_me(), block=True)
+reply_echo = on_command("replyEcho", aliases={"recho", "reply_echo", "Reply_Echo"}, rule=to_me(), block=True)
 
 @reply_echo.handle()
 async def reply_echo_handle(matcher: Matcher, args: Message = CommandArg()):
@@ -20,7 +20,7 @@ async def reply_echo_handle(matcher: Matcher, args: Message = CommandArg()):
         matcher.set_arg("reply_echo_text", args)
 
 @reply_echo.got("reply_echo_text", prompt="[Echo] Waiting for input...")
-async def reply_echo_got_text(event: MessageEvent, args: Message = Arg('reply_echo_text')):
+async def reply_echo_got_text(event: MessageEvent, args: Message = Arg("reply_echo_text")):
     reply = MessageSegment.reply(event.message_id) # 获取回复消息头
     if isinstance(args, Message):
         # 如果是消息对象，则直接返回
