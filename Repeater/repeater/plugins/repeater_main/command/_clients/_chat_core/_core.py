@@ -7,7 +7,7 @@ from typing import (
 import httpx
 from ._response_body import ChatResponse, StreamChatChunkResponse
 from ....exit_register import ExitRegister
-from ....assist import PersonaInfo, TextRender, RendedImage, Response
+from ....assist import PersonaInfo, RendedImage, Response
 
 from ....core_net_configs import *
 
@@ -21,7 +21,6 @@ class ChatCore:
         self._persona_info = persona_info
         self._namespace = namespace
         self._public_space_chat: bool = public_space_chat
-        self._text_render = TextRender(namespace = self.namespace)
     
     @property
     def namespace(self) -> str:
@@ -184,17 +183,6 @@ class ChatCore:
             message_buffer.append(message)
             data["message"] = "\n".join(message_buffer)
         return data
-    
-    async def text_render(self, text: str) -> RendedImage:
-        return await self._text_render.render(text)
-    
-    async def content_render(self, content: str, reasoning_content: str = "") -> RendedImage:
-        text = ""
-        if reasoning_content:
-            text += ("> " + reasoning_content.replace("\n", "\n> ") + "\n\n---\n\n")
-        text += content
-
-        return await self.text_render(text)
     
     exit_register.register()
     async def close(self):

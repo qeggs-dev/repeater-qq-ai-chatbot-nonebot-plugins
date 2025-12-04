@@ -1,6 +1,6 @@
 from nonebot.adapters.onebot.v11 import MessageSegment, Message
 from nonebot.internal.matcher.matcher import Matcher
-from ....assist import PersonaInfo, MessageSource, Response, TextRender, SendMsg as BaseSendMsg
+from ....assist import PersonaInfo, MessageSource, Response, SendMsg as BaseSendMsg
 from ._response_body import ChatResponse
 from ....chattts import ChatTTSAPI
 from typing import NoReturn
@@ -19,7 +19,6 @@ class Send_msg(BaseSendMsg):
         ):
         super().__init__(f"Chat.{component}", matcher, persona_info)
         self._response: Response[ChatResponse] = response
-        self._text_render = TextRender(namespace = self._persona_info.namespace)
         self._chat_tts_api = ChatTTSAPI()
     
     async def _send_error_message(self):
