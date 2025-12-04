@@ -16,7 +16,7 @@ class RendedImage(BaseModel):
 class TextRender:
     _client = httpx.AsyncClient()
 
-    def __init__(self, namespace: str | Namespace):
+    def __init__(self, namespace: str | Namespace, timeout:float = 60.0):
         self.url = f"{BACKEND_HOST}:{BACKEND_PORT}"
         if isinstance(namespace, str):
             self.namespce = namespace
@@ -24,11 +24,13 @@ class TextRender:
             self.namespce = namespace.namespace
         else:
             raise TypeError(f"namespace must be str or Namespace, not {type(namespace)}")
+        self._timeout = timeout
 
     async def render(self, text: str) -> Response[RendedImage]:
         response = await self._client.post(
             f"{TEXT_RENDER_ROUTE}/{self.namespce}",
-            json={"text": text}
+            json={"text": text},
+            timeout = self._timeout
         )
         try:
             response_json:dict = response.json()

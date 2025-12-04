@@ -33,7 +33,10 @@ class SendMsg:
         self._component: str = component
         self._persona_info: PersonaInfo = persona_info
         self._matcher: Type[Matcher] = matcher
-        self._text_render = TextRender(namespace = self._persona_info.namespace)
+        self._text_render = TextRender(
+            namespace = self._persona_info.namespace,
+            timeout = storage_config.render_api_timeout
+        )
         self._prefix: Message = Message()
         self._chat_tts_api = ChatTTSAPI()
     
