@@ -8,7 +8,7 @@ from nonebot.params import (
     ArgPlainText,
     Arg
 )
-from ...assist import PersonaInfo, MessageSource, SendMsg, TextRender
+from ...assist import PersonaInfo, MessageSource, SendMsg
 
 choose_group_member = on_command("chooseGroupMember", aliases={"cgm","choose_group_member", "Choose_Group_Member", "ChooseGroupMember"}, rule=to_me(), block=True)
 
