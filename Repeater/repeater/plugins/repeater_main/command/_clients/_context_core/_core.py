@@ -90,9 +90,9 @@ class ContextCore:
             f"{GET_CONTEXT_LENGTH_ROUTE}/{self._info.namespace_str}"
         )
         return Response(
-            status_code = response.status_code,
-            response_text = response.text,
-            response_body = ContextTotalLengthResponse(
+            code = response.status_code,
+            text = response.text,
+            data = ContextTotalLengthResponse(
                 **response.json()
             ) if response.status_code == 200 else None
         )
