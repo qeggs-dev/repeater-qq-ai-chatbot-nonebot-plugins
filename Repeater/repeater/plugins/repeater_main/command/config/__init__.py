@@ -8,6 +8,7 @@ from ._set_presence_penalty import handle_set_presence_penalty
 from ._change_default_personality import handle_change_default_personality
 from ._del_config import handle_del_config
 from ._set_render_style import handle_set_render_style
+from ._set_render_title import handle_set_render_title
 from ._change_config_branch import handle_change_config_branch
 from ._set_max_tokens import handle_set_max_tokens
 from ._set_top_p import handle_set_top_p
@@ -23,6 +24,7 @@ __all__ = [
     "handle_change_default_personality",
     "handle_del_config",
     "handle_set_render_style",
+    "handle_set_render_title",
     "handle_change_config_branch",
     "handle_set_max_tokens",
     "handle_set_top_p",
