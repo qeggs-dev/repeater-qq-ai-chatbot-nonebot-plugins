@@ -22,6 +22,7 @@ class StorageConfigs(BaseModel):
     hello_content: str = "Repeater Is Ready!"
     welcome_messages_by_weekday: dict[int | str, str] = Field(default_factory=dict, max_length=7)
     merge_group_id: bool = False
+    render_api_timeout:float = 600.0
 
 loader: Loader[StorageConfigs] = Loader(
     model=StorageConfigs,
