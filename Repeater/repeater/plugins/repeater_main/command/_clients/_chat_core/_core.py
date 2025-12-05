@@ -7,7 +7,7 @@ from typing import (
 import httpx
 from ._response_body import ChatResponse, StreamChatChunkResponse
 from ....exit_register import ExitRegister
-from ....assist import PersonaInfo, RendedImage, Response
+from ....assist import PersonaInfo, Response
 
 from ....core_net_configs import *
 
