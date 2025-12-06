@@ -14,7 +14,7 @@ from ....core_net_configs import *
 exit_register = ExitRegister()
 
 class ChatCore:
-    _chat_client = httpx.AsyncClient(timeout=600.0)
+    _chat_client = httpx.AsyncClient(timeout=storage_configs.server_api_timeout.chat)
     _client = httpx.AsyncClient()
     
     def __init__(self, persona_info: PersonaInfo, public_space_chat: bool = False, namespace: str | None = None):
@@ -161,7 +161,7 @@ class ChatCore:
             data["model_uid"] = model_uid
         if role_name is not None:
             data["role_name"] = role_name
-        elif storage_config.merge_group_id:
+        elif storage_configs.merge_group_id:
             data["role_name"] = self._persona_info.nickname
         if reference_context_id:
             data["reference_context_id"] = reference_context_id
@@ -175,7 +175,7 @@ class ChatCore:
                 message_buffer.append(">     Message Sending time:{time}")
                 if enable_md_prompt:
                     message_buffer.append(">     Markdown Rendering is turned on!!")
-                if storage_config.merge_group_id:
+                if storage_configs.merge_group_id:
                     message_buffer.append(">     Now User: {username}({nickname})")
                 if reference_context_id:
                     message_buffer.append(">     Guest Mode(User: {username}), Citation context is turned on!!")

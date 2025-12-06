@@ -1,6 +1,6 @@
 # 服务端配置
 from ._net_config import net_config
-from ._storage_configs import storage_config
+from ._storage_configs import storage_configs
 
 # ==== CHAT API ==== #
 BACKEND_HOST = net_config.backend_host
@@ -54,6 +54,6 @@ BALANCE_ROUTE = f"{BACKEND_HOST}:{BACKEND_PORT}/balance_query"
 VARIABLE_EXPANSION = f"{BACKEND_HOST}:{BACKEND_PORT}/userdata/variable/expand"
 
 # ==== CONFIG ==== #
-HELLO_CONTENT = storage_config.hello_content
+HELLO_CONTENT = storage_configs.hello_content
 RepeaterDebugMode = net_config.repeater_debug_mode # 是否开启调试模式，调试模式下，将直接返回消息内容，而不进行后端访问操作
 

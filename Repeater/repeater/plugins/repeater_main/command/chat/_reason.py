@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from .._clients import ChatCore, ChatSendMsg
 from ...assist import PersonaInfo
 from ...logger import logger
-from ...core_net_configs import storage_config
+from ...core_net_configs import storage_configs
 
 reason = on_command("reason", aliases={"r", "Reason"}, rule=to_me(), block=True)
 
@@ -29,7 +29,7 @@ async def reason_handle(bot: Bot, event: MessageEvent, args: Message = CommandAr
     
     response = await chat_core.send_message(
         message = message.extract_plain_text().strip(),
-        model_uid=storage_config.reason_model_uid
+        model_uid=storage_configs.reason_model_uid
     )
     
     send_msg = ChatSendMsg(

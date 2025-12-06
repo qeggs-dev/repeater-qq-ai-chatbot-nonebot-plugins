@@ -14,7 +14,10 @@ class TextLengthScoreConfigs(BaseModel):
     mean_line_max: int = 32
     total_length: int = 400
     threshold: TextLengthScoreThreshold = Field(default_factory = TextLengthScoreThreshold)
-    
+
+class ServerAPITimeout(BaseModel):
+    chat: float = 600.0
+    render: float = 600.0
 
 class StorageConfigs(BaseModel):
     text_length_score_configs: TextLengthScoreConfigs = Field(default_factory = TextLengthScoreConfigs)
@@ -22,11 +25,11 @@ class StorageConfigs(BaseModel):
     hello_content: str = "Repeater Is Ready!"
     welcome_messages_by_weekday: dict[int | str, str] = Field(default_factory=dict, max_length=7)
     merge_group_id: bool = False
-    render_api_timeout:float = 600.0
+    server_api_timeout:ServerAPITimeout = Field(default_factory = ServerAPITimeout)
 
 loader: Loader[StorageConfigs] = Loader(
     model=StorageConfigs,
     path="configs/main_api.json",
     mode=Mode.JSON
 )
-storage_config: StorageConfigs = loader.load(write_on_failure=True)
+storage_configs: StorageConfigs = loader.load(write_on_failure=True)

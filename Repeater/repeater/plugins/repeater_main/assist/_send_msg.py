@@ -1,7 +1,7 @@
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
 from nonebot.internal.matcher.matcher import Matcher
 from nonebot.exception import FinishedException
-from ..core_net_configs import RepeaterDebugMode, storage_config
+from ..core_net_configs import RepeaterDebugMode, storage_configs
 from ._http_code import HTTP_Code
 from ._persona_info import PersonaInfo
 from ._namespace import MessageSource
@@ -35,7 +35,7 @@ class SendMsg:
         self._matcher: Type[Matcher] = matcher
         self._text_render = TextRender(
             namespace = self._persona_info.namespace,
-            timeout = storage_config.render_api_timeout
+            timeout = storage_configs.server_api_timeout.render
         )
         self._prefix: Message = Message()
         self._chat_tts_api = ChatTTSAPI()
@@ -65,21 +65,21 @@ class SendMsg:
     @property
     def hello_content(self) -> str:
         now = datetime.now()
-        if len(storage_config.welcome_messages_by_weekday) == 0:
-            return storage_config.hello_content
+        if len(storage_configs.welcome_messages_by_weekday) == 0:
+            return storage_configs.hello_content
         weekday = now.weekday() + 1
         weekday_str = now.strftime("%A")
         weekday_abridge = now.strftime("%a")
-        if weekday in storage_config.welcome_messages_by_weekday:
-            return storage_config.welcome_messages_by_weekday[weekday]
-        elif str(weekday) in storage_config.welcome_messages_by_weekday:
-            return storage_config.welcome_messages_by_weekday[str(weekday)]
-        elif weekday_str in storage_config.welcome_messages_by_weekday:
-            return storage_config.welcome_messages_by_weekday[weekday_str]
-        elif weekday_abridge in storage_config.welcome_messages_by_weekday:
-            return storage_config.welcome_messages_by_weekday[weekday_abridge]
+        if weekday in storage_configs.welcome_messages_by_weekday:
+            return storage_configs.welcome_messages_by_weekday[weekday]
+        elif str(weekday) in storage_configs.welcome_messages_by_weekday:
+            return storage_configs.welcome_messages_by_weekday[str(weekday)]
+        elif weekday_str in storage_configs.welcome_messages_by_weekday:
+            return storage_configs.welcome_messages_by_weekday[weekday_str]
+        elif weekday_abridge in storage_configs.welcome_messages_by_weekday:
+            return storage_configs.welcome_messages_by_weekday[weekday_abridge]
         else:
-            return storage_config.hello_content
+            return storage_configs.hello_content
     
     @overload
     async def send_debug_mode(
@@ -664,10 +664,10 @@ class SendMsg:
         
         lines = text.splitlines()
         line_lengths = np.array([len(line) for line in lines], dtype=np.int64)
-        lines_score = len(lines) / storage_config.text_length_score_configs.max_lines
-        single_line_score = line_lengths.max() / storage_config.text_length_score_configs.single_line_max
-        mean_line_score = line_lengths.mean() / storage_config.text_length_score_configs.mean_line_max
-        total_length_score = len(text) / storage_config.text_length_score_configs.total_length
+        lines_score = len(lines) / storage_configs.text_length_score_configs.max_lines
+        single_line_score = line_lengths.max() / storage_configs.text_length_score_configs.single_line_max
+        mean_line_score = line_lengths.mean() / storage_configs.text_length_score_configs.mean_line_max
+        total_length_score = len(text) / storage_configs.text_length_score_configs.total_length
 
         return (
             # lines: 33.3%
@@ -684,8 +684,8 @@ class SendMsg:
     @property
     def text_length_score_threshold(self) -> float:
         if self._persona_info.source == MessageSource.GROUP:
-            threshold = storage_config.text_length_score_configs.threshold.group
+            threshold = storage_configs.text_length_score_configs.threshold.group
         else:
-            threshold = storage_config.text_length_score_configs.threshold.private
+            threshold = storage_configs.text_length_score_configs.threshold.private
 
         return threshold
