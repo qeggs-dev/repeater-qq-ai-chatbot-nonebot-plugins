@@ -17,6 +17,10 @@ class TextLengthScoreConfigs(BaseModel):
 
 class ServerAPITimeout(BaseModel):
     chat: float = 600.0
+    context: float = 10.0
+    prompt: float = 10.0
+    config: float = 10.0
+    variable_expansion: float = 40.0
     render: float = 600.0
 
 class StorageConfigs(BaseModel):

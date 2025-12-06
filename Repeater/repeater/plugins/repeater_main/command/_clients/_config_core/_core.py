@@ -15,7 +15,9 @@ exit_register = ExitRegister()
 logger = base_logger.bind(module = "Config.Core")
 
 class ConfigCore:
-    _httpx_client = httpx.AsyncClient()
+    _httpx_client = httpx.AsyncClient(
+        timeout = storage_configs.server_api_timeout.config
+    )
 
     def __init__(self, info: PersonaInfo):
         self._info = info

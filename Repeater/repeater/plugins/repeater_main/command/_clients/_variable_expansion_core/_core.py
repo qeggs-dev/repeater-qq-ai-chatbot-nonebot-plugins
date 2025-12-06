@@ -10,7 +10,9 @@ from ....assist import PersonaInfo, Response
 from ....logger import logger
 
 class VariableExpansionCore:
-    _httpx_client = httpx.AsyncClient()
+    _httpx_client = httpx.AsyncClient(
+        timeout = storage_configs.server_api_timeout.variable_expansion
+    )
 
     def __init__(self, info: PersonaInfo):
         self._info = info

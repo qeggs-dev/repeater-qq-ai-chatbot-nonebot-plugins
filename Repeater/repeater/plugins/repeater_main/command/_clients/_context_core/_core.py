@@ -16,7 +16,9 @@ from ._response import (
 logger = base_logger.bind(module = "Context.Core")
 
 class ContextCore:
-    _httpx_client = httpx.AsyncClient()
+    _httpx_client = httpx.AsyncClient(
+        timeout = storage_configs.server_api_timeout.context
+    )
 
     def __init__(self, info: PersonaInfo):
         self._info = info

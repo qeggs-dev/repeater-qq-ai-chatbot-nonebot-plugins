@@ -12,7 +12,9 @@ from ....logger import logger as base_logger
 logger = base_logger.bind(module = "Prompt.Core")
 
 class PromptCore:
-    _httpx_client = httpx.AsyncClient()
+    _httpx_client = httpx.AsyncClient(
+        timeout = storage_configs.server_api_timeout.prompt
+    )
 
     def __init__(self, info: PersonaInfo):
         self._info = info
