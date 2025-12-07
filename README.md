@@ -161,6 +161,93 @@ PS: 由于OneBot客户端通常为入站服务，所以默认情况下所有服�
 
 ---
 
+## 模板系统
+
+模板系统的部分由后端定义，请参考后端的README。
+
+---
+
+## 配置文件
+
+main_api.json
+```json
+{
+    // Text Length Score 配置
+    "text_length_score_config":{
+        // 最大长度阈值
+        "max_lines": 5,
+        // 每行最大字符数
+        "single_line_max": 64,
+        // 平均行最大字符数
+        "mean_line_max": 32,
+        // 总字符数
+        "total_length": 400,
+
+        // 评分阈值
+        "threshold": {
+            // 群聊阈值
+            "group": 1.0,
+            // 私聊阈值
+            "private": 2.64
+        }
+    },
+    // 后端推理模型使用的UID
+    "reason_model_uid": "reasoner",
+    // 在仅@且没有任何文本的情况下
+    // 返回的消息内容
+    "hello_content": "Repeater is Online!",
+    // 是hello_content的变种
+    // 这里的Key是星期
+    // Value是星期对应的消息内容
+    "welcome_messages_by_weekday": {
+        "4": "Repeater is Online!\n\n疯狂星期四! ! !\n复读机想要 50,000,000 Token ，求求了（>^< ;)"
+    },
+    // 是否在群聊中让所有人使用同一个User_ID
+    "merge_group_id": false
+}
+```
+配置了一些主要的参数，如文本长度评分、推理模型使用的UID、欢迎消息等。
+
+tts.json
+```json
+{
+    // ChatTTS API 地址
+    "base_url": "http://127.0.0.1:9966",
+    // ChatTTS API 参数
+    "api_args": {
+        // 模型名称
+        "voice": "265.pt",
+        // TTS 语速
+        "speed": 6,
+        // TTS 模型提示词
+        "tts_prompt": "[break_6]",
+        // TTS 模型温度
+        "temperature": 0.2,
+        // TTS 模型Top_P
+        "top_p": 0.701,
+        // TTS 模型Top_K
+        "top_k": 20,
+        // TTS 模型生成的最大优化Token数
+        "refine_max_new_token": 384,
+        // TTS 模型生成最大推理Token数
+        "infer_max_new_token": 2048,
+        // TTS 语速(我不知道为什么会有两个，所以就全都加上了)
+        "text_seed": 42,
+        // 是否跳过输入优化
+        "skip_refine": true,
+        // 是否为流式输出
+        "is_stream": false,
+        // 自定义语音
+        "custom_voice": 0
+    },
+    "timeout": 300.0
+}
+```
+PS：该配置文件是专门用于对接ChatTTS的
+如果不需要TTS功能，该部分可以忽略
+
+---
+
 ## 命令表
 
 | Command                    | Abridge | Full Name                 | Type        | Joined Version | Description                   | Parameter Description                     | Remarks |
@@ -171,7 +258,7 @@ PS: 由于OneBot客户端通常为入站服务，所以默认情况下所有服�
 | `renderChat`               | `rc`    | `RenderChat`              | `CHAT`      | 4.0 Beta       | 渲染Markdown回复               | 自然语言输入                               | 强制渲染图片输出 |
 | `setRenderStyle`           | `srs`   | `SetRenderStyle`          | `CONFIG`    | 4.0 Beta       | 设置渲染样式                   | [渲染样式](#Markdown图片渲染样式)           | 设置Markdown图片渲染样式 |
 | `npChat`                   | `np`    | `NoPromptChat`            | `CHAT`      | 4.0 Beta       | 不加载提示词进行对话            | 自然语言输入                               | 使用常规模型 |
-| `reason`                   | `r`     | `Reason`                  | `CHAT`      | 4.0 Beta       | 使用Reasoner模型进行推理        | 自然语言输入                               | 调用模型由`reason_model_uid`字段控制，默认`deepseek-reasoner` |
+| `reason`                   | `r`     | `Reason`                  | `CHAT`      | 4.0 Beta       | 使用Reasoner模型进行推理        | 自然语言输入                               | 调用模型由`reason_model_uid`字段控制，默认`reasoner` |
 | `recomplete`               | `rcm`   | `Recomplete`              | `CHAT`      | 4.0 Beta       | 重新进行对话补全                | 无                                        | 重新生成 |
 | `setFrequencyPenalty`      | `sfp`   | `SetFrequencyPenalty`     | `CONFIG`    | 4.0 Beta       | 设置频率惩罚                   | `-2`\~`2`的浮点数 或`-200%`\~`200%`的百分比 | 控制着模型输出重复相同内容的可能性 |
 | `setPresencePenalty`       | `spp`   | `SetPresencePenalty`      | `CONFIG`    | 4.0 Beta       | 设置存在惩罚                   | `-2`\~`2`的浮点数 或`-200%`\~`200%`的百分比 | 控制着模型谈论新主题的可能性 |
@@ -201,6 +288,12 @@ PS: 由于OneBot客户端通常为入站服务，所以默认情况下所有服�
 | `changeSession`            | `cs`    | `ChangeSession`           | `MIXED`     | 4.2.5.1        | 让所有的数据同时切换到一个分支   | 分支名称                                  | 让`Context`、`Prompt`、`Config`同时切换到一个分支 |
 | `noSaveChat`               | `nsc`   | `NoSaveChat`              | `CHAT`      | 4.2.6.6        | 不保存的聊天对话                | 无                                        | 聊天后不保存最新聊天记录 |
 | `summaryChatRecord`        | `scr`   | `SummaryChatRecord`       | `OTHER`     | 4.2.6.6        | 聊天记录总结                    | 整数，传入的消息数量                       | 获取当前群聊内指定数量的聊天记录摘要 |
+| `varExpandText`            | `vet`   | `Var_Expand_Text`         | `VAREXPAND` | 4.2.7.0        | 变量展开                       | 文本模板(使用大括号作为[变量](#变量表)标记)  | 强制使用文本输出 |
+| `varExpandImage`           | `vei`   | `Var_Expand_Image`        | `VAREXPAND` | 4.2.7.0        | 变量展开                       | 渲染模板(使用花括号作为[变量](#变量表)标记)  | 强制使用图片输出 |
+| `setAutoLoadPrompt`        | `salp`  | `SetAutoLoadPrompt`       | `CONFIG`    | 4.3.1.0        | 设置自动加载提示词              | `true`或`false`                           | 设置请求时是否自动加载Prompt |
+| `setAutoSaveContext`       | `sasc`  | `SetAutoSaveContext`      | `CONFIG`    | 4.3.1.0        | 设置自动保存上下文              | `true`或`false`                           | 设置生成完毕后是否自动保存Context |
+| `setRenderTitle`           | `srt`   | `SetRenderTitle`          | `CONFIG`    | 4.3.2.1        | 设置渲染标题                   | 任意文本                                   | 渲染时显示的标题内容 |
+| `setTimezone`              | `stz`   | `SetTimezone`             | `CONFIG`    | 4.3.3.3        | 设置时区                       | UTC偏移量(如 `8.0`)                        | 暂不支持时区名      |
 
 ## 相关仓库
 - [Repeater Backend](https://github.com/qeggs-dev/repeater-ai-chatbot-backend)
