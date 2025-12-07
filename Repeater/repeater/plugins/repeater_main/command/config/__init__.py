@@ -11,6 +11,7 @@ from ._set_render_style import handle_set_render_style
 from ._set_render_title import handle_set_render_title
 from ._change_config_branch import handle_change_config_branch
 from ._set_max_tokens import handle_set_max_tokens
+from ._set_timezone import handle_set_timezone
 from ._set_top_p import handle_set_top_p
 
 __all__ = [
@@ -27,5 +28,6 @@ __all__ = [
     "handle_set_render_title",
     "handle_change_config_branch",
     "handle_set_max_tokens",
+    "handle_set_timezone",
     "handle_set_top_p",
 ]
