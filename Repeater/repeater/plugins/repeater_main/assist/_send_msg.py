@@ -619,7 +619,9 @@ class SendMsg:
                 message = MessageSegment.image(render_response.data.image_url)
             else:
                 await self.send_response(render_response, lambda response: f"Render Error: {response.text}")
-        return message
+            return message
+        else:
+            raise ValueError("Text is empty.")
     
     @overload
     async def _send(
