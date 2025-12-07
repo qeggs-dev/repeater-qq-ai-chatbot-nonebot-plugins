@@ -53,16 +53,18 @@ class Send_msg(BaseSendMsg):
             await self.send_debug_mode()
         else:
             if self._response.code == 200:
-                await self.send_render(
-                    self._response.data.reasoning_content,
-                    reply = True,
-                    continue_handler = True
-                )
-                await self.send_tts(
-                    text or self._response.data.content,
-                    reply = False,
-                    continue_handler = False
-                )
+                if self._response.data.reasoning_content:
+                    await self.send_render(
+                        self._response.data.reasoning_content,
+                        reply = True,
+                        continue_handler = True
+                    )
+                if self._response.data.content:
+                    await self.send_tts(
+                        text or self._response.data.content,
+                        reply = False,
+                        continue_handler = False
+                    )
             else:
                 await self._send_error_message()
             
