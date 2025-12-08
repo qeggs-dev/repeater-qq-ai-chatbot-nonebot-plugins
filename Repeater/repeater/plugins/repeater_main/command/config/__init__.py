@@ -6,6 +6,7 @@ from ._set_temperature import handle_set_temperature
 from ._set_frequency_penalty import handle_set_frequency_penalty
 from ._set_presence_penalty import handle_set_presence_penalty
 from ._change_default_personality import handle_change_default_personality
+from ._set_html_template import handle_set_html_template
 from ._del_config import handle_del_config
 from ._set_render_style import handle_set_render_style
 from ._set_render_title import handle_set_render_title
@@ -24,6 +25,7 @@ __all__ = [
     "handle_set_frequency_penalty",
     "handle_set_presence_penalty",
     "handle_change_default_personality",
+    "handle_set_html_template",
     "handle_del_config",
     "handle_set_render_style",
     "handle_set_render_title",
