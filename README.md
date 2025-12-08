@@ -295,6 +295,7 @@ PS：该配置文件是专门用于对接ChatTTS的
 | `setRenderTitle`           | `srt`   | `SetRenderTitle`          | `CONFIG`    | 4.3.2.1        | 设置渲染标题                   | 任意文本                                   | 渲染时显示的标题内容 |
 | `setTimezone`              | `stz`   | `SetTimezone`             | `CONFIG`    | 4.3.3.3        | 设置时区                       | 时区名称(如`Asia/Shanghai`)                | 请使用确定的时区名称 |
 | `writeUserProfile`         | `wup`   | `WriteUserProfile`        | `CONFIG`    | 4.3.3.6        | 写入用户人设数据                | 任意文本                                   | 该部分会被嵌入到用户提示词中，告诉AI用户的基础设定 |
+| `setHtmlTemplate`          | `sht`   | `SetHtmlTemplate`         | `CONFIG`    | 4.3.3.6        | 设置HTML模板                   | 预设模板名称                               | 可以用于切换Markdown渲染时使用的HTML模板 |
 
 ## 相关仓库
 - [Repeater Backend](https://github.com/qeggs-dev/repeater-ai-chatbot-backend)
