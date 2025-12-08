@@ -13,6 +13,7 @@ from ._change_config_branch import handle_change_config_branch
 from ._set_max_tokens import handle_set_max_tokens
 from ._set_timezone import handle_set_timezone
 from ._set_top_p import handle_set_top_p
+from ._write_user_profile import handle_write_user_profile
 
 __all__ = [
     "handle_set_auto_load_prompt",
@@ -30,4 +31,5 @@ __all__ = [
     "handle_set_max_tokens",
     "handle_set_timezone",
     "handle_set_top_p",
+    "handle_write_user_profile"
 ]
