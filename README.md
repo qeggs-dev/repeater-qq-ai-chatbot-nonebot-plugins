@@ -282,7 +282,7 @@ PS：该配置文件是专门用于对接ChatTTS的
 | `chooseGroupMember`        | `cgm`   | `ChooseGroupMember`       | `OTHER`     | 4.1.2.0        | 抽取群组成员                   | 抽取数量                                   | 抽取群组成员 |
 | `withdraw`                 | `w`     | `Withdraw`                | `CONTEXT`   | 4.2.3.0        | 撤回消息                       | 无                                        | 删除复读机上下文中保存的最新一回合对话 |
 | `recentSpeakingRanking`    | `rsr`   | `RecentSpeakingRanking`   | `OTHER`     | 4.2.3.0        | 最近发言排行                   | 无                                        | 获取群组内最近发言的成员列表 |
-| `setAutoShrinkLength`      | `sasl`  | `SetAutoShrinkLength`     | `CONFIG`    | 4.2.4.0        | 设置自动缩减长度上限            | 整数                                      | 如果你的聊天条数超过该值，系统会尝试自动删除最旧的部分 ||
+| `setAutoShrinkLength`      | `sasl`  | `SetAutoShrinkLength`     | `CONFIG`    | 4.2.4.0        | 设置自动缩减长度上限            | 整数                                      | 如果你的聊天条数超过该值，系统会尝试自动删除最旧的部分 |
 | `deleteSession`            | `ds`    | `DeleteSession`           | `MIXED`     | 4.2.5.0        | 删除所有用户数据               | 无                                        | 删除所有用户数据 |
 | `raw`                      | `raw`   | `Raw`                     | `CHAT`      | 4.2.5.1        | 发送消息且不包含任何元数据      | 自然语言输入                               | 发送消息且不包含任何元数据 |
 | `changeSession`            | `cs`    | `ChangeSession`           | `MIXED`     | 4.2.5.1        | 让所有的数据同时切换到一个分支   | 分支名称                                  | 让`Context`、`Prompt`、`Config`同时切换到一个分支 |
@@ -293,7 +293,8 @@ PS：该配置文件是专门用于对接ChatTTS的
 | `setAutoLoadPrompt`        | `salp`  | `SetAutoLoadPrompt`       | `CONFIG`    | 4.3.1.0        | 设置自动加载提示词              | `true`或`false`                           | 设置请求时是否自动加载Prompt |
 | `setAutoSaveContext`       | `sasc`  | `SetAutoSaveContext`      | `CONFIG`    | 4.3.1.0        | 设置自动保存上下文              | `true`或`false`                           | 设置生成完毕后是否自动保存Context |
 | `setRenderTitle`           | `srt`   | `SetRenderTitle`          | `CONFIG`    | 4.3.2.1        | 设置渲染标题                   | 任意文本                                   | 渲染时显示的标题内容 |
-| `setTimezone`              | `stz`   | `SetTimezone`             | `CONFIG`    | 4.3.3.3        | 设置时区                       | UTC偏移量(如 `8.0`)                        | 暂不支持时区名      |
+| `setTimezone`              | `stz`   | `SetTimezone`             | `CONFIG`    | 4.3.3.3        | 设置时区                       | 时区名称(如`Asia/Shanghai`)                | 请使用确定的时区名称 |
+| `writeUserProfile`         | `wup`   | `WriteUserProfile`        | `CONFIG`    | 4.3.3.6        | 写入用户人设数据                | 任意文本                                   | 该部分会被嵌入到用户提示词中，告诉AI用户的基础设定 |
 
 ## 相关仓库
 - [Repeater Backend](https://github.com/qeggs-dev/repeater-ai-chatbot-backend)
