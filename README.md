@@ -158,6 +158,25 @@ PS: 由于OneBot客户端通常为入站服务，所以默认情况下所有服�
 | `dark-purple` | 暗紫色 |
 | `dark-yellow` | 暗黄色 |
 | `dark-orange` | 暗橙色 |
+| `legacy` | 旧版亮色 |
+| `legacy-dark` | 旧版暗色 |
+| `legacy-red` | 旧版红色 |
+| `legacy-pink` | 旧版粉色 |
+| `legacy-blue` | 旧版蓝色 |
+| `legacy-green` | 旧版绿色 |
+| `legacy-purple` | 旧版紫色 |
+| `legacy-yellow` | 旧版黄色 |
+| `legacy-orange` | 旧版橙色 |
+| `legacy-dark-red` | 旧版暗红色 |
+| `legacy-dark-pink` | 旧版暗粉色 |
+| `legacy-dark-blue` | 旧版暗蓝色 |
+| `legacy-dark-green` | 旧版暗绿色 |
+| `legacy-dark-purple` | 旧版暗紫色 |
+| `legacy-dark-yellow` | 旧版暗黄色 |
+| `legacy-dark-orange` | 旧版暗橙色 |
+
+PS: `light`为默认风格，无需指定
+颜色风格默认在 `./configs/style` 文件夹下
 
 ---
 
