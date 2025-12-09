@@ -37,15 +37,20 @@
 
 长度评分系统通过以下公式计算：
 ```python
-lines = text.splitlines()
-length_score = (
-    len(lines) / max_lines +
-    (
-        max(len(line) for line in lines) / single_line_max +
-        sum(len(line) for line in lines) / len(lines) / mean_line_max
-    ) / 2 +
-    len(text) / total_length
-) / 3
+def length_score(text: str) -> float:
+    if len(text) == 0:
+        length_score = 0
+    else:
+        lines = text.splitlines()
+        length_score = (
+            len(lines) / max_lines +
+            (
+                max(len(line) for line in lines) / single_line_max +
+                sum(len(line) for line in lines) / len(lines) / mean_line_max
+            ) / 2 +
+            len(text) / total_length
+        ) / 3
+    return length_score
 ```
 如果长度评分超过阈值，则会向后端请求将文本渲染为图片，以保证不会影响其他用户正常聊天。
 
