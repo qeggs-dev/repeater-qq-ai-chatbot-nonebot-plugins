@@ -45,7 +45,7 @@ async def handle_smart_at(bot: Bot, event: MessageEvent):
     
     response = await core.send_message(
         message = message.extract_plain_text().strip(),
-        images_url = images
+        image_url = images
     )
     
     chat_send_msg = ChatSendMsg(
