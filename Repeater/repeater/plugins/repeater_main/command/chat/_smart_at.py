@@ -6,7 +6,7 @@ from nonebot.adapters import Bot
 from ...logger import logger
 
 from .._clients import ChatCore, ChatSendMsg
-from ...assist import PersonaInfo, SendMsg, MessageSource
+from ...assist import PersonaInfo, SendMsg, MessageSource, ImageDownloader
 
 smart_at: type[Matcher] = on_message(rule=to_me(), priority=100, block=True)
 
@@ -24,16 +24,28 @@ async def handle_smart_at(bot: Bot, event: MessageEvent):
 
     message = persona_info.message
     
-    if not persona_info.message_str.strip():
+    if not persona_info:
         if persona_info.source == MessageSource.GROUP:
             await sendmsg.send_hello()
         else:
             return
     
     core = ChatCore(persona_info)
+
+    images: list[str] = []
+    if "image" in message:
+        async with ImageDownloader(persona_info) as downloader:
+            get_image_url = downloader.download_image_to_base64()
+            async for image_url in get_image_url:
+                if image_url.data is not None:
+                    images.append(
+                        image_url.data
+                    )
+
     
     response = await core.send_message(
-        message = message.extract_plain_text().strip()
+        message = message.extract_plain_text().strip(),
+        images_url = images
     )
     
     chat_send_msg = ChatSendMsg(
