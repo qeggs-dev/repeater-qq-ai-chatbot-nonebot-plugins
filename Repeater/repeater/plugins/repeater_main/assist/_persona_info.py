@@ -27,6 +27,15 @@ class PersonaInfo:
         
         self._superusers: set[int] = set(int(user) for user in self._bot.config.superusers)
     
+    def __bool__(self) -> bool:
+        for message in self.message:
+            if message.type not in  ["at", "text", "reply"]:
+                return True
+            if message.type == "text":
+                if message.data["text"]:
+                    return True
+        return False
+    
     @property
     def is_superuser(self) -> bool:
         if self._bot.config.superusers is None:
