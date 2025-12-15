@@ -12,6 +12,7 @@ class ImageDownloader:
         self._persona = persona
         self._client = httpx.AsyncClient()
     
+    @staticmethod
     def detect_image_type(content: bytes) -> str:
         """检测图片类型"""
         image_type = imghdr.what(None, content)
