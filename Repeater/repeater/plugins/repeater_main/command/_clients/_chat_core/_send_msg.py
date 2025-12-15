@@ -9,7 +9,7 @@ import numpy as np
 
 logger = base_logger.bind(module = "Chat.SendMsg")
 
-class Send_msg(BaseSendMsg):
+class SendMsg(BaseSendMsg):
     def __init__(
             self,
             component: str,
