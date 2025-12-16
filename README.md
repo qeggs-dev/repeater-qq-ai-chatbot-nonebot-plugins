@@ -222,7 +222,20 @@ main_api.json
         "4": "Repeater is Online!\n\n疯狂星期四! ! !\n复读机想要 50,000,000 Token ，求求了（>^< ;)"
     },
     // 是否在群聊中让所有人使用同一个User_ID
-    "merge_group_id": false
+    "merge_group_id": false,
+
+    // Repeater API超时时间
+    "server_api_timeout": {
+        "chat": 600.0,
+        "context": 10.0,
+        "prompt": 10.0,
+        "config": 10.0,
+        "variable_expansion": 40.0,
+        "render": 600.0
+    },
+
+    // 在用户输入图片的时候，是否将其下载为 Base64 以防止链接失效
+    "use_base64_visual_input": true
 }
 ```
 配置了一些主要的参数，如文本长度评分、推理模型使用的UID、欢迎消息等。
@@ -271,14 +284,14 @@ PS：该配置文件是专门用于对接ChatTTS的
 
 | Command                    | Abridge | Full Name                 | Type        | Joined Version | Description                   | Parameter Description                     | Remarks |
 | :---                       | :---    | :---                      | :---:       | :---:          | :---:                         | :---:                                     | :---:   |
-| `chat`                     | `c`     | `Chat`                    | `CHAT`      | 4.0 Beta       | 与机器人对话                   | 自然语言输入                               | 默认命令，可被`to_me`消息调起 |
+| ``                         | ``      | ``                        | `CHAT`      | 4.0 Beta       | 默认命令，自然语言对话          | 自然语言输入                               | 当你@复读机的时候，如果没有命中其他命令就会执行这个，并把所有内容作为输入 |
+| `chat`                     | `c`     | `Chat`                    | `CHAT`      | 4.0 Beta       | 与机器人对话                   | 自然语言输入                               | 强制模型用文字输出，绕过Markdown渲染检查 |
 | `keepAnswering`            | `ka`    | `KeepAnswering`           | `CHAT`      | 4.0 Beta       | 持续对话(常规)                 | 无                                        | 无须输入，AI再次回复 |
 | `keepReasoning`            | `kr`    | `KeepReasoning`           | `CHAT`      | 4.0 Beta       | 持续对话(推理)                 | 无                                        | 无须输入，AI再次使用推理回复 |
 | `renderChat`               | `rc`    | `RenderChat`              | `CHAT`      | 4.0 Beta       | 渲染Markdown回复               | 自然语言输入                               | 强制渲染图片输出 |
 | `setRenderStyle`           | `srs`   | `SetRenderStyle`          | `CONFIG`    | 4.0 Beta       | 设置渲染样式                   | [渲染样式](#Markdown图片渲染样式)           | 设置Markdown图片渲染样式 |
 | `npChat`                   | `np`    | `NoPromptChat`            | `CHAT`      | 4.0 Beta       | 不加载提示词进行对话            | 自然语言输入                               | 使用常规模型 |
 | `reason`                   | `r`     | `Reason`                  | `CHAT`      | 4.0 Beta       | 使用Reasoner模型进行推理        | 自然语言输入                               | 调用模型由`reason_model_uid`字段控制，默认`reasoner` |
-| `recomplete`               | `rcm`   | `Recomplete`              | `CHAT`      | 4.0 Beta       | 重新进行对话补全                | 无                                        | 重新生成 |
 | `setFrequencyPenalty`      | `sfp`   | `SetFrequencyPenalty`     | `CONFIG`    | 4.0 Beta       | 设置频率惩罚                   | `-2`\~`2`的浮点数 或`-200%`\~`200%`的百分比 | 控制着模型输出重复相同内容的可能性 |
 | `setPresencePenalty`       | `spp`   | `SetPresencePenalty`      | `CONFIG`    | 4.0 Beta       | 设置存在惩罚                   | `-2`\~`2`的浮点数 或`-200%`\~`200%`的百分比 | 控制着模型谈论新主题的可能性 |
 | `setTemperature`           | `st`    | `SetTemperature`          | `CONFIG`    | 4.0 Beta       | 设置温度                       | `0`\~`2`的浮点数 或`0%`\~`200%`的百分比  | 控制着模型生成内容的不确定性 |
@@ -316,6 +329,11 @@ PS：该配置文件是专门用于对接ChatTTS的
 | `writeUserProfile`         | `wup`   | `WriteUserProfile`        | `CONFIG`    | 4.3.3.6        | 写入用户人设数据                 | 任意文本                                   | 该部分会被嵌入到用户提示词中，告诉AI用户的基础设定 |
 | `setHtmlTemplate`          | `sht`   | `SetHtmlTemplate`         | `CONFIG`    | 4.3.3.6        | 设置HTML模板                    | 预设模板名称                               | 可以用于切换Markdown渲染时使用的HTML模板 |
 | `setSaveTextOnly`          | `ssto`  | `SetSaveTextOnly`         | `CONFIG`    | 4.3.6.0        | 是否在保存时丢弃除了文本以外的内容 | `true`或`false`                           | 设为`true`可以更快速的完成保存与读取，但模型将无法再获取之前的附加数据 |
+
+PS：`CHAT`类型命令几乎全员支持视觉输入
+由于需要保存上下文，复读机默认会将其下载为Base64编码
+你可以在配置文件中关闭该选项，这会让复读机直接使用QQ传递的临时URL
+适合不保存图片的情况
 
 ## 相关仓库
 - [Repeater Backend](https://github.com/qeggs-dev/repeater-ai-chatbot-backend)
