@@ -5,6 +5,7 @@ from ._assist_func import (
     handle_at_with_name,
     image_to_text
 )
+from ..core_net_configs import storage_configs
 from ._namespace import MessageSource, Namespace
 from ._image_downloader import ImageDownloader
 
@@ -200,14 +201,20 @@ class PersonaInfo:
     def plaintext_message(self) -> str:
         return self.message.extract_plain_text()
     
-    async def download_image_to_base64(self) -> list[str]:
+    async def get_images_url(self, base64: bool | None = None) -> list[str]:
+        if base64 is None:
+            base64 = storage_configs.use_base64_visual_input
         images: list[str] = []
         if "image" in self.message:
-            async with ImageDownloader(self) as downloader:
-                get_image_url = downloader.download_image_to_base64()
-                async for image_url in get_image_url:
-                    if image_url.data is not None:
-                        images.append(
-                            image_url.data
-                        )
+            async with ImageDownloader(self.message) as downloader:
+                if base64:
+                    get_image_url = downloader.download_image_to_base64()
+                    async for image_url in get_image_url:
+                        if image_url.data is not None:
+                            images.append(
+                                image_url.data
+                            )
+                else:
+                    for image_url in downloader.get_images():
+                        images.append(image_url["url"])
         return images
