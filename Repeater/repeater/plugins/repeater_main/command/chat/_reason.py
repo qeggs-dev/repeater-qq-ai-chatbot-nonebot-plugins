@@ -27,7 +27,7 @@ async def reason_handle(bot: Bot, event: MessageEvent, args: Message = CommandAr
 
     chat_core = ChatCore(persona_info)
 
-    images: list[str] = persona_info.download_image_to_base64()
+    images: list[str] = persona_info.get_images_url()
     
     response = await chat_core.send_message(
         message = message.extract_plain_text().strip(),

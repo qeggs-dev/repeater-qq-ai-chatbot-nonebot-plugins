@@ -32,7 +32,7 @@ async def handle_smart_at(bot: Bot, event: MessageEvent):
     
     core = ChatCore(persona_info)
 
-    images: list[str] = persona_info.download_image_to_base64()
+    images: list[str] = persona_info.get_images_url()
 
     
     response = await core.send_message(

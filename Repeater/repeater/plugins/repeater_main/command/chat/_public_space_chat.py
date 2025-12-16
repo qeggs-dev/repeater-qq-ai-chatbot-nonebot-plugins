@@ -26,7 +26,7 @@ async def handle_public_space_chat(bot: Bot, event: MessageEvent, args: Message 
 
     chat_core = ChatCore(persona_info)
     
-    images: list[str] = persona_info.download_image_to_base64()
+    images: list[str] = persona_info.get_images_url()
 
     response = await chat_core.send_message(
         message.extract_plain_text().strip(),
