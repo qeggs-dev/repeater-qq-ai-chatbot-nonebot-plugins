@@ -42,6 +42,7 @@ class ChatCore:
         save_context: bool | None = None,
         enable_md_prompt: bool = True,
         reference_context_id: str | None = None,
+        continue_completion: bool | None = None,
     ) -> Response[ChatResponse | None]:
         """
         发送消息到AI后端
@@ -62,6 +63,7 @@ class ChatCore:
             enable_md_prompt = enable_md_prompt,
             save_context = save_context,
             reference_context_id = reference_context_id,
+            continue_completion = continue_completion,
         )
         response = await self._chat_client.post(
             url = url,
@@ -100,6 +102,7 @@ class ChatCore:
         save_context: bool | None = None,
         enable_md_prompt: bool = True,
         reference_context_id: str | None = None,
+        continue_completion: bool | None = None,
     ) -> AsyncIterator[Any]:
         """
         发送消息到AI后端，并获取流式响应
@@ -121,6 +124,7 @@ class ChatCore:
             enable_md_prompt = enable_md_prompt,
             save_context = save_context,
             reference_context_id = reference_context_id,
+            continue_completion = continue_completion,
             stream = True,
         )
         async with self._chat_client.stream(
@@ -147,6 +151,7 @@ class ChatCore:
         save_context: bool | None = None,
         enable_md_prompt: bool = True,
         reference_context_id: str | None = None,
+        continue_completion: bool | None = None,
         stream: bool = False,
     ):
         # 表单数据格式 (Form Data)
@@ -172,6 +177,8 @@ class ChatCore:
             data["role_name"] = self._persona_info.nickname
         if reference_context_id:
             data["reference_context_id"] = reference_context_id
+        if continue_completion is not None:
+            data["continue_completion"] = continue_completion
         if stream:
             data["stream"] = stream
         if message:
