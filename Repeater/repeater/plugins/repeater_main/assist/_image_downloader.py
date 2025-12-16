@@ -1,15 +1,15 @@
 from __future__ import annotations
 import httpx
-from ._persona_info import PersonaInfo
+from nonebot.adapters.onebot.v11 import Message
 import base64
 import asyncio
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Generator, Any
 from ._response_body import Response
 import imghdr
 
 class ImageDownloader:
-    def __init__(self, persona: PersonaInfo) -> None:
-        self._persona = persona
+    def __init__(self, message: Message) -> None:
+        self._message = message
         self._client = httpx.AsyncClient()
     
     @staticmethod
@@ -25,6 +25,11 @@ class ImageDownloader:
             'webp': 'image/webp'
         }
         return type_map.get(image_type, 'application/octet-stream')
+    
+    def get_images(self) -> Generator[dict[str, Any], None, None]:
+        for segment in self._message:
+            if segment.type == 'image':
+                yield segment.data
 
     async def download_image(self, skip_size: int = 10 * 1024 * 1024) -> AsyncGenerator[Response[bytes | None], None]:
         """
@@ -34,28 +39,27 @@ class ImageDownloader:
         :return Response[bytes | None]: 图片内容，如果图片大小超过skip_size，则返回None
         """
 
-        for segment in self._persona.message:
-            if segment.type == "image":
-                url = str(segment.data["url"])
-                size = int(segment.data["file_size"])
-                if size > skip_size:
-                    yield Response(
-                        data = None,
-                    )
-                    continue
-                response = await self._client.get(url)
-                if response.status_code == 200:
-                    yield Response(
-                        code = response.status_code,
-                        text = response.text,
-                        data = response.content
-                    )
-                else:
-                    yield Response(
-                        code = response.status_code,
-                        text = response.text,
-                        data = None,
-                    )
+        for image in self.get_images():
+            url = str(image["url"])
+            size = int(image["file_size"])
+            if size > skip_size:
+                yield Response(
+                    data = None,
+                )
+                continue
+            response = await self._client.get(url)
+            if response.status_code == 200:
+                yield Response(
+                    code = response.status_code,
+                    text = response.text,
+                    data = response.content
+                )
+            else:
+                yield Response(
+                    code = response.status_code,
+                    text = response.text,
+                    data = None,
+                )
     
     async def download_image_to_base64(self, skip_size: int = 1024 * 1024 * 10) -> AsyncGenerator[Response[str | None], None]:
         """
