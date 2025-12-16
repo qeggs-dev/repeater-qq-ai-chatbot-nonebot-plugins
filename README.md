@@ -297,7 +297,7 @@ PS：该配置文件是专门用于对接ChatTTS的
 | `changeContextBranch`      | `ccb`   | `ChangeContextBranch`     | `CONTEXT`   | 4.1.2.0        | 切换上下文分支                 | 分支名称                                   | 切换上下文分支 |
 | `changePromptBranch`       | `cppb`  | `ChangePromptBranch`      | `PROMPT`    | 4.1.2.0        | 切换提示词分支                 | 分支名称                                   | 切换提示词分支 |
 | `changeConfigBranch`       | `ccfgb` | `ChangeConfigBranch`      | `CONFIG`    | 4.1.2.0        | 切换配置分支                   | 分支名称                                   | 切换配置分支 |
-| `reference`                | `ref`   | `Reference`               | `CHAT`      | 4.1.2.0        | 引用上下文                     | 用户ID                                    | 引用其他用户的上下文并追加到当前上下文 |
+| `reference`                | `ref`   | `Reference`               | `CHAT`      | 4.1.2.0        | 引用上下文                     | @群成员并输入自然语言                       | 引用其他用户的上下文进行生成，并将结果保存到自己的聊天记录中 |
 | `chooseGroupMember`        | `cgm`   | `ChooseGroupMember`       | `OTHER`     | 4.1.2.0        | 抽取群组成员                   | 抽取数量                                   | 抽取群组成员 |
 | `withdraw`                 | `w`     | `Withdraw`                | `CONTEXT`   | 4.2.3.0        | 撤回消息                       | 无                                        | 删除复读机上下文中保存的最新一回合对话 |
 | `recentSpeakingRanking`    | `rsr`   | `RecentSpeakingRanking`   | `OTHER`     | 4.2.3.0        | 最近发言排行                   | 无                                        | 获取群组内最近发言的成员列表 |
