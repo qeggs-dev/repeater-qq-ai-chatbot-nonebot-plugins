@@ -6,7 +6,7 @@ from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
 from .._clients import ChatCore, ChatSendMsg
-from ...assist import PersonaInfo
+from ...assist import PersonaInfo, ImageDownloader
 from ...logger import logger
 
 renderChat = on_command("renderChat", aliases={"rc", "render_chat", "Render_Chat", "RenderChat"}, rule=to_me(), block=True)
@@ -25,6 +25,16 @@ async def handle_render_Chat(bot: Bot, event: MessageEvent, args: Message = Comm
     message = persona_info.message
     
     core = ChatCore(persona_info)
+
+    images: list[str] = []
+    if "image" in message:
+        async with ImageDownloader(persona_info) as downloader:
+            get_image_url = downloader.download_image_to_base64()
+            async for image_url in get_image_url:
+                if image_url.data is not None:
+                    images.append(
+                        image_url.data
+                    )
 
     response = await core.send_message(
         message = message.extract_plain_text().strip()

@@ -6,7 +6,7 @@ from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment
 from nonebot.adapters import Bot
 
 from .._clients import ChatCore, ChatSendMsg
-from ...assist import PersonaInfo
+from ...assist import PersonaInfo, ImageDownloader
 from ...logger import logger
 
 recomplete = on_command("recomplete", aliases={"rec", "Recomplete"}, rule=to_me(), block=True)
@@ -25,6 +25,16 @@ async def handle_recomplete(bot: Bot, event: MessageEvent, args: Message = Comma
     message = persona_info.message
 
     chat_core = ChatCore(persona_info)
+
+    images: list[str] = []
+    if "image" in message:
+        async with ImageDownloader(persona_info) as downloader:
+            get_image_url = downloader.download_image_to_base64()
+            async for image_url in get_image_url:
+                if image_url.data is not None:
+                    images.append(
+                        image_url.data
+                    )
 
     response = await chat_core.send_message(
         message = message.extract_plain_text().strip()
