@@ -8,7 +8,7 @@ from nonebot.adapters import Bot
 from ...logger import logger
 
 from .._clients import ChatCore, ChatSendMsg
-from ...assist import PersonaInfo, ImageDownloader
+from ...assist import PersonaInfo
 
 nosave_chat: type[Matcher] = on_command("noSaveChat", aliases={"nsc", "no_save_chat", "NoSaveChat", "No_Save_Chat"}, rule=to_me(), block=True)
 
@@ -27,19 +27,12 @@ async def handle_nosave_chat(bot: Bot, event: MessageEvent, args: Message = Comm
 
     core = ChatCore(persona_info)
 
-    images: list[str] = []
-    if "image" in message:
-        async with ImageDownloader(persona_info) as downloader:
-            get_image_url = downloader.download_image_to_base64()
-            async for image_url in get_image_url:
-                if image_url.data is not None:
-                    images.append(
-                        image_url.data
-                    )
+    images: list[str] = persona_info.download_image_to_base64()
 
     response = await core.send_message(
         message = message.extract_plain_text().strip(),
-        save_context = False
+        save_context = False,
+        image_url = images
     )
 
     send_msg = ChatSendMsg(

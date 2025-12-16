@@ -6,6 +6,7 @@ from ._assist_func import (
     image_to_text
 )
 from ._namespace import MessageSource, Namespace
+from ._image_downloader import ImageDownloader
 
 class PersonaInfo:
     def __init__(self, bot: Bot, event: MessageEvent, args: Message | None = None):
@@ -198,3 +199,15 @@ class PersonaInfo:
     @property
     def plaintext_message(self) -> str:
         return self.message.extract_plain_text()
+    
+    async def download_image_to_base64(self) -> list[str]:
+        images: list[str] = []
+        if "image" in self.message:
+            async with ImageDownloader(self) as downloader:
+                get_image_url = downloader.download_image_to_base64()
+                async for image_url in get_image_url:
+                    if image_url.data is not None:
+                        images.append(
+                            image_url.data
+                        )
+        return images

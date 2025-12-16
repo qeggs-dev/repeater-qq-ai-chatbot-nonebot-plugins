@@ -12,7 +12,7 @@ from ...logger import logger
 renderChat = on_command("renderChat", aliases={"rc", "render_chat", "Render_Chat", "RenderChat"}, rule=to_me(), block=True)
 
 @renderChat.handle()
-async def handle_render_Chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
+async def handle_render_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     persona_info = PersonaInfo(bot, event, args)
 
     logger.info(
@@ -26,18 +26,11 @@ async def handle_render_Chat(bot: Bot, event: MessageEvent, args: Message = Comm
     
     core = ChatCore(persona_info)
 
-    images: list[str] = []
-    if "image" in message:
-        async with ImageDownloader(persona_info) as downloader:
-            get_image_url = downloader.download_image_to_base64()
-            async for image_url in get_image_url:
-                if image_url.data is not None:
-                    images.append(
-                        image_url.data
-                    )
+    images: list[str] = persona_info.download_image_to_base64()
 
     response = await core.send_message(
-        message = message.extract_plain_text().strip()
+        message = message.extract_plain_text().strip(),
+        image_url = images
     )
 
     send_msg = ChatSendMsg(

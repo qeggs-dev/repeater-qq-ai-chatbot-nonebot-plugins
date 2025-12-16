@@ -27,19 +27,12 @@ async def handle_raw_chat(bot: Bot, event: MessageEvent, args: Message = Command
 
     core = ChatCore(persona_info)
 
-    images: list[str] = []
-    if "image" in message:
-        async with ImageDownloader(persona_info) as downloader:
-            get_image_url = downloader.download_image_to_base64()
-            async for image_url in get_image_url:
-                if image_url.data is not None:
-                    images.append(
-                        image_url.data
-                    )
+    images: list[str] = persona_info.download_image_to_base64()
 
     response = await core.send_message(
         message = message.extract_plain_text().strip(),
-        add_metadata = False
+        add_metadata = False,
+        image_url = images
     )
 
     send_msg = ChatSendMsg(

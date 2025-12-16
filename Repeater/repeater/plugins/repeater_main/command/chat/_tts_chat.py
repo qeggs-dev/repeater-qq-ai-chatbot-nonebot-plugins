@@ -27,18 +27,11 @@ async def handle_tts_chat(bot: Bot, event: MessageEvent, args: Message = Command
 
     core = ChatCore(persona_info)
 
-    images: list[str] = []
-    if "image" in message:
-        async with ImageDownloader(persona_info) as downloader:
-            get_image_url = downloader.download_image_to_base64()
-            async for image_url in get_image_url:
-                if image_url.data is not None:
-                    images.append(
-                        image_url.data
-                    )
+    images: list[str] = persona_info.download_image_to_base64()
 
     response = await core.send_message(
-        message = persona_info.message_str
+        message = persona_info.message_str,
+        image_url = images
     )
 
     send_msg = ChatSendMsg(

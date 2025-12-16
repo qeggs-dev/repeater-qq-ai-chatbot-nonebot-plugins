@@ -27,19 +27,12 @@ async def reason_handle(bot: Bot, event: MessageEvent, args: Message = CommandAr
 
     chat_core = ChatCore(persona_info)
 
-    images: list[str] = []
-    if "image" in message:
-        async with ImageDownloader(persona_info) as downloader:
-            get_image_url = downloader.download_image_to_base64()
-            async for image_url in get_image_url:
-                if image_url.data is not None:
-                    images.append(
-                        image_url.data
-                    )
+    images: list[str] = persona_info.download_image_to_base64()
     
     response = await chat_core.send_message(
         message = message.extract_plain_text().strip(),
-        model_uid=storage_configs.reason_model_uid
+        model_uid=storage_configs.reason_model_uid,
+        image_url = images
     )
     
     send_msg = ChatSendMsg(

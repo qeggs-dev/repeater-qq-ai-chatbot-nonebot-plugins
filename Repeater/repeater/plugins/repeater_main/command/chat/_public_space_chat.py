@@ -26,17 +26,13 @@ async def handle_public_space_chat(bot: Bot, event: MessageEvent, args: Message 
 
     chat_core = ChatCore(persona_info)
     
-    images: list[str] = []
-    if "image" in message:
-        async with ImageDownloader(persona_info) as downloader:
-            get_image_url = downloader.download_image_to_base64()
-            async for image_url in get_image_url:
-                if image_url.data is not None:
-                    images.append(
-                        image_url.data
-                    )
-    
-    response = await chat_core.send_message(message.extract_plain_text().strip())
+    images: list[str] = persona_info.download_image_to_base64()
+
+    response = await chat_core.send_message(
+        message.extract_plain_text().strip(),
+        image_url = images
+    )
+
     send_msg = ChatSendMsg(
         "Public_Space_Chat",
         persona_info,

@@ -26,21 +26,14 @@ async def handle_reference(bot: Bot, event: MessageEvent, args: Message = Comman
 
     chat_core = ChatCore(persona_info)
 
-    images: list[str] = []
-    if "image" in message:
-        async with ImageDownloader(persona_info) as downloader:
-            get_image_url = downloader.download_image_to_base64()
-            async for image_url in get_image_url:
-                if image_url.data is not None:
-                    images.append(
-                        image_url.data
-                    )
+    images: list[str] = persona_info.download_image_to_base64()
 
     if not persona_info.noself_at_list:
         await reference.finish("==== Reference ==== \n Please at a member to get reference.")
         
     response = await chat_core.send_message(
-        message = message.extract_plain_text().strip(), reference_context_id=persona_info.noself_at_list[0]
+        message = message.extract_plain_text().strip(), reference_context_id=persona_info.noself_at_list[0],
+        image_url = images
     )
 
     send_msg = ChatSendMsg(
