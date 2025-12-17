@@ -1,10 +1,10 @@
 # @复读机Repeater
 **- Only Chat, Focus Chat. -**
 
-*注：本仓库仅为NoneBot插件，需要配合[后端项目](#相关仓库)使用*
+*注：本仓库仅为客户端实现，需要配合[后端项目](#相关仓库)使用*
 
-一个基于[`NoneBot`](https://nonebot.dev/)和[`OpenAI SDK`](https://pypi.org/project/openai/)开发的**实验性**QQ聊天机器人
-**此仓库仅为后端实现，NoneBot插件部分请查看[`Repater-Nonebot-Plugin`](https://github.com/qeggs-dev/repeater-qq-ai-chatbot-nonebot-plugins)**
+一个基于[`NoneBot`](https://nonebot.dev/)和[`Repeater Backend`](https://github.com/qeggs-dev/repeater-ai-chatbot-backend)开发的 AI QQ Bot
+**此仓库仅为 Repeater 的 NoneBot OneBot v11 适配客户端**
 将原始会话数据的处理直接公开给用户使用
 以达到接近直接操作API的灵活度体验
 
