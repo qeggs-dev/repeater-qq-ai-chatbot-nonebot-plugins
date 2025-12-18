@@ -329,4 +329,4 @@ Context、Prompt、Config
 后端会同时收到三个API的请求
 
 ## 相关仓库
-- [Repeater Backend](https://github.com/qeggs-dev/repeater-ai-chatbot-backend)
+- [Repeater Backend](https://github.com/qeggs-dev/repeater-ai-chatbot)
