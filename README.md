@@ -279,9 +279,9 @@ PS：该配置文件是专门用于对接ChatTTS的
 | `setRenderStyle`           | `srs`   | `SetRenderStyle`          | `CONFIG`    | 4.0 Beta       | 设置渲染样式                   | [渲染样式](#Markdown图片渲染样式)           | 设置Markdown图片渲染样式 |
 | `npChat`                   | `np`    | `NoPromptChat`            | `CHAT`      | 4.0 Beta       | 不加载提示词进行对话            | 自然语言输入                               | 使用常规模型 |
 | `reason`                   | `r`     | `Reason`                  | `CHAT`      | 4.0 Beta       | 使用Reasoner模型进行推理        | 自然语言输入                               | 调用模型由`reason_model_uid`字段控制，默认`reasoner` |
-| `setFrequencyPenalty`      | `sfp`   | `SetFrequencyPenalty`     | `CONFIG`    | 4.0 Beta       | 设置频率惩罚                   | `-2`\~`2`的浮点数 或`-200%`\~`200%`的百分比 | 控制着模型输出重复相同内容的可能性 |
-| `setPresencePenalty`       | `spp`   | `SetPresencePenalty`      | `CONFIG`    | 4.0 Beta       | 设置存在惩罚                   | `-2`\~`2`的浮点数 或`-200%`\~`200%`的百分比 | 控制着模型谈论新主题的可能性 |
-| `setTemperature`           | `st`    | `SetTemperature`          | `CONFIG`    | 4.0 Beta       | 设置温度                       | `0`\~`2`的浮点数 或`0%`\~`200%`的百分比  | 控制着模型生成内容的不确定性 |
+| `setFrequencyPenalty`      | `sfp`   | `SetFrequencyPenalty`     | `CONFIG`    | 4.0 Beta       | 设置频率惩罚                   | `-2`\~`2`的浮点数<br/>或`-200%`\~`200%`的百分比 | 控制着模型输出重复相同内容的可能性 |
+| `setPresencePenalty`       | `spp`   | `SetPresencePenalty`      | `CONFIG`    | 4.0 Beta       | 设置存在惩罚                   | `-2`\~`2`的浮点数<br/>或`-200%`\~`200%`的百分比 | 控制着模型谈论新主题的可能性 |
+| `setTemperature`           | `st`    | `SetTemperature`          | `CONFIG`    | 4.0 Beta       | 设置温度                       | `0`\~`2`的浮点数<br/>或`0%`\~`200%`的百分比  | 控制着模型生成内容的不确定性 |
 | `setPrompt`                | `sp`    | `SetPrompt`               | `PROMPT`    | 4.0 Beta       | 设置提示词                     | 自然语言输入                               | 设置提示词 |
 | `changeDefaultPersonality` | `cdp`   | `ChangeDefaultPersonality`| `CONFIG`    | 4.0 Beta       | 修改默认人格                   | [人格预设](#人格预设)                       | 修改默认人格路由 |
 | `deletePrompt`             | `dp`    | `DeletePrompt`            | `PROMPT`    | 4.0 Beta       | 删除提示词                     | 无                                        | 删除提示词 |
