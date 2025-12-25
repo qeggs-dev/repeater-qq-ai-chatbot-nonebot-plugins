@@ -16,16 +16,16 @@ class ChatResponse(BaseModel):
     )
 
     reasoning_content: str | None = None
-    content: str | None = None
-    user_raw_input: str | None = None
-    model_group: str | None = None
-    model_name: str | None = None
-    model_type: str | None = None
-    model_uid: str | None = None
-    create_time: int | None = None
-    id: str | None = None
-    finish_reason_cause: str | None = None
-    finish_reason_code: FinishReason | None = None
+    content: str = ""
+    user_raw_input: str = ""
+    model_group: str = ""
+    model_name: str = ""
+    model_type: str = ""
+    model_uid: str = ""
+    create_time: int = 0
+    id: str = ""
+    finish_reason_cause: str = ""
+    finish_reason_code: FinishReason = FinishReason.STOP
     status: int = 200
 
 class TokensCount(BaseModel):
