@@ -31,6 +31,7 @@ class StorageConfigs(BaseModel):
     merge_group_id: bool = False
     server_api_timeout:ServerAPITimeout = Field(default_factory = ServerAPITimeout)
     use_base64_visual_input: bool = True
+    download_visual_input_timeout: float = 600.0
 
 loader: Loader[StorageConfigs] = Loader(
     model=StorageConfigs,

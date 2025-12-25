@@ -206,7 +206,10 @@ class PersonaInfo:
             base64 = storage_configs.use_base64_visual_input
         images: list[str] = []
         if "image" in self.message:
-            async with ImageDownloader(self.message) as downloader:
+            async with ImageDownloader(
+                self.message,
+                timeout=storage_configs.download_visual_input_timeout
+            ) as downloader:
                 if base64:
                     get_image_url = downloader.download_image_to_base64()
                     async for image_url in get_image_url:

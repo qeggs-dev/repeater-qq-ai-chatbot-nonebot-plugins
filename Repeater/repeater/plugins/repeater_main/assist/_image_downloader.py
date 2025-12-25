@@ -8,9 +8,11 @@ from ._response_body import Response
 import imghdr
 
 class ImageDownloader:
-    def __init__(self, message: Message) -> None:
+    def __init__(self, message: Message, timeout: float = 10.0) -> None:
         self._message = message
-        self._client = httpx.AsyncClient()
+        self._client = httpx.AsyncClient(
+            timeout = timeout,
+        )
     
     @staticmethod
     def detect_image_type(content: bytes) -> str:
