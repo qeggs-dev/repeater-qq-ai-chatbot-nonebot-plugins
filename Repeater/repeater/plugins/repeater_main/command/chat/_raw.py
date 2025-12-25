@@ -3,8 +3,7 @@ from nonebot.internal.matcher.matcher import Matcher
 from nonebot.rule import to_me
 from nonebot.params import CommandArg
 from nonebot.adapters import Message
-from nonebot.adapters.onebot.v11 import MessageEvent
-from nonebot.adapters import Bot
+from nonebot.adapters.onebot.v11 import Bot, MessageEvent
 from ...logger import logger
 
 from .._clients import ChatCore, ChatSendMsg
