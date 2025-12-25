@@ -74,7 +74,9 @@ class PersonaInfo:
         if self.card:
             return self.card
         else:
-            return self.nickname
+            if self.nickname is not None:
+                return self.nickname
+            return ""
     
     @property
     def age(self) -> int | None:

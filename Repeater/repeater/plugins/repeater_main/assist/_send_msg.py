@@ -1,6 +1,8 @@
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
 from nonebot.internal.matcher.matcher import Matcher
 from nonebot.exception import FinishedException
+
+from Repeater.repeater.plugins.repeater_main.assist._text_render import RendedImage
 from ..core_net_configs import RepeaterDebugMode, storage_configs
 from ._http_code import HTTP_Code
 from ._persona_info import PersonaInfo
@@ -336,7 +338,7 @@ class SendMsg:
     async def send_warning(
             self,
             warning: str,
-            reply: Message = None,
+            reply: bool = True,
             continue_handler: Literal[True] = True
         ) -> None: ...
 
@@ -344,7 +346,7 @@ class SendMsg:
     async def send_warning(
             self,
             warning: str,
-            reply: Message = None,
+            reply: bool = True,
             continue_handler: Literal[False] = False
         ) -> NoReturn: ...
     
@@ -376,6 +378,7 @@ class SendMsg:
             continue_handler: Literal[False] = False
         ) -> NoReturn: ...
     
+    @overload
     async def send_text(
             self,
             text: str | None = None,
@@ -403,7 +406,6 @@ class SendMsg:
         )
     
     @overload
-    
     async def send_mixed_render(
             self,
             text: str,
@@ -451,7 +453,7 @@ class SendMsg:
     @overload
     async def send_render(
             self,
-            text: str | None = None,
+            text: str,
             reply: bool = True,
             continue_handler: Literal[False] = False
         ) -> NoReturn: ...
@@ -459,14 +461,14 @@ class SendMsg:
     @overload
     async def send_render(
             self,
-            text: str | None = None,
+            text: str,
             reply: bool = True,
             continue_handler: Literal[True] = True
         ) -> None: ...
     
     async def send_render(
             self,
-            text: str | None = None,
+            text: str,
             reply: bool = True,
             continue_handler: bool = False
         ):
@@ -487,7 +489,8 @@ class SendMsg:
     @overload
     async def send_tts(
             self,
-            text: str | None = None,
+            text: str,
+            send_error_message: bool = True,
             reply: bool = False,
             continue_handler: Literal[False] = False
         ) -> NoReturn: ...
@@ -495,14 +498,15 @@ class SendMsg:
     @overload
     async def send_tts(
             self,
-            text: str | None = None,
+            text: str,
+            send_error_message: bool = True,
             reply: bool = False,
             continue_handler: Literal[True] = True
         ) -> None: ...
     
     async def send_tts(
             self,
-            text: str | None = None,
+            text: str,
             send_error_message: bool = True,
             reply: bool = False,
             continue_handler: bool = False
@@ -515,7 +519,7 @@ class SendMsg:
         :param continue_handler: 是否继续处理流程
         """
         response = await self._chat_tts_api.text_to_speech(text)
-        if response.code == 200:
+        if response.code == 200 and response.data is not None:
             await self._send(
                 message = MessageSegment.record(response.data.audio_files[0].url),
                 reply = reply,
@@ -529,7 +533,7 @@ class SendMsg:
     @overload
     async def send_check_length(
             self,
-            text: str | None = None,
+            message: Message | str,
             threshold: float = 1.0,
             reply: bool = True,
             continue_handler: Literal[False] = False
@@ -538,7 +542,7 @@ class SendMsg:
     @overload
     async def send_check_length(
             self,
-            message: Message,
+            message: Message | str,
             threshold: float = 1.0,
             reply: bool = True,
             continue_handler: Literal[True] = True
@@ -546,21 +550,27 @@ class SendMsg:
     
     async def send_check_length(
             self,
-            message: Message | str | None = None,
+            message: Message | str,
             threshold: float = 1.0,
             reply: bool = True,
-            continue_handler: Literal[False] = False
+            continue_handler: bool = False
         ):
-        length_score = self.text_length_score(message)
+        if isinstance(message, Message):
+            text = message.extract_plain_text()
+        elif isinstance(message, str):
+            text = message
+        else:
+            raise TypeError(f"message must be Message or str, but got {type(message)}")
+        length_score = self.text_length_score(text)
         if length_score >= threshold:
             await self.send_render(
-                message,
+                text,
                 reply = reply,
                 continue_handler = continue_handler
             )
         else:
             await self.send_text(
-                message,
+                text,
                 reply = reply,
                 continue_handler = continue_handler
             )
@@ -568,7 +578,7 @@ class SendMsg:
     @overload
     async def send_any(
             self,
-            message: Message,
+            message: str | Message | MessageSegment,
             reply: bool = False,
             continue_handler: Literal[False] = False
         ) -> NoReturn: ...
@@ -576,14 +586,14 @@ class SendMsg:
     @overload
     async def send_any(
             self,
-            message: MessageSegment,
+            message: str | Message | MessageSegment,
             reply: bool = False,
             continue_handler: Literal[True] = True
         ) -> None: ...
     
     async def send_any(
             self,
-            message: Message,
+            message: str | Message | MessageSegment,
             reply: bool = True,
             continue_handler: bool = False
         ):
@@ -606,15 +616,15 @@ class SendMsg:
         """
         raise FinishedException
 
-    async def text_render(self, text: str | None = None) -> MessageSegment:
+    async def text_render(self, text: str) -> MessageSegment:
         """
         渲染文本
 
         :param text: 渲染文本内容
         """
         if text:
-            render_response = await self._text_render.render(text)
-            if render_response.code == 200:
+            render_response: Response[RendedImage] = await self._text_render.render(text)
+            if render_response.code == 200 and render_response.data is not None:
                 message = MessageSegment.image(render_response.data.image_url)
             else:
                 await self.send_response(render_response, lambda response: f"Render Error: {response.text}")
@@ -625,7 +635,7 @@ class SendMsg:
     @overload
     async def _send(
             self,
-            message: Message,
+            message: str | Message | MessageSegment,
             reply: bool = True,
             continue_handler: Literal[False] = False
         ) -> NoReturn: ...
@@ -633,14 +643,14 @@ class SendMsg:
     @overload
     async def _send(
             self,
-            message: Message,
+            message: str | Message | MessageSegment,
             reply: bool = True,
             continue_handler: Literal[True] = True
         ) -> None: ...
     
     async def _send(
             self,
-            message: Message,
+            message: str | Message | MessageSegment,
             reply: bool = True,
             continue_handler: bool = False
         ):
