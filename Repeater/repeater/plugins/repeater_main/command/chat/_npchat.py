@@ -26,7 +26,7 @@ async def handle_npchat(bot: Bot, event: MessageEvent, args: Message = CommandAr
 
     chat_core = ChatCore(persona_info)
 
-    images: list[str] = persona_info.get_images_url()
+    images: list[str] = await persona_info.get_images_url()
 
     response = await chat_core.send_message(
         message.extract_plain_text().strip(),

@@ -27,7 +27,7 @@ async def handle_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg(
 
     core = ChatCore(persona_info)
 
-    images: list[str] = persona_info.get_images_url()
+    images: list[str] = await persona_info.get_images_url()
 
     response = await core.send_message(
         message = message.extract_plain_text().strip(),

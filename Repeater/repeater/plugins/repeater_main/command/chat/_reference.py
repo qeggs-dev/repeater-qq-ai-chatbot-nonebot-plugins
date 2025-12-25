@@ -26,7 +26,7 @@ async def handle_reference(bot: Bot, event: MessageEvent, args: Message = Comman
 
     chat_core = ChatCore(persona_info)
 
-    images: list[str] = persona_info.get_images_url()
+    images: list[str] = await persona_info.get_images_url()
 
     if not persona_info.noself_at_list:
         await reference.finish("==== Reference ==== \n Please at a member to get reference.")
