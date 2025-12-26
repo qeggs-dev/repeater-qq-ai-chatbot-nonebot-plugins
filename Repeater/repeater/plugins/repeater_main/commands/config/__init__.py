@@ -10,6 +10,7 @@ from ._set_html_template import handle_set_html_template
 from ._del_config import handle_del_config
 from ._set_render_style import handle_set_render_style
 from ._set_render_title import handle_set_render_title
+from ._set_save_text_only import handle_set_save_text_only
 from ._change_config_branch import handle_change_config_branch
 from ._set_max_tokens import handle_set_max_tokens
 from ._set_timezone import handle_set_timezone
@@ -29,6 +30,7 @@ __all__ = [
     "handle_del_config",
     "handle_set_render_style",
     "handle_set_render_title",
+    "handle_set_save_text_only",
     "handle_change_config_branch",
     "handle_set_max_tokens",
     "handle_set_timezone",

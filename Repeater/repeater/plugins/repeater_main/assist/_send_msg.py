@@ -1,6 +1,8 @@
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
 from nonebot.internal.matcher.matcher import Matcher
 from nonebot.exception import FinishedException
+
+from ._text_render import RendedImage
 from ..core_net_configs import RepeaterDebugMode, storage_configs
 from ._http_code import HTTP_Code
 from ._persona_info import PersonaInfo
@@ -19,7 +21,6 @@ from typing import (
 )
 from datetime import datetime
 from ..logger import logger
-import numpy as np
 
 T_RESPONSE = TypeVar("T_RESPONSE")
 
@@ -337,7 +338,7 @@ class SendMsg:
     async def send_warning(
             self,
             warning: str,
-            reply: Message = None,
+            reply: bool = True,
             continue_handler: Literal[True] = True
         ) -> None: ...
 
@@ -345,7 +346,7 @@ class SendMsg:
     async def send_warning(
             self,
             warning: str,
-            reply: Message = None,
+            reply: bool = True,
             continue_handler: Literal[False] = False
         ) -> NoReturn: ...
     
@@ -377,6 +378,7 @@ class SendMsg:
             continue_handler: Literal[False] = False
         ) -> NoReturn: ...
     
+    @overload
     async def send_text(
             self,
             text: str | None = None,
@@ -404,7 +406,6 @@ class SendMsg:
         )
     
     @overload
-    
     async def send_mixed_render(
             self,
             text: str,
@@ -452,7 +453,7 @@ class SendMsg:
     @overload
     async def send_render(
             self,
-            text: str | None = None,
+            text: str,
             reply: bool = True,
             continue_handler: Literal[False] = False
         ) -> NoReturn: ...
@@ -460,14 +461,14 @@ class SendMsg:
     @overload
     async def send_render(
             self,
-            text: str | None = None,
+            text: str,
             reply: bool = True,
             continue_handler: Literal[True] = True
         ) -> None: ...
     
     async def send_render(
             self,
-            text: str | None = None,
+            text: str,
             reply: bool = True,
             continue_handler: bool = False
         ):
@@ -488,7 +489,8 @@ class SendMsg:
     @overload
     async def send_tts(
             self,
-            text: str | None = None,
+            text: str,
+            send_error_message: bool = True,
             reply: bool = False,
             continue_handler: Literal[False] = False
         ) -> NoReturn: ...
@@ -496,14 +498,15 @@ class SendMsg:
     @overload
     async def send_tts(
             self,
-            text: str | None = None,
+            text: str,
+            send_error_message: bool = True,
             reply: bool = False,
             continue_handler: Literal[True] = True
         ) -> None: ...
     
     async def send_tts(
             self,
-            text: str | None = None,
+            text: str,
             send_error_message: bool = True,
             reply: bool = False,
             continue_handler: bool = False
@@ -516,7 +519,7 @@ class SendMsg:
         :param continue_handler: 是否继续处理流程
         """
         response = await self._chat_tts_api.text_to_speech(text)
-        if response.code == 200:
+        if response.code == 200 and response.data is not None:
             await self._send(
                 message = MessageSegment.record(response.data.audio_files[0].url),
                 reply = reply,
@@ -530,7 +533,7 @@ class SendMsg:
     @overload
     async def send_check_length(
             self,
-            text: str | None = None,
+            message: Message | str,
             threshold: float = 1.0,
             reply: bool = True,
             continue_handler: Literal[False] = False
@@ -539,7 +542,7 @@ class SendMsg:
     @overload
     async def send_check_length(
             self,
-            message: Message,
+            message: Message | str,
             threshold: float = 1.0,
             reply: bool = True,
             continue_handler: Literal[True] = True
@@ -547,21 +550,27 @@ class SendMsg:
     
     async def send_check_length(
             self,
-            message: Message | str | None = None,
+            message: Message | str,
             threshold: float = 1.0,
             reply: bool = True,
-            continue_handler: Literal[False] = False
+            continue_handler: bool = False
         ):
-        length_score = self.text_length_score(message)
+        if isinstance(message, Message):
+            text = message.extract_plain_text()
+        elif isinstance(message, str):
+            text = message
+        else:
+            raise TypeError(f"message must be Message or str, but got {type(message)}")
+        length_score = self.text_length_score(text)
         if length_score >= threshold:
             await self.send_render(
-                message,
+                text,
                 reply = reply,
                 continue_handler = continue_handler
             )
         else:
             await self.send_text(
-                message,
+                text,
                 reply = reply,
                 continue_handler = continue_handler
             )
@@ -569,7 +578,7 @@ class SendMsg:
     @overload
     async def send_any(
             self,
-            message: Message,
+            message: str | Message | MessageSegment,
             reply: bool = False,
             continue_handler: Literal[False] = False
         ) -> NoReturn: ...
@@ -577,14 +586,14 @@ class SendMsg:
     @overload
     async def send_any(
             self,
-            message: MessageSegment,
+            message: str | Message | MessageSegment,
             reply: bool = False,
             continue_handler: Literal[True] = True
         ) -> None: ...
     
     async def send_any(
             self,
-            message: Message,
+            message: str | Message | MessageSegment,
             reply: bool = True,
             continue_handler: bool = False
         ):
@@ -607,15 +616,15 @@ class SendMsg:
         """
         raise FinishedException
 
-    async def text_render(self, text: str | None = None) -> MessageSegment:
+    async def text_render(self, text: str) -> MessageSegment:
         """
         渲染文本
 
         :param text: 渲染文本内容
         """
         if text:
-            render_response = await self._text_render.render(text)
-            if render_response.code == 200:
+            render_response: Response[RendedImage] = await self._text_render.render(text)
+            if render_response.code == 200 and render_response.data is not None:
                 message = MessageSegment.image(render_response.data.image_url)
             else:
                 await self.send_response(render_response, lambda response: f"Render Error: {response.text}")
@@ -626,7 +635,7 @@ class SendMsg:
     @overload
     async def _send(
             self,
-            message: Message,
+            message: str | Message | MessageSegment,
             reply: bool = True,
             continue_handler: Literal[False] = False
         ) -> NoReturn: ...
@@ -634,14 +643,14 @@ class SendMsg:
     @overload
     async def _send(
             self,
-            message: Message,
+            message: str | Message | MessageSegment,
             reply: bool = True,
             continue_handler: Literal[True] = True
         ) -> None: ...
     
     async def _send(
             self,
-            message: Message,
+            message: str | Message | MessageSegment,
             reply: bool = True,
             continue_handler: bool = False
         ):
@@ -660,26 +669,61 @@ class SendMsg:
             await self.break_handler()
     
     @staticmethod
-    def text_length_score(text:str) -> float:
+    def text_length_score(text: str) -> float:
         if not text:
             return 0.0
         
-        lines = text.splitlines()
-        line_lengths = np.array([len(line) for line in lines], dtype=np.int64)
-        lines_score = len(lines) / storage_configs.text_length_score_configs.max_lines
-        single_line_score = line_lengths.max() / storage_configs.text_length_score_configs.single_line_max
-        mean_line_score = line_lengths.mean() / storage_configs.text_length_score_configs.mean_line_max
-        total_length_score = len(text) / storage_configs.text_length_score_configs.total_length
-
+        config = storage_configs.text_length_score_configs
+        
+        # 单次遍历统计
+        max_line_length: int = 0
+        total_chars_in_lines: int = 0  # 所有行中非换行符字符总数
+        line_count: int = 0
+        current_line_length: int = 0
+        
+        for char in text:
+            if char == "\n":
+                # 当前行结束
+                if current_line_length > max_line_length:
+                    max_line_length = current_line_length
+                total_chars_in_lines += current_line_length
+                line_count += 1
+                current_line_length = 0
+            else:
+                current_line_length += 1
+        
+        # 处理最后一行（如果文本不以换行符结尾）
+        if current_line_length > 0 or (text and text[-1] == '\n'):
+            # 两种情况：
+            # 1. current_line_length > 0: 最后有内容
+            # 2. text[-1] == '\n': 最后是空行（current_line_length=0但算一行）
+            if current_line_length > max_line_length:
+                max_line_length = current_line_length
+            total_chars_in_lines += current_line_length
+            line_count += 1
+        
+        # 如果line_count为0（理论上不会发生，因为text不为空）
+        if line_count == 0:
+            return 0.0
+        
+        # 计算统计值
+        mean_line_length: float = total_chars_in_lines / line_count
+        total_length: int = len(text)  # 直接使用len，避免重复计算
+        
+        # 计算各项得分
+        lines_score: float = line_count / config.max_lines
+        max_single_line_score: float = max_line_length / config.single_line_max
+        mean_line_score: float = mean_line_length / config.mean_line_max
+        total_length_score: float = total_length / config.total_length
+        
+        # 综合得分（加权平均）
         return (
-            # lines: 33.3%
             lines_score +
-            # single_line_score + mean_line_score: 33.3%
             (
-                single_line_score +
+                max_single_line_score
+                +
                 mean_line_score
             ) / 2.0 +
-            # total_length: 33.3%
             total_length_score
         ) / 3.0
     

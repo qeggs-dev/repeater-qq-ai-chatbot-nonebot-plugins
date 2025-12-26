@@ -3,7 +3,7 @@ from nonebot.rule import to_me
 from nonebot.adapters.onebot.v11 import Bot, MessageEvent, Message
 from nonebot.params import CommandArg
 
-from ...assist import PersonaInfo
+from ...assist import PersonaInfo, ImageDownloader
 from ...chattts import ChatTTSAPI
 from .._clients import ChatCore, ChatSendMsg
 from ...logger import logger
@@ -23,10 +23,15 @@ async def handle_tts_chat(bot: Bot, event: MessageEvent, args: Message = Command
         module = "Chat.TTS_Chat"
     )
 
+    message = persona_info.message
+
     core = ChatCore(persona_info)
 
+    images: list[str] = await persona_info.get_images_url()
+
     response = await core.send_message(
-        message = persona_info.message_str
+        message = persona_info.message_str,
+        image_url = images
     )
 
     send_msg = ChatSendMsg(

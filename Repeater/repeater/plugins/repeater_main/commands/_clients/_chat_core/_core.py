@@ -37,10 +37,12 @@ class ChatCore:
         add_metadata: bool = True,
         role_name: str | None = None,
         model_uid: str | None = None,
+        image_url: str | list[str] | None = None,
         load_prompt: bool | None = None,
         save_context: bool | None = None,
         enable_md_prompt: bool = True,
         reference_context_id: str | None = None,
+        continue_completion: bool | None = None,
     ) -> Response[ChatResponse | None]:
         """
         发送消息到AI后端
@@ -56,10 +58,12 @@ class ChatCore:
             add_metadata = add_metadata,
             role_name = role_name,
             model_uid = model_uid,
+            image_url = image_url,
             load_prompt = load_prompt,
             enable_md_prompt = enable_md_prompt,
             save_context = save_context,
             reference_context_id = reference_context_id,
+            continue_completion = continue_completion,
         )
         response = await self._chat_client.post(
             url = url,
@@ -93,10 +97,12 @@ class ChatCore:
         add_metadata: bool = True,
         role_name: str | None = None,
         model_uid: str | None = None,
+        image_url: str | list[str] | None = None,
         load_prompt: bool | None = None,
         save_context: bool | None = None,
         enable_md_prompt: bool = True,
         reference_context_id: str | None = None,
+        continue_completion: bool | None = None,
     ) -> AsyncIterator[Any]:
         """
         发送消息到AI后端，并获取流式响应
@@ -113,10 +119,12 @@ class ChatCore:
             add_metadata = add_metadata,
             role_name = role_name,
             model_uid = model_uid,
+            image_url = image_url,
             load_prompt = load_prompt,
             enable_md_prompt = enable_md_prompt,
             save_context = save_context,
             reference_context_id = reference_context_id,
+            continue_completion = continue_completion,
             stream = True,
         )
         async with self._chat_client.stream(
@@ -138,10 +146,12 @@ class ChatCore:
         add_metadata: bool = True,
         role_name: str | None = None,
         model_uid: str | None = None,
+        image_url: str | list[str] | None = None,
         load_prompt: bool | None = None,
         save_context: bool | None = None,
         enable_md_prompt: bool = True,
         reference_context_id: str | None = None,
+        continue_completion: bool | None = None,
         stream: bool = False,
     ):
         # 表单数据格式 (Form Data)
@@ -159,12 +169,16 @@ class ChatCore:
             data["save_context"] = save_context
         if model_uid is not None:
             data["model_uid"] = model_uid
+        if image_url:
+            data["image_url"] = image_url
         if role_name is not None:
             data["role_name"] = role_name
         elif storage_configs.merge_group_id:
             data["role_name"] = self._persona_info.nickname
         if reference_context_id:
             data["reference_context_id"] = reference_context_id
+        if continue_completion is not None:
+            data["continue_completion"] = continue_completion
         if stream:
             data["stream"] = stream
         if message:

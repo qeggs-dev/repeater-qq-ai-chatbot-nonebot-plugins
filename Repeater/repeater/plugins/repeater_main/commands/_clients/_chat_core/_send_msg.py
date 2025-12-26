@@ -3,25 +3,25 @@ from nonebot.internal.matcher.matcher import Matcher
 from ....assist import PersonaInfo, MessageSource, Response, SendMsg as BaseSendMsg
 from ._response_body import ChatResponse
 from ....chattts import ChatTTSAPI
-from typing import NoReturn
+from typing import NoReturn, Type
 from ....logger import logger as base_logger
 import numpy as np
 
 logger = base_logger.bind(module = "Chat.SendMsg")
 
-class Send_msg(BaseSendMsg):
+class SendMsg(BaseSendMsg):
     def __init__(
             self,
             component: str,
             persona_info: PersonaInfo,
-            matcher: Matcher,
+            matcher: Type[Matcher],
             response: Response[ChatResponse | None],
         ):
         super().__init__(f"Chat.{component}", matcher, persona_info)
-        self._response: Response[ChatResponse] = response
+        self._response: Response[ChatResponse | None] = response
         self._chat_tts_api = ChatTTSAPI()
     
-    async def _send_error_message(self):
+    async def _send_error_message(self) -> NoReturn:
         if self._response.data is None:
             await self.send_response(self._response)
         else:
@@ -35,7 +35,7 @@ class Send_msg(BaseSendMsg):
         if self.is_debug_mode:
             await self.send_debug_mode()
         else:
-            if self._response.code == 200:
+            if self._response.code == 200 and self._response.data is not None:
                 score = self.text_length_score(self._response.data.content)
                 threshold = self.text_length_score_threshold
                 logger.info(f"Response content socre: {score}")
@@ -52,7 +52,7 @@ class Send_msg(BaseSendMsg):
         if self.is_debug_mode:
             await self.send_debug_mode()
         else:
-            if self._response.code == 200:
+            if self._response.code == 200 and self._response.data is not None:
                 if self._response.data.reasoning_content:
                     await self.send_render(
                         self._response.data.reasoning_content,
@@ -73,7 +73,7 @@ class Send_msg(BaseSendMsg):
         if self.is_debug_mode:
             await self.send_debug_mode()
         else:
-            if self._response.code == 200:
+            if self._response.code == 200 and self._response.data is not None:
                 message = Message()
                 message.append(self._persona_info.reply)
                 # 推理内容必须渲染为图片
@@ -93,7 +93,7 @@ class Send_msg(BaseSendMsg):
         if self.is_debug_mode:
             await self.send_debug_mode()
         else:
-            if self._response.code == 200:
+            if self._response.code == 200 and self._response.data is not None:
                 message = Message()
                 message.append(self._persona_info.reply)
                 if self._response.data.reasoning_content:

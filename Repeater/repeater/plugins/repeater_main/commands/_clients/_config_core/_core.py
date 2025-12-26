@@ -40,11 +40,16 @@ class ConfigCore:
         else:
             if item_type not in TYPES:
                 raise TypeError(f"Unsupported type: {item_type}")
-        logger.info("Set config: {config_key} = {value}({item_type})", config_key=config_key, value=value, item_type=item_type)
+        logger.info(
+            "Set config: {config_key} = {value}(type:{item_type})",
+            config_key=config_key,
+            value=value,
+            item_type=item_type
+        )
         response = await self._httpx_client.put(
-            f"{SET_CONFIG_ROUTE}/{self._info.namespace_str}/{item_type}",
+            f"{SET_CONFIG_ROUTE}/{self._info.namespace_str}/{config_key}",
             json={
-                "key": config_key,
+                "type": item_type,
                 "value": value
             }
         )

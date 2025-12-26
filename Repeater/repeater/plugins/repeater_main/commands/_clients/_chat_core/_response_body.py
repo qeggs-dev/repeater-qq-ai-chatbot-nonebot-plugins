@@ -1,14 +1,23 @@
 from pydantic import BaseModel, ConfigDict, Field
+from enum import StrEnum
 import math
-from typing import Literal
+
+class FinishReason(StrEnum):
+    STOP = "stop"
+    LENGTH = "length"
+    CONTENT_FILTER = "content_filter"
+    TOOL_CALL = "tool_calls"
+    INSUFFICIENT_SYSTEM_RESOURCE = "insufficient_system_resource"
 
 class ChatResponse(BaseModel):
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(
+        validate_assignment=True,
+        extra="allow",
+    )
 
-    reasoning_content: str = ""
+    reasoning_content: str | None = None
     content: str = ""
     user_raw_input: str = ""
-    user_input: str = ""
     model_group: str = ""
     model_name: str = ""
     model_type: str = ""
@@ -16,6 +25,7 @@ class ChatResponse(BaseModel):
     create_time: int = 0
     id: str = ""
     finish_reason_cause: str = ""
+    finish_reason_code: FinishReason = FinishReason.STOP
     status: int = 200
 
 class TokensCount(BaseModel):
@@ -48,7 +58,10 @@ class Logprob(BaseModel):
     top_logprobs: list[Top_Logprob] = Field(default_factory=list)
 
 class StreamChatChunkResponse(BaseModel):
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(
+        validate_assignment=True,
+        extra="allow",
+    )
     
     id: str = ""
     reasoning_content: str = ""
@@ -58,7 +71,7 @@ class StreamChatChunkResponse(BaseModel):
     function_name: str = ""
     function_arguments: str = ""
     token_usage: TokensCount = Field(default_factory=TokensCount)
-    finish_reason: Literal["stop", "length", "content_filter", "tool_calls", "insufficient_system_resource"] | None = None
+    finish_reason: FinishReason | None = None
     created: int = 0
     model: str = ""
     system_fingerprint: str = ""

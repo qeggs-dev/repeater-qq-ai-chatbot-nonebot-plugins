@@ -3,12 +3,11 @@ from nonebot.internal.matcher.matcher import Matcher
 from nonebot.rule import to_me
 from nonebot.params import CommandArg
 from nonebot.adapters import Message
-from nonebot.adapters.onebot.v11 import MessageEvent
-from nonebot.adapters import Bot
+from nonebot.adapters.onebot.v11 import Bot, MessageEvent
 from ...logger import logger
 
 from .._clients import ChatCore, ChatSendMsg
-from ...assist import PersonaInfo
+from ...assist import PersonaInfo, ImageDownloader
 
 chat: type[Matcher] = on_command("chat", aliases={"c", "Chat"}, rule=to_me(), block=True)
 
@@ -27,8 +26,11 @@ async def handle_chat(bot: Bot, event: MessageEvent, args: Message = CommandArg(
 
     core = ChatCore(persona_info)
 
+    images: list[str] = await persona_info.get_images_url()
+
     response = await core.send_message(
-        message = message.extract_plain_text().strip()
+        message = message.extract_plain_text().strip(),
+        image_url = images
     )
 
     send_msg = ChatSendMsg(
