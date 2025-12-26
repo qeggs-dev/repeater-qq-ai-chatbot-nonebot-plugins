@@ -51,7 +51,7 @@ HTML_README_FILE_ROUTE = f"{BACKEND_HOST}:{BACKEND_PORT}/readme.html"
 BALANCE_ROUTE = f"{BACKEND_HOST}:{BACKEND_PORT}/balance_query"
 
 # ==== VARIABLE EXPANSION API ==== #
-VARIABLE_EXPANSION = f"{BACKEND_HOST}:{BACKEND_PORT}/userdata/variable/expand"
+VARIABLE_EXPANSION = f"{BACKEND_HOST}:{BACKEND_PORT}/variable_expand"
 
 # ==== CONFIG ==== #
 HELLO_CONTENT = storage_configs.hello_content
