@@ -28,11 +28,13 @@ class ConfigCore:
             int: "int",
             float: "float",
             str: "string",
-            bool: "bool",
+            bool: "boolean",
             dict: "dict",
             list: "list",
             None: "null"
         }
+        if item_type == "raw":
+            item_type = "raw"
         if item_type == "auto":
             if type(value) not in TYPES:
                 raise TypeError(f"Unsupported type: {type(value).__name__}")
