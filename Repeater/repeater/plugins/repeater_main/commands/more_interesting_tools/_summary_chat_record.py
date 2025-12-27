@@ -53,7 +53,7 @@ async def handle_summary_chat_record(bot: Bot, event: MessageEvent, args: Messag
         chat_core = ChatCore(persona_info, namespace = "Summary_Chat_Record")
         response = await chat_core.send_message(
             add_metadata = False,
-            message = "\n\n".join(texts),
+            message = "\n".join(texts),
             save_context = False
         )
         chat_sendmsg = ChatSendMsg(
